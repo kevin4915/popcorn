@@ -1,2 +1,62 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<div class="choice">
+  <h2>Qu'est-ce qu'on regarde ce soir ? 🍿</h2>
+
+  <%= form_with url: movies_path, method: :get do |f| %>
+
+    <div class="toggle">
+      <span>Film</span>
+      <%= f.check_box :serie, class: "toggle-input" %>
+      <span>Série</span>
+    </div>
+
+    <p>Temps disponible</p>
+    <div class="durations">
+      <%= f.radio_button :duration, "1h", id: "d1h" %>
+      <%= label_tag "d1h", "1h" %>
+
+      <%= f.radio_button :duration, "1h30", id: "d1h30" %>
+      <%= label_tag "d1h30", "1h30" %>
+
+      <%= f.radio_button :duration, "2h+", id: "d2h" %>
+      <%= label_tag "d2h", "2h+" %>
+    </div>
+
+    <p>Avec qui ?</p>
+    <div class="company">
+      <%= f.radio_button :company, "seul", id: "c_seul" %>
+      <%= label_tag "c_seul", "Seul" %>
+
+      <%= f.radio_button :company, "potes", id: "c_potes" %>
+      <%= label_tag "c_potes", "Entre potes" %>
+
+      <%= f.radio_button :company, "famille", id: "c_famille" %>
+      <%= label_tag "c_famille", "En famille" %>
+    </div>
+
+    <p>Genre</p>
+    <%= f.select :genre, ["Action", "Comédie", "Drame", "Thriller",
+                          "Science Fiction", "Horreur", "Romance", "Fantasy"],
+                          { include_blank: "Choisir un genre" } %>
+
+    <button type="submit" class="btn-action">
+      <%= image_tag "logo.png", class: "btn-logo" %>
+      Moteur ... Action !
+    </button>
+
+  <% end %>
+</div>
+
+<div class="top10">
+  <h3>Top 10 De La Semaine</h3>
+  <div class="carousel-container">
+    <button class="carousel-btn" data-carousel="week" data-direction="-1">‹</button>
+    <div class="movies-row" id="carousel-week">
+      <% @top_week.each do |movie| %>
+        <%= link_to movie_path(movie), class: "movie-card-thumb" do %>
+          <%= image_tag movie.poster_url, class: "poster-thumb", alt: movie.title %>
+        <% end %>
+      <% end %>
+    </div>
+    <button class="carousel-btn" data-carousel="week" data-direction="1">›</button>
+  </div>
+</div>
