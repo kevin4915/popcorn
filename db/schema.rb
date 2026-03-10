@@ -24,6 +24,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_153348) do
   end
 
   create_table "movies", force: :cascade do |t|
+    t.text "actors"
     t.string "category"
     t.datetime "created_at", null: false
     t.string "director"
