@@ -1,0 +1,11 @@
+<div class="movie-card">
+  <%= link_to movie_path(movie) do %>
+    <img src="<%= movie.poster_url %>" alt="<%= movie.title %>" class="movie-card-img">
+
+    <div class="movie-card-info">
+      <h3><%= movie.title %></h3>
+      <p><%= movie.year %></p>
+      <p><%= movie.rating %>/10</p>
+    </div>
+  <% end %>
+</div>

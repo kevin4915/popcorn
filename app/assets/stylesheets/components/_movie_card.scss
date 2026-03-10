@@ -1,0 +1,17 @@
+.movie-card {
+  width: 180px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #1c1c1c;
+  color: white;
+}
+
+.movie-card-img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+}
+
+.movie-card-info {
+  padding: 10px;
+}

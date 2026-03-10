@@ -1,0 +1,122 @@
+/* ————————————————————————————————
+   CENTRAGE GLOBAL
+——————————————————————————————— */
+
+.popcorn-wrapper {
+  background: #000;
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centre horizontalement */
+}
+
+/* ————————————————————————————————
+   TITRE
+——————————————————————————————— */
+
+.popcorn-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* ————————————————————————————————
+   CARTE ROUGE DÉGRADÉE CENTRÉE
+——————————————————————————————— */
+
+.popcorn-card {
+  width: 100%;
+  max-width: 420px; /* largeur idéale mobile/tablette */
+  background: linear-gradient(180deg, #8B0000 0%, #E60000 100%);
+  border-radius: 22px;
+  padding: 20px;
+  margin-bottom: 28px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centre l’image + texte */
+}
+
+/* ————————————————————————————————
+   IMAGE
+——————————————————————————————— */
+
+.popcorn-poster img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+
+/* ————————————————————————————————
+   TEXTE
+——————————————————————————————— */
+
+.popcorn-info {
+  width: 100%;
+  text-align: center; /* centre le texte */
+}
+
+.popcorn-info h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+}
+
+/* ————————————————————————————————
+   META (note + année)
+——————————————————————————————— */
+
+.popcorn-meta {
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFD700;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.popcorn-year {
+  color: #fff;
+  opacity: 0.9;
+}
+
+/* ————————————————————————————————
+   DESCRIPTION
+——————————————————————————————— */
+
+.popcorn-description {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #f1f1f1;
+  opacity: 0.95;
+}
+
+.popcorn-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.show-trailer-button {
+  display: block;
+  background: #8a7f7a; /* brun/gris chaud comme ton Figma */
+  color: white;
+  padding: 12px 22px;
+  border-radius: 14px;
+  text-align: center;
+  font-weight: 600;
+  text-decoration: none;
+  margin: 0 auto 20px auto;
+  width: fit-content;
+  transition: 0.2s ease;
+}
+
+.show-trailer-button:hover {
+  background: #7a6f6a; /* léger assombrissement au hover */
+}
