@@ -1,12 +1,46 @@
-.navbar-lewagon {
-  justify-content: space-between;
-  background: white;
+.avatar-dropdown {
+  position: relative;
+  cursor: pointer;
 }
 
-.navbar-lewagon .navbar-collapse {
-  flex-grow: 0;
-}
+.dropdown-menu-custom {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  right: 0;
+  top: 80px;
+  background: #1a1a1a;
+  border: 1px solid #e50914;
+  border-radius: 12px;
+  overflow: hidden;
+  min-width: 200px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  z-index: 100;
 
-.navbar-lewagon .navbar-brand img {
-  width: 40px;
+  &.active {
+    display: flex;
+  }
+
+  a {
+    color: #fff;
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #e50914;
+    }
+
+    &:last-child {
+      border-top: 1px solid #333;
+      color: #ff6b6b;
+
+      &:hover {
+        background: #8b0000;
+        color: #fff;
+      }
+    }
+  }
 }
