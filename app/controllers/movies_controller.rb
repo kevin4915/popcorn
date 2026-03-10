@@ -7,13 +7,12 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
+    render :swipe
   end
 
   def swipe
     @movie = Movie.find(params[:id])
-    if params[:decision] == "like"
-      Historic.create!(user: current_user, movie: @movie)
-    end
+    Historic.create!(user: current_user, movie: @movie) if params[:decision] == "like"
     head :ok
   end
 end
