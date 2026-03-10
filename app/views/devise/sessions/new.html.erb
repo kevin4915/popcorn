@@ -1,57 +1,37 @@
-<div class="account-page py-5">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-12 col-md-10 col-lg-6 col-xl-5">
+<div class="login-page">
+  <div class="login-card">
+    <%= image_tag "logo.png", class: "login-logo" %>
+    <h2>Bienvenue sur PopCorn 🍿</h2>
+    <p class="login-subtitle">Connectez-vous pour accéder à l'application</p>
 
-        <div class="account-card shadow-sm">
-          <div class="account-card-header">
-            <h2 class="account-title mb-1">Merci de vous authentifier</h2>
-            <p class="account-subtitle mb-0">
-              Connectez-vous pour accéder à l'application.
-            </p>
-          </div>
+    <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
 
-          <div class="account-card-body">
-            <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-              <div class="form-section mb-4">
-                <h5 class="section-title">Connexion</h5>
+      <%= f.input :email,
+                  required: false,
+                  autofocus: true,
+                  label: "Adresse email",
+                  input_html: { autocomplete: "email", class: "login-input" },
+                  label_html: { class: "login-label" } %>
 
-                <div class="form-inputs-box">
-                  <%= f.input :email,
-                              required: false,
-                              autofocus: true,
-                              label: "Adresse email",
-                              input_html: { autocomplete: "email" } %>
+      <%= f.input :password,
+                  label: "Mot de passe",
+                  required: false,
+                  input_html: { autocomplete: "current-password", class: "login-input" },
+                  label_html: { class: "login-label" } %>
 
-                  <%= f.input :password,
-                              label: "Mot de passe",
-                              required: false,
-                              input_html: { autocomplete: "current-password" } %>
+      <% if devise_mapping.rememberable? %>
+        <%= f.input :remember_me,
+                    as: :boolean,
+                    label: "Se souvenir de moi",
+                    wrapper_html: { class: "remember-wrapper" } %>
+      <% end %>
 
-                  <% if devise_mapping.rememberable? %>
-                    <div class="remember-me-box mt-3">
-                      <%= f.input :remember_me,
-                                  as: :boolean,
-                                  label: "Se souvenir de moi",
-                                  wrapper_html: { class: "mb-0" },
-                                  input_html: { class: "form-check-input" },
-                                  label_html: { class: "form-check-label" } %>
-                    </div>
-                  <% end %>
-                </div>
-              </div>
+      <%= f.button :submit, "🍿 Se connecter", class: "btn-action mt-3" %>
 
-               <%= f.button :submit, "S'authentifier", class: "btn btn-success px-4 mb-4" %>
+    <% end %>
 
-                <div class="account-links">
-                  <%= render "devise/shared/links" %>
-                </div>
-
-            <% end %>
-          </div>
-        </div>
-
-      </div>
+    <div class="login-links">
+      <%= render "devise/shared/links" %>
     </div>
   </div>
 </div>

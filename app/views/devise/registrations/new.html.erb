@@ -1,116 +1,99 @@
-<div class="account-page py-5">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+<div class="login-page">
+  <div class="login-card">
+    <%= image_tag "logo.png", class: "login-logo" %>
+    <h2>Créer un compte 🍿</h2>
+    <p class="login-subtitle">Renseignez vos informations et sélectionnez vos abonnements</p>
 
-        <div class="account-card shadow-sm">
-          <div class="account-card-header">
-            <h2 class="account-title mb-1">Créer un nouveau compte</h2>
-            <p class="account-subtitle mb-0">
-              Renseignez vos informations et sélectionnez vos abonnements.
-            </p>
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= f.error_notification %>
+
+      <%= f.input :last_name,
+                  required: true,
+                  label: "Nom",
+                  autofocus: true,
+                  input_html: { autocomplete: "family-name", class: "login-input" },
+                  label_html: { class: "login-label" } %>
+
+      <%= f.input :first_name,
+                  required: true,
+                  label: "Prénom",
+                  input_html: { autocomplete: "given-name", class: "login-input" },
+                  label_html: { class: "login-label" } %>
+
+      <%= f.input :email,
+                  required: true,
+                  label: "Adresse email",
+                  input_html: { autocomplete: "email", class: "login-input" },
+                  label_html: { class: "login-label" } %>
+
+      <%= f.input :password,
+                  required: true,
+                  label: "Mot de passe",
+                  hint: ("#{@minimum_password_length} caractères minimum" if @minimum_password_length),
+                  input_html: { autocomplete: "new-password", class: "login-input" },
+                  label_html: { class: "login-label" } %>
+
+      <%= f.input :password_confirmation,
+                  required: true,
+                  label: "Confirmer le mot de passe",
+                  input_html: { autocomplete: "new-password", class: "login-input" },
+                  label_html: { class: "login-label" } %>
+
+      <!-- Abonnements -->
+      <p class="login-label">Mes abonnements</p>
+      <div class="subscriptions-grid">
+        <label class="subscription-option">
+          <%= f.check_box :Netflix, class: "subscription-checkbox" %>
+          <div class="subscription-card">
+            <span class="subscription-checkmark">✓</span>
+            <%= image_tag "Logo_netflix.png", class: "subscription-logo", alt: "Netflix" %>
+            <span class="subscription-name">Netflix</span>
           </div>
+        </label>
 
-          <div class="account-card-body">
-            <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-              <%= f.error_notification %>
-
-              <div class="form-section mb-4">
-                <h5 class="section-title">Informations personnelles</h5>
-
-                <div class="form-inputs-box">
-                  <%= f.input :last_name,
-                              required: true,
-                              label: "Nom",
-                              autofocus: true,
-                              input_html: { autocomplete: "family-name" } %>
-
-                  <%= f.input :first_name,
-                              required: true,
-                              label: "Prénom",
-                              input_html: { autocomplete: "given-name" } %>
-
-                  <%= f.input :email,
-                              required: true,
-                              label: "Adresse email",
-                              input_html: { autocomplete: "email" } %>
-
-                  <%= f.input :password,
-                              label: "Mot de passe",
-                              required: true,
-                              hint: ("#{@minimum_password_length} caractères minimum" if @minimum_password_length),
-                              input_html: { autocomplete: "new-password" } %>
-
-                  <%= f.input :password_confirmation,
-                              label: "Confirmer le mot de passe",
-                              required: true,
-                              input_html: { autocomplete: "new-password" } %>
-                </div>
-              </div>
-
-              <div class="form-section mb-4">
-                <h5 class="section-title">Mes abonnements</h5>
-
-                <div class="subscriptions-grid">
-                  <label class="subscription-option">
-                    <%= f.check_box :Netflix, class: "subscription-checkbox" %>
-                    <div class="subscription-card">
-                      <span class="subscription-checkmark">✓</span>
-                      <%= image_tag "Logo_netflix.png", class: "subscription-logo", alt: "Netflix" %>
-                      <span class="subscription-name">Netflix</span>
-                    </div>
-                  </label>
-
-                  <label class="subscription-option">
-                    <%= f.check_box :DisneyPlus, class: "subscription-checkbox" %>
-                    <div class="subscription-card">
-                      <span class="subscription-checkmark">✓</span>
-                      <%= image_tag "Logo_disney.png", class: "subscription-logo", alt: "Disney+" %>
-                      <span class="subscription-name">Disney+</span>
-                    </div>
-                  </label>
-
-                  <label class="subscription-option">
-                    <%= f.check_box :AmazonPrime, class: "subscription-checkbox" %>
-                    <div class="subscription-card">
-                      <span class="subscription-checkmark">✓</span>
-                      <%= image_tag "Logo_amazon_prime.png", class: "subscription-logo", alt: "Amazon Prime" %>
-                      <span class="subscription-name">Amazon Prime</span>
-                    </div>
-                  </label>
-
-                  <label class="subscription-option">
-                    <%= f.check_box :CanalPlus, class: "subscription-checkbox" %>
-                    <div class="subscription-card">
-                      <span class="subscription-checkmark">✓</span>
-                      <%= image_tag "Logo_canal.png", class: "subscription-logo", alt: "Canal+" %>
-                      <span class="subscription-name">Canal+</span>
-                    </div>
-                  </label>
-
-                  <label class="subscription-option">
-                    <%= f.check_box :HBO, class: "subscription-checkbox" %>
-                    <div class="subscription-card">
-                      <span class="subscription-checkmark">✓</span>
-                      <%= image_tag "Logo_HBO.png", class: "subscription-logo", alt: "HBO" %>
-                      <span class="subscription-name">HBO</span>
-                    </div>
-                  </label>
-                </div>
-              </div>
-
-              <div class="account-actions">
-                <div class="account-links">
-                  <%= render "devise/shared/links" %>
-                </div>
-
-                <%= f.button :submit, "Créer mon compte", class: "btn btn-success px-4" %>
-              </div>
-            <% end %>
+        <label class="subscription-option">
+          <%= f.check_box :DisneyPlus, class: "subscription-checkbox" %>
+          <div class="subscription-card">
+            <span class="subscription-checkmark">✓</span>
+            <%= image_tag "Logo_disney.png", class: "subscription-logo", alt: "Disney+" %>
+            <span class="subscription-name">Disney+</span>
           </div>
-        </div>
+        </label>
 
+        <label class="subscription-option">
+          <%= f.check_box :AmazonPrime, class: "subscription-checkbox" %>
+          <div class="subscription-card">
+            <span class="subscription-checkmark">✓</span>
+            <%= image_tag "Logo_amazon_prime.png", class: "subscription-logo", alt: "Amazon Prime" %>
+            <span class="subscription-name">Amazon Prime</span>
+          </div>
+        </label>
+
+        <label class="subscription-option">
+          <%= f.check_box :CanalPlus, class: "subscription-checkbox" %>
+          <div class="subscription-card">
+            <span class="subscription-checkmark">✓</span>
+            <%= image_tag "Logo_canal.png", class: "subscription-logo", alt: "Canal+" %>
+            <span class="subscription-name">Canal+</span>
+          </div>
+        </label>
+
+        <label class="subscription-option">
+          <%= f.check_box :HBO, class: "subscription-checkbox" %>
+          <div class="subscription-card">
+            <span class="subscription-checkmark">✓</span>
+            <%= image_tag "Logo_HBO.png", class: "subscription-logo", alt: "HBO" %>
+            <span class="subscription-name">HBO</span>
+          </div>
+        </label>
       </div>
-    </div>
+
+      <%= f.button :submit, "🍿 Créer mon compte", class: "btn-action mt-3" %>
+
+      <div class="login-links">
+        <%= render "devise/shared/links" %>
+      </div>
+
+    <% end %>
   </div>
 </div>
