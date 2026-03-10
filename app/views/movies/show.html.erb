@@ -1,0 +1,37 @@
+<div class="show-wrapper">
+
+  <!-- Bouton retour -->
+  <%= link_to movies_path, class: "show-back" do %>
+    ← Retour
+  <% end %>
+
+  <!-- Affiche du film -->
+  <div class="show-poster">
+    <%= image_tag @movie.poster_url, alt: @movie.title %>
+  </div>
+
+  <!-- Infos principales -->
+  <h1 class="show-title"><%= @movie.title %> (<%= @movie.year %>)</h1>
+  <p class="show-director">De <%= @movie.director %></p>
+
+  <%= link_to @movie.trailer_url, target: "_blank", class: "show-trailer-button" do %>
+    Bande Annonce
+  <% end %>
+
+  <!-- Meta : durée + genres + note -->
+  <div class="show-meta">
+    <span>⏱️ <%= @movie.duration %> min</span>
+    <span>⭐ <%= @movie.rating %>/10</span>
+  </div>
+
+  <!-- Description -->
+  <p class="show-description">
+    <%= @movie.synopsis %>
+  </p>
+
+  <!-- Bouton voir le film -->
+  <%= link_to "#", class: "show-watch-button" do %>
+    Voir le film sur Disney+
+  <% end %>
+
+</div>

@@ -7,57 +7,52 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
-
-puts "Nettoyage de la base de données..."
+puts "Cleaning database..."
+Historic.destroy_all
+Review.destroy_all
 Movie.destroy_all
+Platform.destroy_all
+User.destroy_all
 
-puts "Création de 5 films avec leurs acteurs..."
+puts "Creating platforms..."
+netflix = Platform.create!(name: "Netflix")
+prime = Platform.create!(name: "Prime Video")
+disney = Platform.create!(name: "Disney+")
 
-movies = [
-  {
-    title: "Inception",
-    year: 2010,
-    category: "Science-Fiction",
-    synopsis: "Un voleur qui dérobe des secrets dans les rêves.",
-    poster_url: "https://image.tmdb.org/t/p/w500/8IB2e4R45WjN61rRUiNyN70F11T.jpg",
-    actors: "Leonardo DiCaprio, Joseph Gordon-Levitt, Elliot Page"
-  },
-  {
-    title: "The Dark Knight",
-    year: 2008,
-    category: "Action",
-    synopsis: "Batman affronte le Joker pour sauver Gotham.",
-    poster_url: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haZ1Z5t5.jpg",
-    actors: "Christian Bale, Heath Ledger, Aaron Eckhart"
-  },
-  {
-    title: "Interstellar",
-    year: 2014,
-    category: "Science-Fiction",
-    synopsis: "Une équipe d'astronautes voyage à travers un trou de ver.",
-    poster_url: "https://image.tmdb.org/t/p/w500/gEU2QpI6Eki7ygjUo41N50yN2D9.jpg",
-    actors: "Matthew McConaughey, Anne Hathaway, Jessica Chastain"
-  },
-  {
-    title: "Pulp Fiction",
-    year: 1994,
-    category: "Crime",
-    synopsis: "Plusieurs histoires de criminels s'entremêlent à Los Angeles.",
-    poster_url: "https://image.tmdb.org/t/p/w500/d5iSGBOaN195qQW3B0r8MhH39Uo.jpg",
-    actors: "John Travolta, Uma Thurman, Samuel L. Jackson"
-  },
-  {
-    title: "Parasite",
-    year: 2019,
-    category: "Drame",
-    synopsis: "Une famille pauvre s'infiltre dans une famille riche.",
-    poster_url: "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbL3vT1.jpg",
-    actors: "Song Kang-ho, Lee Sun-kyun, Cho Yeo-jeong"
-  }
-]
+puts "Creating movies..."
+movie1 = Movie.create!(
+  title: "Inception",
+  synopsis: "Un voleur infiltre les rêves pour voler des secrets.",
+  year: 2010,
+  duration: 148,
+  rating: 8.8,
+  category: "Science-fiction",
+  platform: netflix,
+  director: "Christopher Nolan",
+  poster_url: "inception.jpg",
+  trailer: "https://www.youtube.com/watch?v=YoHD9XEInc0"
+)
 
-movies.each do |movie_data|
-  Movie.create!(movie_data)
-end
+movie2 = Movie.create!(
+  title: "Interstellar",
+  synopsis: "Un groupe d'explorateurs voyage à travers un trou de ver.",
+  year: 2014,
+  duration: 169,
+  rating: 8.6,
+  category: "Science-fiction",
+  platform: prime,
+  director: "Christopher Nolan",
+  poster_url: "interstellar.jpg",
+  trailer: "https://www.youtube.com/watch?v=zSWdZVtXT7E"
+)
 
-puts "Base de données prête avec #{Movie.count} films !"
+puts "Creating reviews..."
+Review.create!(movie: movie1, rating: 9, comment: "Chef d'œuvre visuel.")
+Review.create!(movie: movie1, rating: 8, comment: "Très intelligent et captivant.")
+Review.create!(movie: movie2, rating: 10, comment: "Magnifique et émouvant.")
+
+puts "Creating historic..."
+Historic.create!(user: user, movie: movie1, watched_at: Time.now)
+Historic.create!(user: user, movie: movie2, watched_at: Time.now)
+
+puts "Done!"
