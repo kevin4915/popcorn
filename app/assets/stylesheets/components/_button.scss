@@ -1,0 +1,31 @@
+.btn-action,
+.login-links .btn-primary,
+input[type="submit"].btn-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 52px;
+  box-sizing: border-box;
+  padding: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #e50914, #b0060f);
+  border: none;
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 17px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4);
+  transition: transform 0.1s;
+
+  &:hover {
+    background: linear-gradient(135deg, #b0060f, #8b0000) !important;
+    color: #fff !important;
+    transform: scale(0.97);
+  }
+}

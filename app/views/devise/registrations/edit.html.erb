@@ -1,115 +1,114 @@
-<div class="account-page py-5">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+<div class="login-page">
+  <div class="login-card">
+    <%= image_tag "logo.png", class: "login-logo" %>
+    <h2>Mon profil 🍿</h2>
+    <p class="login-subtitle">Mettez à jour vos informations personnelles et gérez vos abonnements</p>
 
-        <div class="account-card shadow-sm">
-          <div class="account-card-header">
-            <h2 class="account-title mb-1">Mon profil</h2>
-            <p class="account-subtitle mb-0">
-              Mettez à jour vos informations personnelles et gérez vos abonnements.
-            </p>
-          </div>
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <%= f.error_notification %>
 
-          <div class="account-card-body">
-            <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-              <%= f.error_notification %>
+      <%= f.input :first_name,
+                  required: true,
+                  label: "Prénom",
+                  input_html: { class: "login-input" },
+                  label_html: { class: "login-label" } %>
 
-              <div class="form-section mb-4">
-                <h5 class="section-title">Informations personnelles</h5>
+      <%= f.input :last_name,
+                  required: true,
+                  label: "Nom",
+                  input_html: { class: "login-input" },
+                  label_html: { class: "login-label" } %>
 
-                <div class="form-inputs-box">
-                  <%= f.input :first_name, label: "Prénom", required: true %>
+      <%= f.input :email,
+                  required: true,
+                  label: "Adresse e-mail",
+                  input_html: { class: "login-input" },
+                  label_html: { class: "login-label" } %>
 
-                  <%= f.input :last_name, label: "Nom", required: true %>
-
-                  <%= f.input :email, label: "Adresse e-mail", required: true %>
-
-                  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-                    <div class="alert alert-warning mt-3 mb-3">
-                      En attente de confirmation pour : <strong><%= resource.unconfirmed_email %></strong>
-                    </div>
-                  <% end %>
-
-                  <%= f.input :password,
-                              label: "Nouveau mot de passe",
-                              hint: "Laisser vide si vous ne voulez pas le changer",
-                              required: false,
-                              input_html: { autocomplete: "new-password" } %>
-
-                  <%= f.input :password_confirmation,
-                              label: "Confirmer le nouveau mot de passe",
-                              required: false,
-                              input_html: { autocomplete: "new-password" } %>
-
-                  <%= f.input :current_password,
-                              label: "Mot de passe actuel",
-                              hint: "Nous avons besoin de votre mot de passe actuel pour confirmer vos modifications",
-                              required: true,
-                              input_html: { autocomplete: "current-password" } %>
-                </div>
-              </div>
-
-              <div class="form-section mb-4">
-                <h5 class="section-title">Mes abonnements</h5>
-
-                <div class="subscriptions-grid">
-                  <label class="subscription-option">
-                    <%= f.check_box :Netflix, class: "subscription-checkbox" %>
-                    <div class="subscription-card">
-                      <span class="subscription-checkmark">✓</span>
-                      <%= image_tag "Logo_netflix.png", class: "subscription-logo", alt: "Netflix" %>
-                      <span class="subscription-name">Netflix</span>
-                    </div>
-                  </label>
-
-                  <label class="subscription-option">
-                    <%= f.check_box :DisneyPlus, class: "subscription-checkbox" %>
-                    <div class="subscription-card">
-                      <span class="subscription-checkmark">✓</span>
-                      <%= image_tag "Logo_disney.png", class: "subscription-logo", alt: "Disney+" %>
-                      <span class="subscription-name">Disney+</span>
-                    </div>
-                  </label>
-
-                  <label class="subscription-option">
-                    <%= f.check_box :AmazonPrime, class: "subscription-checkbox" %>
-                    <div class="subscription-card">
-                      <span class="subscription-checkmark">✓</span>
-                      <%= image_tag "Logo_amazon_prime.png", class: "subscription-logo", alt: "Amazon Prime" %>
-                      <span class="subscription-name">Amazon Prime</span>
-                    </div>
-                  </label>
-
-                  <label class="subscription-option">
-                    <%= f.check_box :CanalPlus, class: "subscription-checkbox" %>
-                    <div class="subscription-card">
-                      <span class="subscription-checkmark">✓</span>
-                      <%= image_tag "Logo_canal.png", class: "subscription-logo", alt: "Canal+" %>
-                      <span class="subscription-name">Canal+</span>
-                    </div>
-                  </label>
-
-                  <label class="subscription-option">
-                    <%= f.check_box :HBO, class: "subscription-checkbox" %>
-                    <div class="subscription-card">
-                      <span class="subscription-checkmark">✓</span>
-                      <%= image_tag "Logo_HBO.png", class: "subscription-logo", alt: "HBO" %>
-                      <span class="subscription-name">HBO</span>
-                    </div>
-                  </label>
-                </div>
-              </div>
-
-              <div class="account-actions">
-                <%= link_to "Retour", request.referer || root_path, class: "btn btn-outline-secondary" %>
-                <%= f.button :submit, "Enregistrer mes modifications", class: "btn btn-success px-4" %>
-              </div>
-            <% end %>
-          </div>
+      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+        <div class="alert alert-warning mt-3 mb-3">
+          En attente de confirmation pour : <strong><%= resource.unconfirmed_email %></strong>
         </div>
+      <% end %>
 
+      <%= f.input :password,
+                  required: false,
+                  label: "Nouveau mot de passe",
+                  hint: "Laisser vide si vous ne voulez pas le changer",
+                  input_html: { autocomplete: "new-password", class: "login-input" },
+                  label_html: { class: "login-label" } %>
+
+      <%= f.input :password_confirmation,
+                  required: false,
+                  label: "Confirmer le nouveau mot de passe",
+                  input_html: { autocomplete: "new-password", class: "login-input" },
+                  label_html: { class: "login-label" } %>
+
+      <%= f.input :current_password,
+                  required: true,
+                  label: "Mot de passe actuel",
+                  hint: "Nous avons besoin de votre mot de passe actuel pour confirmer vos modifications",
+                  input_html: { autocomplete: "current-password", class: "login-input" },
+                  label_html: { class: "login-label" } %>
+
+      <!-- Abonnements -->
+      <p class="login-label">Mes abonnements</p>
+      <div class="subscriptions-grid">
+        <label class="subscription-option">
+          <%= f.check_box :Netflix, class: "subscription-checkbox" %>
+          <div class="subscription-card">
+            <span class="subscription-checkmark">✓</span>
+            <%= image_tag "Logo_netflix.png", class: "subscription-logo", alt: "Netflix" %>
+            <span class="subscription-name">Netflix</span>
+          </div>
+        </label>
+
+        <label class="subscription-option">
+          <%= f.check_box :DisneyPlus, class: "subscription-checkbox" %>
+          <div class="subscription-card">
+            <span class="subscription-checkmark">✓</span>
+            <%= image_tag "Logo_disney.png", class: "subscription-logo", alt: "Disney+" %>
+            <span class="subscription-name">Disney+</span>
+          </div>
+        </label>
+
+        <label class="subscription-option">
+          <%= f.check_box :AmazonPrime, class: "subscription-checkbox" %>
+          <div class="subscription-card">
+            <span class="subscription-checkmark">✓</span>
+            <%= image_tag "Logo_amazon_prime.png", class: "subscription-logo", alt: "Amazon Prime" %>
+            <span class="subscription-name">Amazon Prime</span>
+          </div>
+        </label>
+
+        <label class="subscription-option">
+          <%= f.check_box :CanalPlus, class: "subscription-checkbox" %>
+          <div class="subscription-card">
+            <span class="subscription-checkmark">✓</span>
+            <%= image_tag "Logo_canal.png", class: "subscription-logo", alt: "Canal+" %>
+            <span class="subscription-name">Canal+</span>
+          </div>
+        </label>
+
+        <label class="subscription-option">
+          <%= f.check_box :HBO, class: "subscription-checkbox" %>
+          <div class="subscription-card">
+            <span class="subscription-checkmark">✓</span>
+            <%= image_tag "Logo_HBO.png", class: "subscription-logo", alt: "HBO" %>
+            <span class="subscription-name">HBO</span>
+          </div>
+        </label>
       </div>
-    </div>
+
+      <div style="display: flex; gap: 12px; margin-top: 12px;">
+        <%= link_to "← Retour", request.referer || root_path, class: "btn-action" %>
+        <%= f.button :submit, "🍿 Enregistrer", class: "btn-action" %>
+      </div>
+
+      <div class="login-links">
+        <%= render "devise/shared/links" %>
+      </div>
+
+    <% end %>
   </div>
 </div>
