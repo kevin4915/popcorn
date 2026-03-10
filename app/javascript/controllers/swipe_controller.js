@@ -4,7 +4,6 @@ export default class extends Controller {
   static targets = ["card"]
 
   handleSwipe(event) {
-    // 1. On récupère le bouton cliqué (celui qui a le data-decision)
     const button = event.currentTarget
     const decision = button.dataset.decision
 

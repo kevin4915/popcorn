@@ -26,46 +26,4 @@
       </div>
     <% end %>
   <% end %>
-
-<div class="swipe-container" data-controller="swipe">
-  <% if @movies.empty? %>
-    <div class="empty-state">
-      <p>Plus de films trouvés, change tes filtres !</p>
-      <%= link_to "Réinitialiser", movies_path, class: "btn-reset" %>
-    </div>
-  <% else %>
-    <% @movies.reverse.each_with_index do |movie, index| %>
-      <div class="movie-card"
-           data-swipe-target="card"
-           data-movie-id="<%= movie.id %>"
-           style="z-index: <%= 100 - index %>;">
-
-        <% total = @movies.count %>
-        <div class="progress-bar">
-          <div class="progress" style="width: <%= ((index + 1).to_f / total) * 100 %>%"></div>
-        </div>
-
-        <img src="<%= movie.poster_url %>" alt="<%= movie.title %>" referrerpolicy="no-referrer">
-
-        <div class="card-info">
-          <h3><%= movie.title %> (<%= movie.year %>)</h3>
-          <p class="rating">Note : ⭐ <%= movie.rating || "4.5" %>/5</p>
-          <p class="synopsis"><%= movie.synopsis&.truncate(120) %></p>
-          <div class="actors-section">
-            <strong>Acteurs :</strong>
-            <p class="actors-list"><%= movie.actors %></p>
-          </div>
-        </div>
-
-        <div class="card-actions">
-          <button class="btn-dislike" data-action="click->swipe#handleSwipe" data-decision="dislike">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-          <button class="btn-like" data-action="click->swipe#handleSwipe" data-decision="like">
-            <i class="fa-solid fa-heart"></i>
-          </button>
-        </div>
-      </div>
-    <% end %>
-  <% end %>
 </div>

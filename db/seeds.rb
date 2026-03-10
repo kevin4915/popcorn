@@ -30,7 +30,8 @@ movie1 = Movie.create!(
   platform: netflix,
   director: "Christopher Nolan",
   poster_url: "inception.jpg",
-  trailer: "https://www.youtube.com/watch?v=YoHD9XEInc0"
+  trailer: "https://www.youtube.com/watch?v=YoHD9XEInc0",
+  actors: "Leonardo DiCaprio, Joseph Gordon-Levitt, Elliot Page"
 )
 
 movie2 = Movie.create!(
@@ -43,8 +44,12 @@ movie2 = Movie.create!(
   platform: prime,
   director: "Christopher Nolan",
   poster_url: "interstellar.jpg",
-  trailer: "https://www.youtube.com/watch?v=zSWdZVtXT7E"
+  trailer: "https://www.youtube.com/watch?v=zSWdZVtXT7E",
+  actors: "Matthew McConaughey, Anne Hathaway, Jessica Chastain"
 )
+
+puts "Creating user..."
+user = User.create!(email: "test@example.com", password: "password")
 
 puts "Creating reviews..."
 Review.create!(movie: movie1, rating: 9, comment: "Chef d'œuvre visuel.")
@@ -52,7 +57,7 @@ Review.create!(movie: movie1, rating: 8, comment: "Très intelligent et captivan
 Review.create!(movie: movie2, rating: 10, comment: "Magnifique et émouvant.")
 
 puts "Creating historic..."
-Historic.create!(user: user, movie: movie1, watched_at: Time.now)
-Historic.create!(user: user, movie: movie2, watched_at: Time.now)
+Historic.create!(user: user, movie: movie1)
+Historic.create!(user: user, movie: movie2)
 
 puts "Done!"
