@@ -1,14 +1,24 @@
 /* ————————————————————————————————
-   CENTRAGE GLOBAL
+   WRAPPER GLOBAL
 ——————————————————————————————— */
 
 .popcorn-wrapper {
   background: #000;
   min-height: 100vh;
-  padding: 40px 20px;
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* centre horizontalement */
+  align-items: center;
+  color: white;
+  font-family: 'Inter', sans-serif;
+
+  /*  Ombre rouge autour de toute la page */
+  box-shadow:
+    0 0 25px rgba(255, 0, 0, 0.6),
+    0 0 50px rgba(255, 0, 0, 0.4),
+    0 0 90px rgba(255, 0, 0, 0.25);
+  border-radius: 20px;
+  margin: 20px;
 }
 
 /* ————————————————————————————————
@@ -16,107 +26,107 @@
 ——————————————————————————————— */
 
 .popcorn-title {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
-  color: white;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
   text-align: center;
 }
 
 /* ————————————————————————————————
-   CARTE ROUGE DÉGRADÉE CENTRÉE
+   LIEN GLOBAL (carte cliquable)
 ——————————————————————————————— */
-
-.popcorn-card {
-  width: 100%;
-  max-width: 420px; /* largeur idéale mobile/tablette */
-  background: linear-gradient(180deg, #8B0000 0%, #E60000 100%);
-  border-radius: 22px;
-  padding: 20px;
-  margin-bottom: 28px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* centre l’image + texte */
-}
-
-/* ————————————————————————————————
-   IMAGE
-——————————————————————————————— */
-
-.popcorn-poster img {
-  width: 100%;
-  height: auto;
-  border-radius: 16px;
-  margin-bottom: 16px;
-}
-
-/* ————————————————————————————————
-   TEXTE
-——————————————————————————————— */
-
-.popcorn-info {
-  width: 100%;
-  text-align: center; /* centre le texte */
-}
-
-.popcorn-info h2 {
-  font-size: 22px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 8px;
-}
-
-/* ————————————————————————————————
-   META (note + année)
-——————————————————————————————— */
-
-.popcorn-meta {
-  font-size: 15px;
-  font-weight: 600;
-  color: #FFD700;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-}
-
-.popcorn-year {
-  color: #fff;
-  opacity: 0.9;
-}
-
-/* ————————————————————————————————
-   DESCRIPTION
-——————————————————————————————— */
-
-.popcorn-description {
-  font-size: 15px;
-  line-height: 1.5;
-  color: #f1f1f1;
-  opacity: 0.95;
-}
 
 .popcorn-card-link {
   text-decoration: none;
   color: inherit;
-  display: block;
+  width: 100%;
+  max-width: 480px;
 }
 
-.show-trailer-button {
-  display: block;
-  background: #8a7f7a; /* brun/gris chaud comme ton Figma */
-  color: white;
-  padding: 12px 22px;
+/* ————————————————————————————————
+   CARTE ROUGE DÉGRADÉE (HORIZONTALE)
+——————————————————————————————— */
+
+.popcorn-card.horizontal {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  border-radius: 22px;
+  padding: 16px;
+  margin-bottom: 24px;
+
+}
+
+
+
+/* ————————————————————————————————
+   IMAGE À GAUCHE
+——————————————————————————————— */
+
+.popcorn-poster-left img {
+  width: 110px;
+  height: 160px;
+  object-fit: cover;
   border-radius: 14px;
-  text-align: center;
-  font-weight: 600;
-  text-decoration: none;
-  margin: 0 auto 20px auto;
-  width: fit-content;
-  transition: 0.2s ease;
 }
 
-.show-trailer-button:hover {
-  background: #7a6f6a; /* léger assombrissement au hover */
+/* ————————————————————————————————
+   TEXTE À DROITE
+——————————————————————————————— */
+
+.popcorn-info-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* ————————————————————————————————
+   TITRE + GENRES + DESCRIPTION
+——————————————————————————————— */
+
+.popcorn-movie-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: white;
+}
+
+.popcorn-genres {
+  font-size: 13px;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+.popcorn-description {
+  font-size: 14px;
+  line-height: 1.4;
+  opacity: 0.95;
+}
+
+.popcorn-poster img {
+  width: 140px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+.popcorn-info {
+  max-width: 180px;
+}
+
+.popcorn-description {
+  font-size: 13px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.popcorn-category {
+  font-size: 13px;
+  color: #ff4d4d;
+  margin: -4px 0 6px 0;
+  font-weight: 600;
 }

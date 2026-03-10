@@ -13,6 +13,10 @@
   <!-- Infos principales -->
   <h1 class="show-title"><%= @movie.title %> (<%= @movie.year %>)</h1>
   <p class="show-director">De <%= @movie.director %></p>
+  <p class="show-category">
+    Catégorie : <%= @movie.category %>
+  </p>
+
 
   <%= link_to @movie.trailer_url, target: "_blank", class: "show-trailer-button" do %>
     Bande Annonce
