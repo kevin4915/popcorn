@@ -1,5 +1,5 @@
 class HistoricsController < ApplicationController
   def index
-    @movies = Movie.all
+    @movies = current_user.movies
   end
 end
