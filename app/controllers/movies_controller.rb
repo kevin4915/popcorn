@@ -61,13 +61,43 @@ class MoviesController < ApplicationController
     head :ok
   end
 
+  def surprise
+    @movie = Movie.order("RANDOM()").first
+  end
+
+  def recommended
+    # Films que l'utilisateur a vus
+    seen_ids = current_user.historics.pluck(:movie_id)
+
+    # Utilisateurs qui ont vu les mêmes films
+    similar_users = Historic.where(movie_id: seen_ids)
+                            .where.not(user_id: current_user.id)
+                            .pluck(:user_id)
+
+    # Films vus par ces utilisateurs (mais pas encore vus par toi)
+    similar_movies = Movie.joins(:historics)
+                          .where(historics: { user_id: similar_users })
+                          .where.not(id: seen_ids)
+                          .distinct
+
+    # Films populaires (beaucoup de reviews), non vus
+    popular_unseen = Movie.left_joins(:reviews)
+                          .where.not(id: seen_ids)
+                          .group("movies.id")
+                          .order("COUNT(reviews.id) DESC")
+                          .limit(20)
+
+    # Fusion intelligente
+    @movies = (similar_movies + popular_unseen).uniq
+  end
+
   private
 
   def tmdb_get(path, query = {})
     HTTParty.get(
       "https://api.themoviedb.org/3/#{path}",
       headers: {
-        "Authorization" => "Bearer #{ENV["TMDB_API_TOKEN"]}",
+        "Authorization" => "Bearer #{ENV.fetch('TMDB_API_TOKEN', nil)}",
         "Content-Type" => "application/json"
       },
       query: query
@@ -85,7 +115,7 @@ class MoviesController < ApplicationController
       movie.synopsis  = result["overview"]
       movie.year      = (result["release_date"] || result["first_air_date"])&.split("-")&.first&.to_i
       movie.rating    = (result["vote_average"].to_f / 2).round(1)
-      movie.poster_url = "https://image.tmdb.org/t/p/w500#{result["poster_path"]}"
+      movie.poster_url = "https://image.tmdb.org/t/p/w500#{result['poster_path']}"
       movie.category  = params[:genre]
       movie.platform  = "TMDB"
     end
@@ -125,7 +155,7 @@ class MoviesController < ApplicationController
       "Thriller" => 53,
       "Science Fiction" => 878,
       "Horreur" => 27,
-      "Romance" => 10749,
+      "Romance" => 10_749,
       "Fantasy" => 14
     }[genre]
   end
