@@ -11,14 +11,14 @@
 
     <p>Temps disponible</p>
     <div class="durations">
-      <%= f.radio_button :duration, "1h", id: "d1h" %>
-      <%= label_tag "d1h", "1h" %>
-
       <%= f.radio_button :duration, "1h30", id: "d1h30" %>
       <%= label_tag "d1h30", "1h30" %>
 
-      <%= f.radio_button :duration, "2h+", id: "d2h" %>
-      <%= label_tag "d2h", "2h+" %>
+      <%= f.radio_button :duration, "2h", id: "d2h" %>
+      <%= label_tag "d2h", "2h" %>
+
+      <%= f.radio_button :duration, "2h30+", id: "d2h30" %>
+      <%= label_tag "d2h30", "2h30+" %>
     </div>
 
     <p>Avec qui ?</p>
@@ -34,9 +34,7 @@
     </div>
 
     <p>Genre</p>
-    <%= f.select :genre, ["Action", "Comédie", "Drame", "Thriller",
-                          "Science Fiction", "Horreur", "Romance", "Fantasy"],
-                          { include_blank: "Choisir un genre" } %>
+    <%= f.select :genre, ["Action", "Comédie", "Drame", "Thriller", "Science Fiction", "Horreur", "Romance", "Fantasy"], { include_blank: "Choisir un genre" } %>
 
     <button type="submit" class="btn-action">
       <%= image_tag "logo.png", class: "btn-logo" %>
