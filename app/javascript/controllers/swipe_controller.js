@@ -7,7 +7,7 @@ export default class extends Controller {
     const button = event.currentTarget
     const decision = button.dataset.decision
 
-    const card = button.closest('.movie-card')
+    const card = button.closest('.swipe-card')
     const movieId = card.dataset.movieId
 
     card.classList.remove('swiped-left', 'swiped-right')
