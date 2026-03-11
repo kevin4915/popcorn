@@ -127,7 +127,14 @@ class PagesController < ApplicationController
 
   def extract_top_actors(details)
     cast = details.dig("credits", "cast") || []
-    cast.first(5).map { |actor| actor["name"] }.join(", ")
+
+    cast.first(5).map do |actor|
+      {
+        "name" => actor["name"],
+        "character" => actor["character"],
+        "photo_url" => actor["profile_path"].present? ? "https://image.tmdb.org/t/p/w185#{actor["profile_path"]}" : nil
+      }
+    end.to_json
   end
 
   def extract_trailer_key(details)

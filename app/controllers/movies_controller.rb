@@ -56,10 +56,8 @@ class MoviesController < ApplicationController
   def show
     @movie = Movie.find(params[:id])
 
-    if @movie.actors.blank? || @movie.trailer.blank? || @movie.duration.blank? || @movie.platform.blank?
-      enrich_movie_from_tmdb!(@movie)
-      @movie.save!
-    end
+    enrich_movie_from_tmdb!(@movie)
+    @movie.save!
 
     @actors = parse_actors(@movie.actors)
     @platforms = parse_platforms(@movie.platform)
@@ -126,7 +124,14 @@ class MoviesController < ApplicationController
 
   def extract_top_actors(details)
     cast = details.dig("credits", "cast") || []
-    cast.first(5).map { |actor| actor["name"] }.join(", ")
+
+    cast.first(4).map do |actor|
+      {
+        "name" => actor["name"],
+        "character" => actor["character"],
+        "photo_url" => actor["profile_path"].present? ? "https://image.tmdb.org/t/p/w185#{actor["profile_path"]}" : nil
+      }
+    end.to_json
   end
 
   def extract_trailer_key(details)
@@ -169,11 +174,14 @@ class MoviesController < ApplicationController
     end
   end
 
-  def parse_actors(actors_string)
-    return [] if actors_string.blank?
+def parse_actors(actors_data)
+  return [] if actors_data.blank?
 
-    actors_string.split(",").map(&:strip).first(5)
-  end
+  parsed = JSON.parse(actors_data)
+  parsed.is_a?(Array) ? parsed : []
+rescue JSON::ParserError
+  []
+end
 
   def parse_platforms(platform_string)
     return [] if platform_string.blank?
