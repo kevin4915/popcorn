@@ -1,3 +1,4 @@
+/* --- Wrapper global --- */
 .recommended-wrapper {
   background: #000;
   padding: 40px 20px;
@@ -5,42 +6,78 @@
   color: white;
 }
 
+/* --- Titre --- */
 .recommended-title {
   text-align: center;
   font-size: 32px;
   margin-bottom: 30px;
+  font-weight: 700;
 }
 
+/* --- Carte recommandation --- */
 .recommended-card {
   display: flex;
+  gap: 20px;
   background: #111;
   border: 1px solid #e50914;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(229, 9, 20, 0.4);
-  overflow: hidden;
-  margin-bottom: 25px;
-}
-
-.recommended-image img {
-  width: 180px;
-  height: 260px;
-  object-fit: cover;
-}
-
-.recommended-info {
   padding: 20px;
+  margin-bottom: 25px;
+  align-items: flex-start;
 }
 
+/* --- Image --- */
+.recommended-image img {
+  width: 120px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* --- Bloc texte --- */
+.recommended-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recommended-info h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.recommended-info p {
+  font-size: 14px;   /* avant ~16px */
+  line-height: 1.3;
+  opacity: 0.85;
+}
+
+
+/* --- Note --- */
+.recommended-rating {
+  font-size: 18px;
+  margin-top: 5px;
+}
+
+/* --- Bouton Voir le film --- */
 .recommended-show-button {
-  display: inline-block;
-  margin-top: 20px;
+  margin-top: auto;
   background: #e50914;
   padding: 10px 20px;
   border-radius: 8px;
   color: white;
   text-decoration: none;
+  font-weight: bold;
+  transition: 0.2s;
 }
 
+.recommended-show-button:hover {
+  background: #b20710;
+}
+
+/* --- Message si aucune reco --- */
 .no-reco {
   text-align: center;
   margin-top: 40px;
