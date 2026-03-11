@@ -1,47 +1,93 @@
 <div class="show-wrapper">
 
-  <!-- Bouton retour -->
-  <%= link_to movies_path, class: "show-back" do %>
+  <%= link_to root_path, class: "show-back" do %>
     ← Retour
   <% end %>
 
-  <!-- Affiche du film -->
   <div class="show-poster">
     <%= image_tag @movie.poster_url, alt: @movie.title %>
   </div>
 
-  <!-- Infos principales -->
-  <h1 class="show-title"><%= @movie.title %> (<%= @movie.year %>)</h1>
-  <p class="show-director">De <%= @movie.director %></p>
-  <p class="show-category">
-    Catégorie : <%= @movie.category %>
-  </p>
+  <h1 class="show-title">
+    <%= @movie.title %>
+    <% if @movie.year.present? %>
+      (<%= @movie.year %>)
+    <% end %>
+  </h1>
 
-
-  <%= link_to @movie.trailer, target: "_blank", class: "show-trailer-button" do %>
-    Bande Annonce
+  <% if @movie.director.present? %>
+    <p class="show-director">De <%= @movie.director %></p>
   <% end %>
 
-  <!-- Meta : durée + genres + note -->
+  <% if @movie.category.present? %>
+    <p class="show-category">
+      Catégorie : <%= @movie.category %>
+    </p>
+  <% end %>
+
   <div class="show-meta">
-    <span>⏱️ <%= @movie.duration %> min</span>
-    <span>⭐ <%= @movie.rating %>/10</span>
+    <% if @movie.duration.present? %>
+      <span>⏱️ <%= @movie.duration %> min</span>
+    <% end %>
+
+    <% if @movie.rating.present? %>
+      <span>⭐ <%= @movie.rating %>/5</span>
+    <% end %>
   </div>
 
-  <p class="show-actors">
-    Avec :
-    <%= @movie.actors %>
-  </p>
-
-  <!-- Description -->
-  <h3 class="show-synopsis-title">Synopsis</h3>
   <p class="show-description">
-    <%= @movie.synopsis %>
+    <%= @movie.synopsis.presence || "Synopsis indisponible." %>
   </p>
 
-  <!-- Bouton voir le film -->
-  <%= link_to "#", class: "show-watch-button" do %>
-    Voir le film sur Disney+
+  <% if @actors.present? %>
+    <div class="show-actors">
+      <h2 class="show-section-title">Acteurs principaux</h2>
+      <p><%= @actors.join(", ") %></p>
+    </div>
+  <% end %>
+
+  <% if @platforms.present? %>
+    <div class="show-platforms">
+      <h2 class="show-section-title">Disponible sur</h2>
+      <div class="platform-tags">
+        <% @platforms.each do |platform| %>
+          <span class="platform-tag"><%= platform %></span>
+        <% end %>
+      </div>
+
+      <p class="show-platforms-text">
+        Disponible en France sur <%= @platforms.join(", ") %>.
+      </p>
+
+      <%= link_to "#", class: "show-watch-button" do %>
+        Voir le film sur <%= @platforms.first %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="show-platforms">
+      <h2 class="show-section-title">Disponible sur</h2>
+      <p class="show-platforms-empty">
+        Aucune plateforme renseignée pour la France.
+      </p>
+    </div>
+  <% end %>
+
+  <% if @movie.trailer.present? %>
+    <div class="show-trailer">
+      <h2 class="show-section-title">Bande-annonce</h2>
+
+      <div class="trailer-frame">
+        <iframe
+          width="100%"
+          height="315"
+          src="https://www.youtube.com/embed/<%= @movie.trailer %>"
+          title="Bande-annonce de <%= @movie.title %>"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
   <% end %>
 
 </div>
