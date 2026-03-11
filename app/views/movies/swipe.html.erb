@@ -38,6 +38,17 @@
               <i class="fa-solid fa-heart"></i>
             </button>
           </div>
+
+          <p class="synopsis">
+            <%= movie.synopsis.present? ? truncate(movie.synopsis, length: 140) : "Synopsis indisponible." %>
+          </p>
+
+          <% if movie.actors.present? %>
+            <div class="actors-section">
+              <strong>Acteurs principaux</strong>
+              <p class="actors-list"><%= movie.actors %></p>
+            </div>
+          <% end %>
         </div>
       <% end %>
 
