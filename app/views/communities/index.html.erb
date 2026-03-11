@@ -1,0 +1,49 @@
+<div class="popcorn-wrapper">
+  <h1 class="popcorn-title">Communauté</h1>
+
+  <div class="community-tabs">
+    <%= link_to "Tout le monde", community_path(filter: 'all'), class: @filter == 'all' ? 'active' : '' %>
+    <%= link_to "Mes amis", community_path(filter: 'friends'), class: @filter == 'friends' ? 'active' : '' %>
+  </div>
+
+  <div class="community-feed">
+    <% @recent_likes.each do |historic| %>
+      <div class="popcorn-card horizontal community-card">
+        <div class="popcorn-poster">
+          <%= image_tag historic.movie.poster_url, alt: historic.movie.title %>
+        </div>
+
+        <div class="popcorn-info">
+          <p class="community-activity">
+            <strong><%= historic.user.first_name || historic.user.email.split('@').first %></strong>
+            a aimé <strong><%= historic.movie.title %></strong>
+          </p>
+
+          <div class="popcorn-meta">
+            ⭐ <%= historic.movie.rating || "—" %>/10
+            <span class="popcorn-year">🎞️ <%= historic.movie.year %></span>
+          </div>
+
+          <p class="popcorn-description">
+            <%= truncate(historic.movie.synopsis, length: 150) %>
+          </p>
+
+          <%= link_to "Voir le film", movie_path(historic.movie), class: "btn-popcorn-small" %>
+
+          <div class="community-comments">
+            <% historic.comments.each do |comment| %>
+              <div class="comment-item">
+                <strong><%= comment.user.first_name || "Utilisateur" %> :</strong> <%= comment.content %>
+              </div>
+            <% end %>
+
+            <%= form_with model: [historic, Comment.new], class: "comment-form", style: "display: flex; gap: 10px; align-items: center; margin-top: 10px;" do |f| %>
+             <%= f.text_field :content, placeholder: "Ajouter un commentaire...", style: "flex: 1; background: #1a1a1a; border: 1px solid #444; color: white; padding: 8px; border-radius: 4px;" %>
+             <%= f.submit "Envoyer", style: "background: #E50914; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

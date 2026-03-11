@@ -9,5 +9,6 @@ class User < ApplicationRecord
   has_many :platforms, through: :user_platforms
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-
+  has_many :friendships
+  has_many :friends, -> { where(friendships: { status: 'accepted' }) }, through: :friendships
 end
