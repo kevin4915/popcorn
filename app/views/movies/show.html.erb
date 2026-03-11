@@ -55,10 +55,6 @@
         <% end %>
       </div>
 
-      <p class="show-platforms-text">
-        Disponible en France sur <%= @platforms.join(", ") %>.
-      </p>
-
       <%= link_to "#", class: "show-watch-button" do %>
         Voir le film sur <%= @platforms.first %>
       <% end %>
@@ -87,6 +83,13 @@
           allowfullscreen>
         </iframe>
       </div>
+    </div>
+  <% else %>
+    <div class="show-trailer">
+      <h2 class="show-section-title">Bande-annonce</h2>
+      <p class="show-trailer-empty">
+        Aucune bande-annonce disponible.
+      </p>
     </div>
   <% end %>
 
