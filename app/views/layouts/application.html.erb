@@ -41,23 +41,5 @@
     <% end %>
 
     <%= yield %>
-
-    <script>
-      document.addEventListener('turbo:load', function() {
-        const avatarDropdown = document.getElementById('avatarDropdown');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-
-        if (avatarDropdown && dropdownMenu) {
-          avatarDropdown.addEventListener('click', function(e) {
-            e.stopPropagation();
-            dropdownMenu.classList.toggle('active');
-          });
-
-          document.addEventListener('click', function() {
-            dropdownMenu.classList.remove('active');
-          });
-        }
-      });
-    </script>
   </body>
 </html>
