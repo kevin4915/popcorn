@@ -29,7 +29,7 @@ export default class extends Controller {
       card.remove()
 
       if (decision === "like") {
-        window.location.href = `/movies/${movieId}`
+        window.location.href = `/movies/${movieId}?from=home`
       } else if (this.cardTargets.length === 0) {
         this.endStateTarget.style.display = "flex"
       }
