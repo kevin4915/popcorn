@@ -1,5 +1,5 @@
 <div class="recommended-wrapper">
-  <h1 class="recommended-title">Recommandés pour toi ⭐</h1>
+  <h1 class="recommended-title">Recommandés pour toi 🍿</h1>
 
   <% if @movies.any? %>
     <% @movies.each do |movie| %>
@@ -11,7 +11,7 @@
         <div class="recommended-info">
           <h2><%= movie.title %></h2>
           <p><%= movie.synopsis %></p>
-
+          <p class="recommended-rating">⭐ <%= movie.rating || "N/A" %></p>
           <%= link_to "Voir le film", movie_path(movie), class: "recommended-show-button" %>
         </div>
       </div>
