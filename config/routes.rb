@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
-  root to: "pages#home"
+  root "pages#home"
   resources :movies, only: [:index, :show] do
     member do
       post :swipe

@@ -1,16 +1,225 @@
 .show-wrapper {
+  margin: 0 16px 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(229, 9, 20, 0.75);
+  color: white;
+}
+
+.show-back {
+  color: #e50914;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.show-poster {
+  img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+}
+
+.show-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.show-director {
+  font-size: 14px;
+  color: #aaa;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.show-category {
+  font-size: 13px;
+  color: #e50914;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.show-trailer-button {
+  display: block;
+  background: #2a2a2a;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 16px;
+  border: 1px solid #444;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #333;
+    color: #fff;
+  }
+}
+
+.show-meta {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 16px;
+}
+
+.show-description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #ccc;
+  margin-bottom: 24px;
+}
+
+.show-watch-button {
+  display: block;
+  background: linear-gradient(135deg, #e50914, #b0060f);
+  color: white !important;
+  padding: 14px 20px;
+  border-radius: 14px;
+  text-align: center;
+  font-weight: 700;
+  text-decoration: none;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4);
+  transition: transform 0.1s;
+  font-size: 15px;
+
+  &:hover {
+    background: linear-gradient(135deg, #b0060f, #8b0000);
+    transform: scale(0.97);
+  }
+}
+
+.show-cast {
+  h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #fff;
+  }
+}
+
+.actors-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.actor-card {
+  text-align: center;
+}
+
+.actor-photo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e50914;
+  margin-bottom: 6px;
+}
+
+.actor-photo-placeholder {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #2a2a2a;
+  border: 2px solid #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 6px;
+  color: #666;
+  font-size: 24px;
+}
+
+.actor-name {
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.actor-character {
+  color: #aaa;
+  font-size: 10px;
+  font-style: italic;
+}
+
+.show-platforms,
+.show-actors,
+.show-trailer {
+  margin-top: 2rem;
+}
+
+.show-section-title {
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.platform-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.platform-tag {
+  display: inline-block;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #222;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.show-platforms-text,
+.show-platforms-empty {
+  color: #555;
+  line-height: 1.5;
+}
+
+.show-watch-button,
+.show-trailer-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.85rem 1.2rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.show-watch-button {
+  background: #111827;
+  color: white;
+}
+
+.show-trailer-button {
+  background: #e50914;
+  color: white;
+}
+
+.trailer-frame {
+  overflow: hidden;
+  border-radius: 16px;
   background: #000;
-  padding: 24px;
-  border-radius: 22px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
 
-  /* Bordure rouge */
-  border: 2px solid #E60000;
-
-  /* Glow rouge autour */
-  box-shadow:
-    0 0 12px rgba(255, 0, 0, 0.7),
-    0 0 28px rgba(255, 0, 0, 0.5),
-    0 0 48px rgba(255, 0, 0, 0.3);
-
-  margin: 20px;
+.trailer-frame iframe {
+  display: block;
+  width: 100%;
+  min-height: 315px;
 }
