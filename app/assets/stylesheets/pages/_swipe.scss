@@ -1,0 +1,161 @@
+.swipe-wrapper {
+  margin: 0 16px 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(229, 9, 20, 0.75);
+}
+
+.swipe-container {
+  position: relative;
+  width: 100%;
+  height: 750px;
+}
+
+.empty-state {
+  text-align: center;
+  margin-top: 100px;
+  color: #888;
+
+  .btn-reset {
+    display: inline-block;
+    margin-top: 15px;
+    color: #e50914;
+    text-decoration: none;
+    font-weight: bold;
+  }
+}
+
+.swipe-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+  border-radius: 12px;
+  color: white;
+  padding: 20px;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &.swiped-right::after {
+    content: "LIKE";
+    position: absolute;
+    top: 45px;
+    left: 20px;
+    color: #2ecc71;
+    border: 4px solid #2ecc71;
+    padding: 5px 15px;
+    font-size: 2.5rem;
+    font-weight: bold;
+    transform: rotate(-15deg);
+    border-radius: 10px;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  &.swiped-left::after {
+    content: "NOPE";
+    position: absolute;
+    top: 45px;
+    right: 20px;
+    color: #e74c3c;
+    border: 4px solid #e74c3c;
+    padding: 5px 15px;
+    font-size: 2.5rem;
+    font-weight: bold;
+    transform: rotate(15deg);
+    border-radius: 10px;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+    flex-shrink: 0;
+    border-radius: 10px;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background: #333;
+    margin-bottom: 15px;
+    border-radius: 2px;
+  }
+
+  .progress {
+    height: 100%;
+    background: #e50914;
+    transition: width 0.3s;
+    border-radius: 2px;
+  }
+
+  .card-info {
+    padding: 15px 0;
+    flex-grow: 1;
+    overflow-y: visible;
+
+    h3        { font-size: 1.2rem; margin-bottom: 5px; }
+    .rating   { color: #f1c40f; font-weight: bold; margin-bottom: 8px; }
+    .synopsis { font-size: 0.9rem; color: #ccc; line-height: 1.4; }
+
+    .actors-section {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      border-top: 1px solid #333;
+      padding-top: 8px;
+
+      strong       { color: #e50914; }
+      .actors-list { color: #aaa; }
+    }
+  }
+
+  .card-actions {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 10px;
+    flex-shrink: 0;
+
+    button {
+      border: none;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-dislike { background: #2a2a2a; color: white; }
+    .btn-like    { background: linear-gradient(135deg, #e50914, #b0060f); color: white; box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4); }
+    button:hover { transform: scale(1.1); }
+  }
+}
+
+.end-state {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  height: 60vh;
+  text-align: center;
+
+  p {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+  }
+}
