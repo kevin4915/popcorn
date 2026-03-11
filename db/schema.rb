@@ -35,6 +35,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_082753) do
     t.text "synopsis"
     t.string "title"
     t.string "trailer"
+    t.string "trailer_url"
     t.datetime "updated_at", null: false
     t.integer "year"
   end

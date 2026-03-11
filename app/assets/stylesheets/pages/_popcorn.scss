@@ -130,3 +130,26 @@
   margin: -4px 0 6px 0;
   font-weight: 600;
 }
+
+.popcorn-pagination {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.next-page-button {
+  background: #111;
+  border: 1px solid #E60000;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s ease-in-out;
+
+  &:hover {
+    background: #E60000;
+    transform: scale(1.05);
+  }
+}

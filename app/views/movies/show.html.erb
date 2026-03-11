@@ -28,7 +28,13 @@
     <span>⭐ <%= @movie.rating %>/10</span>
   </div>
 
+  <p class="show-actors">
+    Avec :
+    <%= @movie.actors %>
+  </p>
+
   <!-- Description -->
+  <h3 class="show-synopsis-title">Synopsis</h3>
   <p class="show-description">
     <%= @movie.synopsis %>
   </p>
