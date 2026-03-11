@@ -1,0 +1,33 @@
+<div class="calendar-page">
+  <div class="calendar-hero">
+    <h1>Prochaines sorties</h1>
+  </div>
+
+  <% @upcoming_by_date.each do |date, movies| %>
+    <section class="calendar-row">
+      <div class="calendar-row-header">
+        <h2><%= l(Date.parse(date), format: :long) rescue date %></h2>
+      </div>
+
+      <div class="calendar-grid">
+        <% movies.each do |movie| %>
+          <%= link_to movie_path(movie[:id]), class: "mini-movie-card" do %>
+            <div class="mini-poster-wrap">
+              <% if movie[:poster_url].present? %>
+                <%= image_tag movie[:poster_url], class: "mini-poster", alt: movie[:title] %>
+              <% end %>
+
+              <div class="mini-card-overlay">
+                <h3><%= movie[:title] %></h3>
+
+                <% if movie[:rating].present? %>
+                  <span class="mini-rating">⭐ <%= movie[:rating] %>/5</span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+</div>
