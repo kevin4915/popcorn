@@ -1,6 +1,6 @@
 <div class="show-wrapper">
 
-  <%= link_to root_path, class: "show-back" do %>
+  <%= link_to params[:from] == "historics" ? historics_path : root_path, class: "show-back" do %>
     ← Retour
   <% end %>
 

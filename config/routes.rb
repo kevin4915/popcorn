@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       post :swipe
     end
   end
-  resources :historics, only: [:index]
+  resources :historics, only: [:index, :destroy]
   resources :communities, only: [:index]
   get "community", to: "communities#index"
   resources :historics, only: [:index] do
