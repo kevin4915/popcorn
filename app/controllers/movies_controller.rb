@@ -147,7 +147,26 @@ class MoviesController < ApplicationController
     providers = Array(france["flatrate"])
     return nil if providers.blank?
 
-    providers.map { |provider| provider["provider_name"] }.uniq.join(", ")
+    names = providers.map { |provider| normalize_platform(provider["provider_name"]) }
+
+    names.compact.uniq.join(", ")
+  end
+
+  def normalize_platform(name)
+    case name
+    when /Netflix/i
+      "Netflix"
+    when /Disney/i
+      "Disney+"
+    when /Prime/i
+      "Prime Video"
+    when /Canal/i
+      "Canal+"
+    when /HBO/i
+      "HBO Max"
+    else
+      name
+    end
   end
 
   def parse_actors(actors_string)
