@@ -14,6 +14,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_115901) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+  create_table "badges", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "description"
+    t.string "icon"
+    t.string "name"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "comments", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -74,6 +82,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_115901) do
     t.index ["movie_id"], name: "index_reviews_on_movie_id"
   end
 
+  create_table "user_badges", force: :cascade do |t|
+    t.bigint "badge_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["badge_id"], name: "index_user_badges_on_badge_id"
+    t.index ["user_id"], name: "index_user_badges_on_user_id"
+  end
+
   create_table "user_platforms", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "platform_id", null: false
@@ -116,6 +133,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_115901) do
   add_foreign_key "historics", "movies"
   add_foreign_key "historics", "users"
   add_foreign_key "reviews", "movies"
+  add_foreign_key "user_badges", "badges"
+  add_foreign_key "user_badges", "users"
   add_foreign_key "user_platforms", "platforms"
   add_foreign_key "user_platforms", "users"
   add_foreign_key "user_reviews", "reviews"

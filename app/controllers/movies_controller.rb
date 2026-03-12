@@ -87,13 +87,13 @@ TV_GENRES = {
       tmdb_query["with_runtime.gte"] = 30
     end
 
-    tmdb_results = fetch_tmdb_results(type, tmdb_query, seen_tmdb_ids)
+    tmdb_results = fetch_tmdb_results(type, tmdb_query, seen_ids: seen_tmdb_ids)
 
     if tmdb_results.empty?
       tmdb_results = fetch_tmdb_results(
         type,
         tmdb_query.merge(page: 1, sort_by: "popularity.desc"),
-        seen_tmdb_ids
+        seen_ids: seen_tmdb_ids
       )
     end
 
@@ -112,12 +112,60 @@ TV_GENRES = {
 
     @actors = parse_actors(@movie.actors)
     @platforms = parse_platforms(@movie.platform)
+
+    return unless @platforms.present?
+
+    @watch_url = platform_watch_url(@platforms.first, @movie.title)
   end
 
   def swipe
     @movie = Movie.find(params[:id])
-    Historic.create!(user: current_user, movie: @movie) if params[:decision] == "like"
+    if params[:decision] == "like"
+      Historic.create!(user: current_user, movie: @movie)
+      current_user.check_for_badges
+    end
     head :ok
+  end
+
+  def surprise
+    @movie = Movie.order("RANDOM()").first
+  end
+
+  def recommended
+    # Films likés par l'utilisateur
+    liked_review_ids = current_user.user_reviews.pluck(:review_id)
+    liked_movie_ids = Review.where(id: liked_review_ids).pluck(:movie_id)
+
+    # Films vus (à exclure)
+    seen_ids = current_user.historics.pluck(:movie_id)
+
+    # Utilisateurs qui ont liké les mêmes films
+    similar_users = UserReview.where(review_id: liked_review_ids)
+                              .where.not(user_id: current_user.id)
+                              .pluck(:user_id)
+
+    # Films likés par ces utilisateurs
+    similar_movies = Movie.joins(reviews: :user_reviews)
+                          .where(user_reviews: { user_id: similar_users })
+                          .where.not(id: seen_ids)
+                          .distinct
+
+    # Films populaires non vus
+    popular_unseen = Movie.left_joins(:reviews)
+                          .where.not(id: seen_ids)
+                          .group("movies.id")
+                          .order("COUNT(reviews.id) DESC")
+                          .limit(20)
+
+    # Fusion intelligente
+    @movies = (similar_movies + popular_unseen).uniq
+  end
+
+  def platform_watch_url(platform, title)
+    base = PLATFORM_URLS[platform]
+    return nil unless base
+
+    "#{base}#{CGI.escape(title)}"
   end
 
   private
@@ -133,7 +181,7 @@ TV_GENRES = {
     )
   end
 
-  def fetch_tmdb_results(type, query, seen_ids)
+  def fetch_tmdb_results(type, query, seen_ids: [])
     response = tmdb_get("discover/#{type}", query)
     (response["results"] || []).reject { |r| seen_ids.include?(r["id"]) }
   end
@@ -184,7 +232,7 @@ TV_GENRES = {
       {
         "name" => actor["name"],
         "character" => actor["character"],
-        "photo_url" => actor["profile_path"].present? ? "https://image.tmdb.org/t/p/w185#{actor["profile_path"]}" : nil
+        "photo_url" => actor["profile_path"].present? ? "https://image.tmdb.org/t/p/w185#{actor['profile_path']}" : nil
       }
     end.to_json
   end
