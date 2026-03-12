@@ -3,6 +3,8 @@ class PagesController < ApplicationController
 
   def home
     @top_day = fetch_trending_day_movies
+    @top_tv_fr = fetch_top_tv_france
+    @for_you = fetch_for_you
   end
 
   def calendar
@@ -21,7 +23,7 @@ class PagesController < ApplicationController
     HTTParty.get(
       "https://api.themoviedb.org/3/#{path}",
       headers: {
-        "Authorization" => "Bearer #{ENV.fetch('TMDB_API_TOKEN', nil)}",
+        "Authorization" => "Bearer #{ENV.fetch("TMDB_API_TOKEN", nil)}",
         "Content-Type" => "application/json"
       },
       query: query
@@ -32,7 +34,21 @@ class PagesController < ApplicationController
     response = tmdb_get("trending/movie/day", language: "fr-FR")
     results = response["results"] || []
 
-    results.first(10).map { |result| upsert_movie(result, "Tendance du jour") }
+    results.first(10).map { |result| upsert_movie(result, "Tendance du jour", "movie") }
+  end
+
+  def fetch_top_tv_france
+    response = tmdb_get(
+      "discover/tv",
+      language: "fr-FR",
+      watch_region: "FR",
+      sort_by: "popularity.desc",
+      "vote_count.gte" => 20,
+      page: 1
+    )
+
+    results = response["results"] || []
+    results.first(10).map { |result| upsert_movie(result, "Top séries France", "tv") }
   end
 
   def fetch_now_playing_movies
@@ -40,8 +56,25 @@ class PagesController < ApplicationController
     results = response["results"] || []
 
     results.first(10).map do |result|
-      movie = upsert_movie(result, "Sortie du moment")
+      movie = upsert_movie(result, "Sortie du moment", "movie")
       build_movie_calendar_item(movie, "film", result["release_date"])
+    end
+  end
+
+  def fetch_for_you
+    response = tmdb_get(
+      "discover/movie",
+      language: "fr-FR",
+      watch_region: "FR",
+      sort_by: "popularity.desc",
+      "vote_count.gte" => 20,
+      page: 1
+    )
+
+    results = response["results"] || []
+
+    results.first(10).map do |result|
+      upsert_movie(result, "Pour vous", "movie")
     end
   end
 
@@ -79,7 +112,7 @@ class PagesController < ApplicationController
       .uniq { |result| result["id"] }
       .first(40)
       .map do |result|
-        movie = upsert_movie(result, "À venir")
+        movie = upsert_movie(result, "À venir", "movie")
 
         {
           id: movie.id,
@@ -93,20 +126,20 @@ class PagesController < ApplicationController
       end
   end
 
-  def upsert_movie(result, category_label)
+  def upsert_movie(result, category_label, media_type = "movie")
     movie = Movie.find_or_initialize_by(tmdb_id: result["id"])
 
-  movie.assign_attributes(
-    title: result["title"],
-    synopsis: result["overview"],
-    year: result["release_date"]&.split("-")&.first&.to_i,
-    rating: (result["vote_average"].to_f / 2).round(1),
-    poster_url: result["poster_path"].present? ? "https://image.tmdb.org/t/p/w500#{result["poster_path"]}" : nil,
-    category: category_label,
-    media_type: "movie"
-  )
+    movie.assign_attributes(
+      title: result["title"] || result["name"],
+      synopsis: result["overview"],
+      year: (result["release_date"] || result["first_air_date"])&.split("-")&.first&.to_i,
+      rating: (result["vote_average"].to_f / 2).round(1),
+      poster_url: result["poster_path"].present? ? "https://image.tmdb.org/t/p/w500#{result["poster_path"]}" : nil,
+      category: category_label,
+      media_type: media_type
+    )
 
-    enrich_movie_from_tmdb!(movie)
+    enrich_movie_from_tmdb!(movie, type: media_type)
     movie.save!
     movie
   end

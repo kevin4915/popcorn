@@ -45,7 +45,7 @@
     <%= f.select :genre,
           [],
           { include_blank: "Choisir un genre" },
-          data: { "media_toggle_target": "genreSelect" } %>
+          data: { "media-toggle-target": "genreSelect" } %>
 
     <button type="submit" class="btn-action">
       <%= image_tag "logo.png", class: "btn-logo" %>
@@ -54,22 +54,104 @@
   <% end %>
 </div>
 
-<% if @top_day.present? %>
-  <div class="top10">
-    <h3>Top 10 des tendances du jour</h3>
+<div class="top-section" data-controller="home-tabs">
+  <div class="top-tabs">
+    <button
+      type="button"
+      class="top-tab active"
+      data-home-tabs-target="tab"
+      data-action="click->home-tabs#showFilms"
+    >
+      Top 10 films
+    </button>
 
-    <div class="carousel-container">
-      <button class="carousel-btn" data-carousel="day" data-direction="-1">‹</button>
+    <button
+      type="button"
+      class="top-tab"
+      data-home-tabs-target="tab"
+      data-action="click->home-tabs#showSeries"
+    >
+      Top 10 séries
+    </button>
 
-      <div class="movies-row" id="carousel-day">
-        <% @top_day.each do |movie| %>
-          <%= link_to movie_path(movie), class: "movie-card-thumb" do %>
-            <%= image_tag movie.poster_url, class: "poster-thumb", alt: movie.title %>
+    <button
+      type="button"
+      class="top-tab"
+      data-home-tabs-target="tab"
+      data-action="click->home-tabs#showForYou">
+      Pour vous
+    </button>
+  </div>
+
+  <div data-home-tabs-target="filmsPanel">
+    <% if @top_day.present? %>
+      <div class="top10">
+        <h3>Top 10 des tendances du jour</h3>
+
+        <div class="carousel-container">
+          <button class="carousel-btn" data-carousel="day" data-direction="-1">‹</button>
+
+          <div class="movies-row" id="carousel-day">
+            <% @top_day.each do |movie| %>
+              <%= link_to movie_path(movie), class: "movie-card-thumb" do %>
+                <%= image_tag movie.poster_url, class: "poster-thumb", alt: movie.title %>
+              <% end %>
+            <% end %>
+          </div>
+
+          <button class="carousel-btn" data-carousel="day" data-direction="1">›</button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div data-home-tabs-target="seriesPanel" style="display: none;">
+    <% if @top_tv_fr.present? %>
+      <div class="top10">
+        <h3>Top 10 des séries en France</h3>
+
+        <div class="carousel-container">
+          <button class="carousel-btn" data-carousel="tv-fr" data-direction="-1">‹</button>
+
+          <div class="movies-row" id="carousel-tv-fr">
+            <% @top_tv_fr.each do |serie| %>
+              <%= link_to movie_path(serie), class: "movie-card-thumb" do %>
+                <%= image_tag serie.poster_url, class: "poster-thumb", alt: serie.title %>
+              <% end %>
+            <% end %>
+          </div>
+
+          <button class="carousel-btn" data-carousel="tv-fr" data-direction="1">›</button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div data-home-tabs-target="forYouPanel" style="display: none;">
+  <% if @for_you.present? %>
+
+    <div class="top10">
+      <h3>Recommandé pour vous</h3>
+
+      <div class="carousel-container">
+        <button class="carousel-btn" data-carousel="for-you" data-direction="-1">‹</button>
+
+        <div class="movies-row" id="carousel-for-you">
+          <% @for_you.each do |movie| %>
+            <%= link_to movie_path(movie), class: "movie-card-thumb" do %>
+              <%= image_tag movie.poster_url,
+                    class: "poster-thumb",
+                    alt: movie.title %>
+            <% end %>
           <% end %>
-        <% end %>
+        </div>
+
+        <button class="carousel-btn" data-carousel="for-you" data-direction="1">›</button>
       </div>
 
-      <button class="carousel-btn" data-carousel="day" data-direction="1">›</button>
     </div>
+
+    <% end %>
   </div>
-<% end %>
+
+</div>
