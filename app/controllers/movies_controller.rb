@@ -10,12 +10,12 @@ class MoviesController < ApplicationController
   }.freeze
 
   PLATFORM_URLS = {
-  "Netflix" => "https://www.netflix.com/search?q=",
-  "Disney+" => "https://www.disneyplus.com/search?q=",
-  "Prime Video" => "https://www.primevideo.com/search/ref=atv_nb_sr?phrase=",
-  "Canal+" => "https://www.canalplus.com/recherche/?q=",
-  "HBO Max" => "https://www.hbomax.com/search?q="
-}.freeze
+    "Netflix" => "https://www.netflix.com/search?q=",
+    "Disney+" => "https://www.disneyplus.com/search?q=",
+    "Prime Video" => "https://www.primevideo.com/search/ref=atv_nb_sr?phrase=",
+    "Canal+" => "https://www.canalplus.com/recherche/?q=",
+    "HBO Max" => "https://www.hbomax.com/search?q="
+  }.freeze
 
   def index
     genre_id          = tmdb_genre_id(params[:genre])
@@ -46,13 +46,13 @@ class MoviesController < ApplicationController
       tmdb_query["with_runtime.gte"] = 30
     end
 
-    tmdb_results = fetch_tmdb_results(type, tmdb_query, seen_tmdb_ids)
+    tmdb_results = fetch_tmdb_results(type, tmdb_query, seen_ids: seen_tmdb_ids)
 
     if tmdb_results.empty?
       tmdb_results = fetch_tmdb_results(
         type,
         tmdb_query.merge(page: 1, sort_by: "popularity.desc"),
-        seen_tmdb_ids
+        seen_ids: seen_tmdb_ids
       )
     end
 
@@ -70,22 +70,26 @@ class MoviesController < ApplicationController
     @actors = parse_actors(@movie.actors)
     @platforms = parse_platforms(@movie.platform)
 
-    if @platforms.present?
-      @watch_url = platform_watch_url(@platforms.first, @movie.title)
-    end
+    return unless @platforms.present?
+
+    @watch_url = platform_watch_url(@platforms.first, @movie.title)
   end
 
   def swipe
     @movie = Movie.find(params[:id])
-    Historic.create!(user: current_user, movie: @movie) if params[:decision] == "like"
+    if params[:decision] == "like"
+      Historic.create!(user: current_user, movie: @movie)
+      # Vérification automatique des badges après un like
+      current_user.check_for_badges
+    end
     head :ok
   end
 
   def platform_watch_url(platform, title)
-  base = PLATFORM_URLS[platform]
-  return nil unless base
+    base = PLATFORM_URLS[platform]
+    return nil unless base
 
-  "#{base}#{CGI.escape(title)}"
+    "#{base}#{CGI.escape(title)}"
   end
 
   private
@@ -101,7 +105,7 @@ class MoviesController < ApplicationController
     )
   end
 
-  def fetch_tmdb_results(type, query, seen_ids)
+  def fetch_tmdb_results(type, query, seen_ids: [])
     response = tmdb_get("discover/#{type}", query)
     (response["results"] || []).reject { |r| seen_ids.include?(r["id"]) }
   end
@@ -148,7 +152,7 @@ class MoviesController < ApplicationController
       {
         "name" => actor["name"],
         "character" => actor["character"],
-        "photo_url" => actor["profile_path"].present? ? "https://image.tmdb.org/t/p/w185#{actor["profile_path"]}" : nil
+        "photo_url" => actor["profile_path"].present? ? "https://image.tmdb.org/t/p/w185#{actor['profile_path']}" : nil
       }
     end.to_json
   end
@@ -193,14 +197,14 @@ class MoviesController < ApplicationController
     end
   end
 
-def parse_actors(actors_data)
-  return [] if actors_data.blank?
+  def parse_actors(actors_data)
+    return [] if actors_data.blank?
 
-  parsed = JSON.parse(actors_data)
-  parsed.is_a?(Array) ? parsed : []
-rescue JSON::ParserError
-  []
-end
+    parsed = JSON.parse(actors_data)
+    parsed.is_a?(Array) ? parsed : []
+  rescue JSON::ParserError
+    []
+  end
 
   def parse_platforms(platform_string)
     return [] if platform_string.blank?
