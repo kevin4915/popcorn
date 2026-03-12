@@ -1,0 +1,22 @@
+<div class="recommended-wrapper">
+  <h1 class="recommended-title">Recommandés pour toi 🍿</h1>
+
+  <% if @movies.any? %>
+    <% @movies.each do |movie| %>
+      <div class="recommended-card">
+        <div class="recommended-image">
+          <%= image_tag movie.poster_url, alt: movie.title %>
+        </div>
+
+        <div class="recommended-info">
+          <h2><%= movie.title %></h2>
+          <p><%= movie.synopsis %></p>
+          <p class="recommended-rating">⭐ <%= movie.rating || "N/A" %></p>
+          <%= link_to "Voir le film", movie_path(movie), class: "recommended-show-button" %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="no-reco">Aucune recommandation pour le moment.</p>
+  <% end %>
+</div>

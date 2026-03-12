@@ -10,12 +10,12 @@ class MoviesController < ApplicationController
   }.freeze
 
   PLATFORM_URLS = {
-  "Netflix" => "https://www.netflix.com/search?q=",
-  "Disney+" => "https://www.disneyplus.com/search?q=",
-  "Prime Video" => "https://www.primevideo.com/search/ref=atv_nb_sr?phrase=",
-  "Canal+" => "https://www.canalplus.com/recherche/?q=",
-  "HBO Max" => "https://www.hbomax.com/search?q="
-}.freeze
+    "Netflix" => "https://www.netflix.com/search?q=",
+    "Disney+" => "https://www.disneyplus.com/search?q=",
+    "Prime Video" => "https://www.primevideo.com/search/ref=atv_nb_sr?phrase=",
+    "Canal+" => "https://www.canalplus.com/recherche/?q=",
+    "HBO Max" => "https://www.hbomax.com/search?q="
+  }.freeze
 
   def index
     genre_id          = tmdb_genre_id(params[:genre])
@@ -70,9 +70,9 @@ class MoviesController < ApplicationController
     @actors = parse_actors(@movie.actors)
     @platforms = parse_platforms(@movie.platform)
 
-    if @platforms.present?
-      @watch_url = platform_watch_url(@platforms.first, @movie.title)
-    end
+    return unless @platforms.present?
+
+    @watch_url = platform_watch_url(@platforms.first, @movie.title)
   end
 
   def swipe
@@ -81,11 +81,45 @@ class MoviesController < ApplicationController
     head :ok
   end
 
-  def platform_watch_url(platform, title)
-  base = PLATFORM_URLS[platform]
-  return nil unless base
+  def surprise
+    @movie = Movie.order("RANDOM()").first
+  end
 
-  "#{base}#{CGI.escape(title)}"
+  def recommended
+    # Films likés par l'utilisateur
+    liked_review_ids = current_user.user_reviews.pluck(:review_id)
+    liked_movie_ids = Review.where(id: liked_review_ids).pluck(:movie_id)
+
+    # Films vus (à exclure)
+    seen_ids = current_user.historics.pluck(:movie_id)
+
+    # Utilisateurs qui ont liké les mêmes films
+    similar_users = UserReview.where(review_id: liked_review_ids)
+                              .where.not(user_id: current_user.id)
+                              .pluck(:user_id)
+
+    # Films likés par ces utilisateurs
+    similar_movies = Movie.joins(reviews: :user_reviews)
+                          .where(user_reviews: { user_id: similar_users })
+                          .where.not(id: seen_ids)
+                          .distinct
+
+    # Films populaires non vus
+    popular_unseen = Movie.left_joins(:reviews)
+                          .where.not(id: seen_ids)
+                          .group("movies.id")
+                          .order("COUNT(reviews.id) DESC")
+                          .limit(20)
+
+    # Fusion intelligente
+    @movies = (similar_movies + popular_unseen).uniq
+  end
+
+  def platform_watch_url(platform, title)
+    base = PLATFORM_URLS[platform]
+    return nil unless base
+
+    "#{base}#{CGI.escape(title)}"
   end
 
   private
@@ -148,7 +182,7 @@ class MoviesController < ApplicationController
       {
         "name" => actor["name"],
         "character" => actor["character"],
-        "photo_url" => actor["profile_path"].present? ? "https://image.tmdb.org/t/p/w185#{actor["profile_path"]}" : nil
+        "photo_url" => actor["profile_path"].present? ? "https://image.tmdb.org/t/p/w185#{actor['profile_path']}" : nil
       }
     end.to_json
   end
@@ -193,14 +227,14 @@ class MoviesController < ApplicationController
     end
   end
 
-def parse_actors(actors_data)
-  return [] if actors_data.blank?
+  def parse_actors(actors_data)
+    return [] if actors_data.blank?
 
-  parsed = JSON.parse(actors_data)
-  parsed.is_a?(Array) ? parsed : []
-rescue JSON::ParserError
-  []
-end
+    parsed = JSON.parse(actors_data)
+    parsed.is_a?(Array) ? parsed : []
+  rescue JSON::ParserError
+    []
+  end
 
   def parse_platforms(platform_string)
     return [] if platform_string.blank?
