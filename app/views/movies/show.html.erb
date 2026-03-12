@@ -1,6 +1,13 @@
 <div class="show-wrapper">
 
-  <%= link_to params[:from] == "historics" ? historics_path : root_path, class: "show-back" do %>
+  <%= link_to(
+    case params[:from]
+    when "films"  then films_historics_path
+    when "series" then series_historics_path
+    else root_path
+    end,
+    class: "show-back"
+  ) do %>
     ← Retour
   <% end %>
 
