@@ -1,3 +1,9 @@
+@media (max-width: 600px) {
+  .actors-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 .show-wrapper {
   margin: 0 16px 20px;
   padding: 20px;
@@ -222,4 +228,32 @@
   display: block;
   width: 100%;
   min-height: 315px;
+}
+
+.actors-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scroll-snap-type: x proximity;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+.actor-card {
+  flex: 0 0 90px;
+  min-width: 90px;
+  text-align: center;
+  scroll-snap-align: start;
 }
