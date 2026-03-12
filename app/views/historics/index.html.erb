@@ -1,43 +1,33 @@
 <div class="popcorn-wrapper">
-
   <h1 class="popcorn-title">Mes films</h1>
 
   <% @movies.each do |movie| %>
-    <%= link_to movie_path(movie), class: "popcorn-card-link" do %>
-
-      <div class="popcorn-card horizontal">
-
-        <div class="popcorn-poster">
-          <%= image_tag movie.poster_url, alt: movie.title %>
-        </div>
-
-        <div class="popcorn-info">
-          <h2><%= movie.title %></h2>
-
-          <p class="popcorn-category">
-            🎭 <%= movie.category %>
-          </p>
-
-          <p class="popcorn-duration">
-            ⏱️ <%= movie.duration %> min
-          </p>
-
-          <div class="popcorn-meta">
-            ⭐ <%= movie.rating || "—" %>/10
-            <span class="popcorn-year">🎞️ <%= movie.year || "?" %></span>
+    <div class="popcorn-card-wrapper">
+      <%= link_to movie_path(movie, from: "historics"), class: "popcorn-card-link" do %>
+        <div class="popcorn-card">
+          <div class="popcorn-poster">
+            <%= image_tag movie.poster_url, alt: movie.title %>
           </div>
 
-          <p class="popcorn-description">
-            <%= movie.synopsis %>
-          </p>
+          <div class="popcorn-info">
+            <h2><%= movie.title %></h2>
+            <p class="popcorn-category">🎭 <%= movie.category %></p>
+            <p class="popcorn-duration">⏱️ <%= movie.duration %> min</p>
+            <div class="popcorn-meta">
+              ⭐ <%= movie.rating || "—" %>/5
+              <span class="popcorn-year">🎞️ <%= movie.year || "?" %></span>
+            </div>
+            <p class="popcorn-description"><%= movie.synopsis %></p>
+          </div>
         </div>
+      <% end %>
 
-      </div>
-
-    <% end %>
+      <%= button_to historic_path(current_user.historics.find_by(movie: movie)),
+                    method: :delete,
+                    class: "btn-delete-historic",
+                    form: { data: { turbo_confirm: "Retirer ce film de ta liste ?" } } do %>
+        <i class="fa-solid fa-trash"></i>
+      <% end %>
+    </div>
   <% end %>
-
-</div>
-<div class="popcorn-pagination">
-  <%= link_to "Page suivante →", movies_path(page: params[:page].to_i + 1), class: "next-page-button" %>
 </div>
