@@ -1,0 +1,55 @@
+<div class="calendar-page">
+
+  <div class="calendar-hero">
+    <p class="calendar-kicker">Agenda cinéma</p>
+    <h1>Prochaines sorties</h1>
+    <p class="calendar-subtitle">
+      Les prochaines sorties en France, classées par date.
+    </p>
+  </div>
+
+  <% if @upcoming_by_date.present? %>
+    <% @upcoming_by_date.each do |date, movies| %>
+      <section class="calendar-row">
+        <div class="calendar-row-header">
+          <div class="calendar-date-group">
+            <div class="calendar-icon">📅</div>
+            <div class="calendar-date-badge">
+              <%= l(Date.parse(date), format: :long) rescue date %>
+            </div>
+          </div>
+
+          <span class="calendar-count">
+            <%= movies.count %> <%= movies.count > 1 ? "sorties" : "sortie" %>
+          </span>
+        </div>
+
+        <div class="calendar-divider"></div>
+
+        <div class="calendar-grid">
+          <% movies.each do |movie| %>
+            <%= link_to movie_path(movie[:id]), class: "mini-movie-card" do %>
+              <div class="mini-poster-wrap">
+                <% if movie[:poster_url].present? %>
+                  <%= image_tag movie[:poster_url], class: "mini-poster", alt: movie[:title] %>
+                <% else %>
+                  <div class="mini-poster-placeholder">Pas d’affiche</div>
+                <% end %>
+
+                <div class="mini-card-overlay">
+                  <h3><%= movie[:title] %></h3>
+                  <% if movie[:rating].present? %>
+                    <span class="mini-rating">⭐ <%= movie[:rating] %>/5</span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+  <% else %>
+    <p class="calendar-empty">Aucune sortie à venir trouvée.</p>
+  <% end %>
+
+</div>

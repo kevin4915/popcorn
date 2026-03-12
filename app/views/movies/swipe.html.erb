@@ -1,44 +1,85 @@
 <div class="swipe-wrapper">
   <div class="swipe-container" data-controller="swipe">
-    <% if @movies.empty? %>
+    <% if @movies.blank? %>
       <div class="empty-state">
         <i class="fa-solid fa-film" style="font-size: 3rem; margin-bottom: 1rem;"></i>
         <p>Aucun film trouvé pour ces critères...</p>
         <%= link_to "🍿 Modifier ma recherche", root_path, class: "btn-action" %>
       </div>
     <% else %>
+      <% total = @movies.count %>
+
       <% @movies.reverse.each_with_index do |movie, index| %>
-        <div class="swipe-card"
-             data-swipe-target="card"
-             data-movie-id="<%= movie.id %>"
-             style="z-index: <%= 10 - index %>;">
-          <% total = @movies.count %>
+        <article
+          class="swipe-card"
+          data-swipe-target="card"
+          data-movie-id="<%= movie.id %>"
+          style="z-index: <%= total - index %>;"
+        >
           <div class="progress-bar">
-            <div class="progress" style="width: <%= ((index + 1).to_f / total) * 100 %>%"></div>
+            <div
+              class="progress"
+              style="width: <%= ((index + 1).to_f / total) * 100 %>%"
+            ></div>
           </div>
-          <%= image_tag movie.poster_url, alt: movie.title, referrerpolicy: "no-referrer" %>
+
+          <%= image_tag(
+                movie.poster_url.presence || "placeholder-poster.png",
+                alt: movie.title,
+                referrerpolicy: "no-referrer"
+              ) %>
+
           <div class="card-info">
-            <h3><%= movie.title %> (<%= movie.year %>)</h3>
-            <p class="rating">Note : ⭐ <%= movie.rating || "4.5" %>/5</p>
-            <p class="synopsis"><%= movie.synopsis&.truncate(120) %></p>
-            <div class="actors-section">
-              <strong>Acteurs :</strong>
-              <p class="actors-list"><%= movie.actors %></p>
-            </div>
+            <h3>
+              <%= movie.title %>
+              <% if movie.year.present? %>
+                (<%= movie.year %>)
+              <% end %>
+            </h3>
+
+            <p class="rating">
+              Note :
+              <% if movie.rating.present? %>
+                ⭐ <%= movie.rating %>/5
+              <% else %>
+                Non noté
+              <% end %>
+            </p>
+
+            <p class="synopsis">
+              <%= movie.synopsis.present? ? truncate(movie.synopsis, length: 120) : "Synopsis indisponible." %>
+            </p>
+
+            <% if movie.actor_names.present? %>
+              <div class="actors-section">
+                <strong>Acteurs :</strong>
+                <p class="actors-list"><%= movie.actor_names %></p>
+              </div>
+            <% end %>
           </div>
+
           <div class="card-actions">
-            <button class="btn-dislike"
-                    data-action="click->swipe#handleSwipe"
-                    data-decision="dislike">
-              <i class="fa-solid fa-xmark"></i>
+            <button
+              type="button"
+              class="btn-dislike"
+              data-action="click->swipe#handleSwipe"
+              data-decision="dislike"
+              aria-label="Refuser ce film"
+            >
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
             </button>
-            <button class="btn-like"
-                    data-action="click->swipe#handleSwipe"
-                    data-decision="like">
-              <i class="fa-solid fa-heart"></i>
+
+            <button
+              type="button"
+              class="btn-like"
+              data-action="click->swipe#handleSwipe"
+              data-decision="like"
+              aria-label="Aimer ce film"
+            >
+              <i class="fa-solid fa-heart" aria-hidden="true"></i>
             </button>
           </div>
-        </div>
+        </article>
       <% end %>
 
       <div class="end-state" data-swipe-target="endState" style="display: none;">
@@ -47,4 +88,3 @@
       </div>
     <% end %>
   </div>
-</div>
