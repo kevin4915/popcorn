@@ -59,7 +59,10 @@
         <% end %>
       </div>
 
-      <%= link_to "#", class: "show-watch-button" do %>
+      <%= link_to @watch_url,
+                  target: "_blank",
+                  rel: "noopener",
+                  class: "show-watch-button" do %>
         Regarder sur <%= @platforms.first %>
       <% end %>
     <% else %>

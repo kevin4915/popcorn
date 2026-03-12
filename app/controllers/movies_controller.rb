@@ -1,5 +1,5 @@
 class MoviesController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[index show]
+  before_action :authenticate_user!, only: %i[index show]
 
   PLATFORM_IDS = {
     "Netflix" => 8,
@@ -8,6 +8,14 @@ class MoviesController < ApplicationController
     "CanalPlus" => 381,
     "HBO" => 384
   }.freeze
+
+  PLATFORM_URLS = {
+  "Netflix" => "https://www.netflix.com/search?q=",
+  "Disney+" => "https://www.disneyplus.com/search?q=",
+  "Prime Video" => "https://www.primevideo.com/search/ref=atv_nb_sr?phrase=",
+  "Canal+" => "https://www.canalplus.com/recherche/?q=",
+  "HBO Max" => "https://www.hbomax.com/search?q="
+}.freeze
 
   def index
     genre_id          = tmdb_genre_id(params[:genre])
@@ -61,12 +69,23 @@ class MoviesController < ApplicationController
 
     @actors = parse_actors(@movie.actors)
     @platforms = parse_platforms(@movie.platform)
+
+    if @platforms.present?
+      @watch_url = platform_watch_url(@platforms.first, @movie.title)
+    end
   end
 
   def swipe
     @movie = Movie.find(params[:id])
     Historic.create!(user: current_user, movie: @movie) if params[:decision] == "like"
     head :ok
+  end
+
+  def platform_watch_url(platform, title)
+  base = PLATFORM_URLS[platform]
+  return nil unless base
+
+  "#{base}#{CGI.escape(title)}"
   end
 
   private
