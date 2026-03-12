@@ -44,17 +44,22 @@
   <% end %>
 </div>
 
-<div class="top10">
-  <h3>Top 10 De La Semaine</h3>
-  <div class="carousel-container">
-    <button class="carousel-btn" data-carousel="week" data-direction="-1">‹</button>
-    <div class="movies-row" id="carousel-week">
-      <% @top_week.each do |movie| %>
-        <%= link_to movie_path(movie), class: "movie-card-thumb" do %>
-          <%= image_tag movie.poster_url, class: "poster-thumb", alt: movie.title %>
+<% if @top_day.present? %>
+  <div class="top10">
+    <h3>Top 10 des tendances du jour</h3>
+
+    <div class="carousel-container">
+      <button class="carousel-btn" data-carousel="day" data-direction="-1">‹</button>
+
+      <div class="movies-row" id="carousel-day">
+        <% @top_day.each do |movie| %>
+          <%= link_to movie_path(movie), class: "movie-card-thumb" do %>
+            <%= image_tag movie.poster_url, class: "poster-thumb", alt: movie.title %>
+          <% end %>
         <% end %>
-      <% end %>
+      </div>
+
+      <button class="carousel-btn" data-carousel="day" data-direction="1">›</button>
     </div>
-    <button class="carousel-btn" data-carousel="week" data-direction="1">›</button>
   </div>
-</div>
+<% end %>

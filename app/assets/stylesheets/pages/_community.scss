@@ -1,0 +1,52 @@
+.btn-popcorn-small {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #E50914;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #b3070f;
+  }
+}
+
+.community-comments {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #333;
+
+  .comment-item {
+    font-size: 0.8rem;
+    color: #ccc;
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    background: #111;
+    border-radius: 4px;
+    border-left: 2px solid #E50914;
+  }
+
+  .comment-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    align-items: center;
+
+    .comment-input {
+      flex: 1;
+      background: #181818;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+
+      &:focus { border-color: #E50914; outline: none; }
+    }
+  }
+}

@@ -1,14 +1,21 @@
 Rails.application.routes.draw do
   devise_for :users
-  root to: "pages#home"
+  root "pages#home"
   resources :movies, only: [:index, :show] do
     member do
       post :swipe
     end
   end
-  resources :historics, only: [:index]
   get "surprise", to: "movies#surprise"
   get "recommended", to: "movies#recommended"
+  resources :historics, only: [:index, :destroy]
+  resources :communities, only: [:index]
+  get "community", to: "communities#index"
+  resources :historics, only: [:index] do
+    resources :comments, only: [:create]
+  end
+
+  get "calendar", to: "pages#calendar"
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

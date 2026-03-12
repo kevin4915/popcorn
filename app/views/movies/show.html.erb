@@ -1,47 +1,128 @@
 <div class="show-wrapper">
 
-  <!-- Bouton retour -->
-  <%= link_to movies_path, class: "show-back" do %>
+  <%= link_to params[:from] == "historics" ? historics_path : root_path, class: "show-back" do %>
     ← Retour
   <% end %>
 
-  <!-- Affiche du film -->
   <div class="show-poster">
-    <%= image_tag @movie.poster_url, alt: @movie.title %>
+    <% if @movie.poster_url.present? %>
+      <%= image_tag @movie.poster_url, alt: @movie.title %>
+    <% end %>
   </div>
 
-  <!-- Infos principales -->
-  <h1 class="show-title"><%= @movie.title %> (<%= @movie.year %>)</h1>
-  <p class="show-director">De <%= @movie.director %></p>
-  <p class="show-category">
-    Catégorie : <%= @movie.category %>
-  </p>
+  <h1 class="show-title">
+    <%= @movie.title %>
+    <% if @movie.year.present? %>
+      (<%= @movie.year %>)
+    <% end %>
+  </h1>
 
-
-  <%= link_to @movie.trailer, target: "_blank", class: "show-trailer-button" do %>
-    Bande Annonce
+  <% if @movie.director.present? %>
+    <p class="show-director">
+      De <%= @movie.director %>
+    </p>
   <% end %>
 
-  <!-- Meta : durée + genres + note -->
+  <% if @movie.category.present? %>
+    <p class="show-category">
+      <%= @movie.category %>
+    </p>
+  <% end %>
+
   <div class="show-meta">
-    <span>⏱️ <%= @movie.duration %> min</span>
-    <span>⭐ <%= @movie.rating %>/10</span>
+    <% if @movie.duration.present? %>
+      <span>⏱️ <%= @movie.duration %> min</span>
+    <% end %>
+
+    <% if @movie.rating.present? %>
+      <span>⭐ <%= @movie.rating %>/5</span>
+    <% end %>
   </div>
 
-  <p class="show-actors">
-    Avec :
-    <%= @movie.actors %>
-  </p>
+  <% if @movie.synopsis.present? %>
+    <p class="show-description">
+      <%= @movie.synopsis %>
+    </p>
+  <% end %>
 
-  <!-- Description -->
-  <h3 class="show-synopsis-title">Synopsis</h3>
-  <p class="show-description">
-    <%= @movie.synopsis %>
-  </p>
+  <div class="show-platforms">
+    <h2 class="show-section-title">
+      Disponible sur
+    </h2>
 
-  <!-- Bouton voir le film -->
-  <%= link_to "#", class: "show-watch-button" do %>
-    Voir le film sur Disney+
+    <% if @platforms.present? %>
+      <div class="platform-tags">
+        <% @platforms.each do |platform| %>
+          <span class="platform-tag">
+            <%= platform %>
+          </span>
+        <% end %>
+      </div>
+
+      <%= link_to @watch_url,
+                  target: "_blank",
+                  rel: "noopener",
+                  class: "show-watch-button" do %>
+        Regarder sur <%= @platforms.first %>
+      <% end %>
+    <% else %>
+      <p class="show-platforms-empty">
+        Aucune plateforme renseignée pour la France.
+      </p>
+    <% end %>
+  </div>
+
+  <% if @actors.present? %>
+    <div class="show-cast">
+      <h2>Acteurs principaux</h2>
+
+      <div class="actors-scroll">
+        <% @actors.each do |actor| %>
+          <div class="actor-card">
+            <% if actor["photo_url"].present? %>
+              <%= image_tag actor["photo_url"],
+                alt: actor["name"],
+                class: "actor-photo" %>
+            <% else %>
+              <div class="actor-photo-placeholder">
+                🎭
+              </div>
+            <% end %>
+
+            <div class="actor-name">
+              <%= actor["name"] %>
+            </div>
+
+            <% if actor["character"].present? %>
+              <div class="actor-character">
+                <%= actor["character"] %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @movie.trailer.present? %>
+    <div class="show-trailer">
+      <h2 class="show-section-title">
+        Bande-annonce
+      </h2>
+
+      <div class="trailer-frame">
+        <iframe
+          src="https://www.youtube.com/embed/<%= @movie.trailer %>"
+          title="Bande annonce"
+          frameborder="0"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  <% else %>
+    <p class="show-trailer-empty">
+      Aucune bande-annonce disponible.
+    </p>
   <% end %>
 
 </div>

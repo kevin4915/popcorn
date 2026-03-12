@@ -7,7 +7,7 @@ export default class extends Controller {
     const button = event.currentTarget
     const decision = button.dataset.decision
 
-    const card = button.closest('.movie-card')
+    const card = button.closest('.swipe-card')
     const movieId = card.dataset.movieId
 
     card.classList.remove('swiped-left', 'swiped-right')
@@ -29,7 +29,7 @@ export default class extends Controller {
       card.remove()
 
       if (decision === "like") {
-        window.location.href = `/movies/${movieId}`
+        window.location.href = `/movies/${movieId}?from=home`
       } else if (this.cardTargets.length === 0) {
         this.endStateTarget.style.display = "flex"
       }
