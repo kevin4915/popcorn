@@ -1,11 +1,15 @@
 class HistoricsController < ApplicationController
-  def index
-    @movies = current_user.movies
+  def films
+    @movies = current_user.movies.where(media_type: "movie")
+  end
+
+  def series
+    @movies = current_user.movies.where(media_type: "tv")
   end
 
   def destroy
     @historic = current_user.historics.find(params[:id])
     @historic.destroy
-    redirect_to historics_path, notice: "Film retiré de ta liste !"
+    redirect_back fallback_location: historics_films_path, notice: "Retiré de ta liste !"
   end
 end
