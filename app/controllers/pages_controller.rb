@@ -128,7 +128,7 @@ class PagesController < ApplicationController
   def extract_top_actors(details)
     cast = details.dig("credits", "cast") || []
 
-    cast.first(5).map do |actor|
+    cast.first(4).map do |actor|
       {
         "name" => actor["name"],
         "character" => actor["character"],

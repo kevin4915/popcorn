@@ -45,14 +45,12 @@
     </p>
   <% end %>
 
+  <div class="show-platforms">
+    <h2 class="show-section-title">
+      Disponible sur
+    </h2>
 
-  <% if @platforms.present? %>
-    <div class="show-platforms">
-
-      <h2 class="show-section-title">
-        Disponible sur
-      </h2>
-
+    <% if @platforms.present? %>
       <div class="platform-tags">
         <% @platforms.each do |platform| %>
           <span class="platform-tag">
@@ -61,21 +59,23 @@
         <% end %>
       </div>
 
-    </div>
-  <% end %>
-
+      <%= link_to "#", class: "show-watch-button" do %>
+        Regarder sur <%= @platforms.first %>
+      <% end %>
+    <% else %>
+      <p class="show-platforms-empty">
+        Aucune plateforme renseignée pour la France.
+      </p>
+    <% end %>
+  </div>
 
   <% if @actors.present? %>
     <div class="show-cast">
-
       <h2>Acteurs principaux</h2>
 
       <div class="actors-scroll">
-
         <% @actors.each do |actor| %>
-
           <div class="actor-card">
-
             <% if actor["photo_url"].present? %>
               <%= image_tag actor["photo_url"],
                 alt: actor["name"],
@@ -95,36 +95,26 @@
                 <%= actor["character"] %>
               </div>
             <% end %>
-
           </div>
-
         <% end %>
-
       </div>
-
     </div>
   <% end %>
 
-
   <% if @movie.trailer.present? %>
-
     <div class="show-trailer">
-
       <h2 class="show-section-title">
         Bande-annonce
       </h2>
 
       <div class="trailer-frame">
-
         <iframe
           src="https://www.youtube.com/embed/<%= @movie.trailer %>"
           title="Bande annonce"
           frameborder="0"
           allowfullscreen>
         </iframe>
-
       </div>
-
     </div>
   <% else %>
     <p class="show-trailer-empty">
