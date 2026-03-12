@@ -96,33 +96,39 @@ class PagesController < ApplicationController
   def upsert_movie(result, category_label)
     movie = Movie.find_or_initialize_by(tmdb_id: result["id"])
 
-    movie.assign_attributes(
-      title: result["title"],
-      synopsis: result["overview"],
-      year: result["release_date"]&.split("-")&.first&.to_i,
-      rating: (result["vote_average"].to_f / 2).round(1),
-      poster_url: result["poster_path"].present? ? "https://image.tmdb.org/t/p/w500#{result['poster_path']}" : nil,
-      category: category_label
-    )
+  movie.assign_attributes(
+    title: result["title"],
+    synopsis: result["overview"],
+    year: result["release_date"]&.split("-")&.first&.to_i,
+    rating: (result["vote_average"].to_f / 2).round(1),
+    poster_url: result["poster_path"].present? ? "https://image.tmdb.org/t/p/w500#{result["poster_path"]}" : nil,
+    category: category_label,
+    media_type: "movie"
+  )
 
     enrich_movie_from_tmdb!(movie)
     movie.save!
     movie
   end
 
-  def enrich_movie_from_tmdb!(movie)
+  def enrich_movie_from_tmdb!(movie, type: "movie")
     details = tmdb_get(
-      "movie/#{movie.tmdb_id}",
+      "#{type}/#{movie.tmdb_id}",
       language: "fr-FR",
       append_to_response: "credits,videos"
     )
 
-    watch_providers = tmdb_get("movie/#{movie.tmdb_id}/watch/providers")
+    watch_providers = tmdb_get("#{type}/#{movie.tmdb_id}/watch/providers")
 
-    movie.actors   = extract_top_actors(details)
-    movie.trailer  = extract_trailer_key(details)
-    movie.duration = details["runtime"] if details["runtime"].present?
+    movie.actors = extract_top_actors(details)
+    movie.trailer = extract_trailer_key(details)
     movie.platform = extract_french_platforms(watch_providers)
+
+    if type == "movie"
+      movie.duration = details["runtime"] if details["runtime"].present?
+    elsif type == "tv"
+      movie.duration = details["episode_run_time"]&.first
+    end
   end
 
   def extract_top_actors(details)

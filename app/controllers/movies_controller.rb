@@ -10,16 +10,57 @@ class MoviesController < ApplicationController
   }.freeze
 
   PLATFORM_URLS = {
-    "Netflix" => "https://www.netflix.com/search?q=",
-    "Disney+" => "https://www.disneyplus.com/search?q=",
-    "Prime Video" => "https://www.primevideo.com/search/ref=atv_nb_sr?phrase=",
-    "Canal+" => "https://www.canalplus.com/recherche/?q=",
-    "HBO Max" => "https://www.hbomax.com/search?q="
+  "Netflix" => "https://www.netflix.com/search?q=",
+  "Disney+" => "https://www.disneyplus.com/search?q=",
+  "Prime Video" => "https://www.primevideo.com/search/ref=atv_nb_sr?phrase=",
+  "Canal+" => "https://www.canalplus.com/recherche/?q=",
+  "HBO Max" => "https://www.hbomax.com/search?q="
   }.freeze
 
+  MOVIE_GENRES = {
+  "Action" => 28,
+  "Animation" => 16,
+  "Aventure" => 12,
+  "Comédie" => 35,
+  "Documentaire" => 99,
+  "Drame" => 18,
+  "Familial" => 10751,
+  "Fantastique" => 14,
+  "Guerre" => 10752,
+  "Historique" => 36,
+  "Horreur" => 27,
+  "Musique" => 10402,
+  "Mystère" => 9648,
+  "Policier" => 80,
+  "Romance" => 10749,
+  "Science Fiction" => 878,
+  "Show télé" => 10770,
+  "Thriller" => 53,
+  "Western" => 37
+}.freeze
+
+TV_GENRES = {
+  "Action & Aventure" => 10759,
+  "Animation" => 16,
+  "Comédie" => 35,
+  "Policier" => 80,
+  "Documentaire" => 99,
+  "Drame" => 18,
+  "Familial" => 10751,
+  "Enfants" => 10762,
+  "Mystère" => 9648,
+  "News" => 10763,
+  "Reality show" => 10764,
+  "Science Fiction & Fantasie" => 10765,
+  "Soap" => 10766,
+  "Show télé" => 10767,
+  "Guerre & Politique" => 10768,
+  "Western" => 37
+}.freeze
+
   def index
-    genre_id          = tmdb_genre_id(params[:genre])
-    type              = params[:serie] == "1" ? "tv" : "movie"
+    type = params[:serie] == "1" ? "tv" : "movie"
+    genre_id = tmdb_genre_id(params[:genre], type)
     max_duration      = parse_duration(params[:duration], type)
     user_provider_ids = user_platforms
     without_genres    = excluded_genres(params[:company])
@@ -64,7 +105,9 @@ class MoviesController < ApplicationController
   def show
     @movie = Movie.find(params[:id])
 
-    enrich_movie_from_tmdb!(@movie)
+    type = @movie.media_type.presence || "movie"
+
+    enrich_movie_from_tmdb!(@movie, type: type)
     @movie.save!
 
     @actors = parse_actors(@movie.actors)
@@ -131,7 +174,7 @@ class MoviesController < ApplicationController
     HTTParty.get(
       "https://api.themoviedb.org/3/#{path}",
       headers: {
-        "Authorization" => "Bearer #{ENV.fetch('TMDB_API_TOKEN', nil)}",
+        "Authorization" => "Bearer #{ENV["TMDB_API_TOKEN"]}",
         "Content-Type" => "application/json"
       },
       query: query
@@ -151,8 +194,9 @@ class MoviesController < ApplicationController
       synopsis: result["overview"],
       year: (result["release_date"] || result["first_air_date"])&.split("-")&.first&.to_i,
       rating: (result["vote_average"].to_f / 2).round(1),
-      poster_url: result["poster_path"].present? ? "https://image.tmdb.org/t/p/w500#{result['poster_path']}" : nil,
-      category: params[:genre].presence || "Suggestion"
+      poster_url: result["poster_path"].present? ? "https://image.tmdb.org/t/p/w500#{result["poster_path"]}" : nil,
+      category: params[:genre].presence || "Suggestion",
+      media_type: type
     )
 
     enrich_movie_from_tmdb!(movie, type: type)
@@ -169,19 +213,22 @@ class MoviesController < ApplicationController
 
     watch_providers = tmdb_get("#{type}/#{movie.tmdb_id}/watch/providers")
 
-    movie.actors  = extract_top_actors(details)
+    movie.actors = extract_top_actors(details)
     movie.trailer = extract_trailer_key(details)
     movie.platform = extract_french_platforms(watch_providers)
 
-    return unless type == "movie" && details["runtime"].present?
-
-    movie.duration = details["runtime"]
+    if type == "movie"
+      movie.duration = details["runtime"] if details["runtime"].present?
+    elsif type == "tv"
+      episode_times = details["episode_run_time"] || []
+      movie.duration = episode_times.first if episode_times.any?
+    end
   end
 
   def extract_top_actors(details)
     cast = details.dig("credits", "cast") || []
 
-    cast.first(4).map do |actor|
+    cast.first(5).map do |actor|
       {
         "name" => actor["name"],
         "character" => actor["character"],
@@ -208,9 +255,11 @@ class MoviesController < ApplicationController
     providers = Array(france["flatrate"])
     return nil if providers.blank?
 
-    names = providers.map { |provider| normalize_platform(provider["provider_name"]) }
-
-    names.compact.uniq.join(", ")
+    providers
+      .map { |provider| normalize_platform(provider["provider_name"]) }
+      .compact
+      .uniq
+      .join(", ")
   end
 
   def normalize_platform(name)
@@ -273,16 +322,8 @@ class MoviesController < ApplicationController
     end
   end
 
-  def tmdb_genre_id(genre)
-    {
-      "Action" => 28,
-      "Comédie" => 35,
-      "Drame" => 18,
-      "Thriller" => 53,
-      "Science Fiction" => 878,
-      "Horreur" => 27,
-      "Romance" => 10_749,
-      "Fantasy" => 14
-    }[genre]
+  def tmdb_genre_id(genre, type)
+    type == "tv" ? TV_GENRES[genre] : MOVIE_GENRES[genre]
   end
+
 end

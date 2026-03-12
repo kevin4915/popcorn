@@ -30,9 +30,7 @@
   <% end %>
 
   <div class="show-meta">
-    <% if @movie.duration.present? %>
-      <span>⏱️ <%= @movie.duration %> min</span>
-    <% end %>
+    <span>⏱️ <%= @movie.formatted_duration %></span>
 
     <% if @movie.rating.present? %>
       <span>⭐ <%= @movie.rating %>/5</span>
