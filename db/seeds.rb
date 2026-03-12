@@ -61,3 +61,9 @@ Historic.create!(user: user, movie: movie1)
 Historic.create!(user: user, movie: movie2)
 
 puts "Done!"
+
+Badge.seed_default_badges
+puts "Badges créés avec succès !"
+puts "Rattrapage des badges pour tous les utilisateurs..."
+User.all.each { |user| user.check_for_badges }
+puts "C'est fini !"
