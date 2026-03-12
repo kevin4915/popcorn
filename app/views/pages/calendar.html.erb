@@ -33,14 +33,15 @@
                 <% if movie[:poster_url].present? %>
                   <%= image_tag movie[:poster_url], class: "mini-poster", alt: movie[:title] %>
                 <% else %>
-                  <div class="mini-poster-placeholder">Pas d’affiche</div>
+                  <div class="mini-poster-placeholder">Pas d'affiche</div>
+                <% end %>
+
+                <% if movie[:rating].present? %>
+                  <span class="popcorn-rating-badge">⭐ <%= movie[:rating] %></span>
                 <% end %>
 
                 <div class="mini-card-overlay">
                   <h3><%= movie[:title] %></h3>
-                  <% if movie[:rating].present? %>
-                    <span class="mini-rating">⭐ <%= movie[:rating] %>/5</span>
-                  <% end %>
                 </div>
               </div>
             <% end %>
