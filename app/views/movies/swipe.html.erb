@@ -23,11 +23,16 @@
             ></div>
           </div>
 
-          <%= image_tag(
-                movie.poster_url.presence || "placeholder-poster.png",
-                alt: movie.title,
-                referrerpolicy: "no-referrer"
-              ) %>
+          <div class="swipe-poster-wrap">
+            <%= image_tag(
+                  movie.poster_url.presence || "placeholder-poster.png",
+                  alt: movie.title,
+                  referrerpolicy: "no-referrer"
+                ) %>
+            <% if movie.rating.present? %>
+              <span class="popcorn-rating-badge">⭐ <%= movie.rating %>/5</span>
+            <% end %>
+          </div>
 
           <div class="card-info">
             <h3>
@@ -37,25 +42,16 @@
               <% end %>
             </h3>
 
-            <p class="rating">
-              Note :
-              <% if movie.rating.present? %>
-                ⭐ <%= movie.rating %>/5
-              <% else %>
-                Non noté
-              <% end %>
-            </p>
+            <div class="movie-details-section">
+              <span>🎬 <%= movie.category.presence || "—" %></span>
+              <span>⏱️ <%= movie.duration.present? ? "#{movie.duration} min" : "—" %></span>
+              <span>🎞️ <%= movie.year.presence || "—" %></span>
+            </div>
 
             <p class="synopsis">
-              <%= movie.synopsis.present? ? truncate(movie.synopsis, length: 120) : "Synopsis indisponible." %>
+              <%= movie.synopsis.present? ? truncate_at_sentence(movie.synopsis, 250) : "Synopsis indisponible." %>
             </p>
 
-            <% if movie.actor_names.present? %>
-              <div class="actors-section">
-                <strong>Acteurs :</strong>
-                <p class="actors-list"><%= movie.actor_names %></p>
-              </div>
-            <% end %>
           </div>
 
           <div class="card-actions">
@@ -88,3 +84,4 @@
       </div>
     <% end %>
   </div>
+</div>

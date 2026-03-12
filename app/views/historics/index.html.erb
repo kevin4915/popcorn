@@ -17,7 +17,7 @@
             <div class="popcorn-meta">
               <span class="popcorn-year">🎞️ <%= movie.year || "?" %></span>
             </div>
-            <p class="popcorn-description"><%= movie.synopsis %></p>
+            <p class="popcorn-description"><%= truncate_at_sentence(movie.synopsis,100) %></p>
           <% end %>
 
           <div class="popcorn-actions">
