@@ -1,16 +1,27 @@
 Rails.application.routes.draw do
   devise_for :users
+
   root "pages#home"
+
   resources :movies, only: [:index, :show] do
     member do
       post :swipe
     end
   end
+
   get "surprise", to: "movies#surprise"
   get "recommended", to: "movies#recommended"
-  resources :historics, only: [:index, :destroy]
+  resources :historics, only: [:destroy] do
+    collection do
+      get :films
+      get :series
+    end
+  end
+
   resources :communities, only: [:index]
+
   get "community", to: "communities#index"
+
   resources :historics, only: [:index] do
     resources :comments, only: [:create]
   end
