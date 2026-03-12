@@ -82,9 +82,17 @@
         </article>
       <% end %>
 
-      <div class="end-state" data-swipe-target="endState" style="display: none;">
-        <p>Tu as vu tous les films !</p>
-        <%= link_to "🍿 Nouvelle recherche", root_path, class: "btn-action" %>
-      </div>
+    <div class="end-state" data-swipe-target="endState" style="display: none;">
+      <p>
+        <% if params[:serie] == "1" %>
+          Tu as vu toutes les séries !
+        <% else %>
+          Tu as vu tous les films !
+        <% end %>
+      </p>
+
+      <%= link_to "🍿 Nouvelle recherche", root_path, class: "btn-action" %>
+    </div>
     <% end %>
   </div>
+</div>

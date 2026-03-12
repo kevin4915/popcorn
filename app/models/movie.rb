@@ -10,4 +10,14 @@ class Movie < ApplicationRecord
   rescue JSON::ParserError, NoMethodError
     actors
   end
+
+  def formatted_duration
+  return "Durée moyenne non disponible" if duration.blank?
+
+    if media_type == "tv"
+      "#{duration} min / épisode"
+    else
+      "#{duration} min"
+    end
+  end
 end

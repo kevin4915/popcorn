@@ -105,7 +105,9 @@ TV_GENRES = {
   def show
     @movie = Movie.find(params[:id])
 
-    enrich_movie_from_tmdb!(@movie)
+    type = @movie.media_type.presence || "movie"
+
+    enrich_movie_from_tmdb!(@movie, type: type)
     @movie.save!
 
     @actors = parse_actors(@movie.actors)
@@ -145,7 +147,8 @@ TV_GENRES = {
       year: (result["release_date"] || result["first_air_date"])&.split("-")&.first&.to_i,
       rating: (result["vote_average"].to_f / 2).round(1),
       poster_url: result["poster_path"].present? ? "https://image.tmdb.org/t/p/w500#{result["poster_path"]}" : nil,
-      category: params[:genre].presence || "Suggestion"
+      category: params[:genre].presence || "Suggestion",
+      media_type: type
     )
 
     enrich_movie_from_tmdb!(movie, type: type)
@@ -166,8 +169,11 @@ TV_GENRES = {
     movie.trailer = extract_trailer_key(details)
     movie.platform = extract_french_platforms(watch_providers)
 
-    if type == "movie" && details["runtime"].present?
-      movie.duration = details["runtime"]
+    if type == "movie"
+      movie.duration = details["runtime"] if details["runtime"].present?
+    elsif type == "tv"
+      episode_times = details["episode_run_time"] || []
+      movie.duration = episode_times.first if episode_times.any?
     end
   end
 
