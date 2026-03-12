@@ -1,0 +1,21 @@
+<div class="surprise-wrapper">
+  <h1 class="surprise-title">Surprends-moi 🎬</h1>
+
+  <%= link_to "Nouveau film", surprise_path, class: "surprise-button" %>
+
+  <% if @movie %>
+    <div class="surprise-card">
+      <div class="surprise-image">
+        <%= image_tag @movie.poster_url, alt: @movie.title %>
+
+      </div>
+
+      <div class="surprise-info">
+        <h2><%= @movie.title %></h2>
+        <p><%= @movie.synopsis %></p>
+
+        <%= link_to "Voir le film", movie_path(@movie), class: "surprise-show-button" %>
+      </div>
+    </div>
+  <% end %>
+</div>
