@@ -1,24 +1,32 @@
-<div class="choice">
+<div class="choice" data-controller="media-toggle">
   <h2>Qu'est-ce qu'on regarde ce soir ? 🍿</h2>
 
   <%= form_with url: movies_path, method: :get do |f| %>
-
     <div class="toggle">
       <span>Film</span>
-      <%= f.check_box :serie, class: "toggle-input" %>
+
+      <%= f.check_box :serie,
+            class: "toggle-input",
+            data: {
+              action: "change->media-toggle#updateForm",
+              "media-toggle-target": "toggle"
+            } %>
+
       <span>Série</span>
     </div>
 
-    <p>Temps disponible</p>
-    <div class="durations">
-      <%= f.radio_button :duration, "1h30", id: "d1h30" %>
-      <%= label_tag "d1h30", "1h30" %>
+    <div data-media-toggle-target="durationBlock">
+      <p>Temps disponible</p>
+      <div class="durations">
+        <%= f.radio_button :duration, "1h30", id: "d1h30" %>
+        <%= label_tag "d1h30", "1h30" %>
 
-      <%= f.radio_button :duration, "2h", id: "d2h" %>
-      <%= label_tag "d2h", "2h" %>
+        <%= f.radio_button :duration, "2h", id: "d2h" %>
+        <%= label_tag "d2h", "2h" %>
 
-      <%= f.radio_button :duration, "2h30+", id: "d2h30" %>
-      <%= label_tag "d2h30", "2h30+" %>
+        <%= f.radio_button :duration, "2h30+", id: "d2h30" %>
+        <%= label_tag "d2h30", "2h30+" %>
+      </div>
     </div>
 
     <p>Avec qui ?</p>
@@ -34,13 +42,15 @@
     </div>
 
     <p>Genre</p>
-    <%= f.select :genre, ["Action", "Comédie", "Drame", "Thriller", "Science Fiction", "Horreur", "Romance", "Fantasy"], { include_blank: "Choisir un genre" } %>
+    <%= f.select :genre,
+          [],
+          { include_blank: "Choisir un genre" },
+          data: { "media_toggle_target": "genreSelect" } %>
 
     <button type="submit" class="btn-action">
       <%= image_tag "logo.png", class: "btn-logo" %>
       Moteur ... Action !
     </button>
-
   <% end %>
 </div>
 
