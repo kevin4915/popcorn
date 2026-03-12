@@ -6,11 +6,13 @@ Rails.application.routes.draw do
       post :swipe
     end
   end
+  get "surprise", to: "movies#surprise"
+  get "recommended", to: "movies#recommended"
   resources :historics, only: [:index, :destroy]
   resources :communities, only: [:index]
   get "community", to: "communities#index"
   resources :historics, only: [:index] do
-  resources :comments, only: [:create]
+    resources :comments, only: [:create]
   end
 
   get "calendar", to: "pages#calendar"
