@@ -7,6 +7,9 @@ Rails.application.routes.draw do
     member do
       post :swipe
     end
+    collection do
+      get :search
+    end
   end
 
   get "surprise", to: "movies#surprise"

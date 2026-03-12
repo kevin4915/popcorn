@@ -1,5 +1,5 @@
 class MoviesController < ApplicationController
-  before_action :authenticate_user!, only: %i[index show]
+  before_action :authenticate_user!, only: %i[index show search]
 
   PLATFORM_IDS = {
     "Netflix" => 8,
@@ -168,6 +168,17 @@ TV_GENRES = {
     "#{base}#{CGI.escape(title)}"
   end
 
+  def search
+    query = params[:q]
+    return if query.blank?
+
+    results = tmdb_get("search/multi", language: "fr-FR", query: query)
+    @movies = (results["results"] || [])
+      .select { |r| %w[movie tv].include?(r["media_type"]) }
+      .first(10)
+      .map { |result| upsert_movie(result, result["media_type"]) }
+  end
+
   private
 
   def tmdb_get(path, query = {})
@@ -315,9 +326,9 @@ TV_GENRES = {
 
   def excluded_genres(company)
     case company
-    when "famille" then ""
-    when "potes"   then "10751"
-    when "seul"    then "10751,16"
+    when "famille" then "27, 80, 10752, 10768"
+    when "potes"   then ""
+    when "seul"    then ""
     else ""
     end
   end
