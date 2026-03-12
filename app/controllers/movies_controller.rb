@@ -66,26 +66,30 @@ class MoviesController < ApplicationController
   end
 
   def recommended
-    # Films que l'utilisateur a vus
+    # Films likés par l'utilisateur
+    liked_review_ids = current_user.user_reviews.pluck(:review_id)
+    liked_movie_ids = Review.where(id: liked_review_ids).pluck(:movie_id)
+
+    # Films vus (à exclure)
     seen_ids = current_user.historics.pluck(:movie_id)
 
-    # Utilisateurs qui ont vu les mêmes films
-    similar_users = Historic.where(movie_id: seen_ids)
-                            .where.not(user_id: current_user.id)
-                            .pluck(:user_id)
+    # Utilisateurs qui ont liké les mêmes films
+    similar_users = UserReview.where(review_id: liked_review_ids)
+                              .where.not(user_id: current_user.id)
+                              .pluck(:user_id)
 
-    # Films vus par ces utilisateurs (mais pas encore vus par toi)
-    similar_movies = Movie.joins(:historics)
-                          .where(historics: { user_id: similar_users })
+    # Films likés par ces utilisateurs
+    similar_movies = Movie.joins(reviews: :user_reviews)
+                          .where(user_reviews: { user_id: similar_users })
                           .where.not(id: seen_ids)
                           .distinct
 
-    # Films populaires (beaucoup de reviews), non vus
+    # Films populaires non vus
     popular_unseen = Movie.left_joins(:reviews)
                           .where.not(id: seen_ids)
                           .group("movies.id")
                           .order("COUNT(reviews.id) DESC")
-                          .limit(3)
+                          .limit(20)
 
     # Fusion intelligente
     @movies = (similar_movies + popular_unseen).uniq
