@@ -46,13 +46,13 @@ class MoviesController < ApplicationController
       tmdb_query["with_runtime.gte"] = 30
     end
 
-    tmdb_results = fetch_tmdb_results(type, tmdb_query, seen_tmdb_ids)
+    tmdb_results = fetch_tmdb_results(type, tmdb_query, seen_ids: seen_tmdb_ids)
 
     if tmdb_results.empty?
       tmdb_results = fetch_tmdb_results(
         type,
         tmdb_query.merge(page: 1, sort_by: "popularity.desc"),
-        seen_tmdb_ids
+        seen_ids: seen_tmdb_ids
       )
     end
 
@@ -77,7 +77,10 @@ class MoviesController < ApplicationController
 
   def swipe
     @movie = Movie.find(params[:id])
-    Historic.create!(user: current_user, movie: @movie) if params[:decision] == "like"
+    if params[:decision] == "like"
+      Historic.create!(user: current_user, movie: @movie)
+      current_user.check_for_badges
+    end
     head :ok
   end
 
@@ -135,7 +138,7 @@ class MoviesController < ApplicationController
     )
   end
 
-  def fetch_tmdb_results(type, query, seen_ids)
+  def fetch_tmdb_results(type, query, seen_ids: [])
     response = tmdb_get("discover/#{type}", query)
     (response["results"] || []).reject { |r| seen_ids.include?(r["id"]) }
   end

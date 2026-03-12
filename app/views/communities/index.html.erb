@@ -15,12 +15,23 @@
 
         <div class="popcorn-info">
           <p class="community-activity">
-            <strong><%= historic.user.first_name || historic.user.email.split('@').first %></strong>
+            <span class="user-identity">
+              <span class="user-name">
+                <%= historic.user.first_name || historic.user.email.split('@').first %>
+              </span>
+              <span class="badges-container">
+                <% historic.user.badges.each do |badge| %>
+                  <span class="popcorn-badge" title="<%= badge.description %>">
+                    <%= badge.icon %>
+                  </span>
+                <% end %>
+              </span>
+            </span>
             a aimé <strong><%= historic.movie.title %></strong>
           </p>
 
           <div class="popcorn-meta">
-            ⭐ <%= historic.movie.rating || "—" %>/10
+            ⭐ <%= historic.movie.rating || "—" %>/5
             <span class="popcorn-year">🎞️ <%= historic.movie.year %></span>
           </div>
 
@@ -37,9 +48,9 @@
               </div>
             <% end %>
 
-            <%= form_with model: [historic, Comment.new], class: "comment-form", style: "display: flex; gap: 10px; align-items: center; margin-top: 10px;" do |f| %>
-             <%= f.text_field :content, placeholder: "Ajouter un commentaire...", style: "flex: 1; background: #1a1a1a; border: 1px solid #444; color: white; padding: 8px; border-radius: 4px;" %>
-             <%= f.submit "Envoyer", style: "background: #E50914; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;" %>
+            <%= form_with model: [historic, Comment.new], class: "comment-form" do |f| %>
+              <%= f.text_field :content, placeholder: "Ajouter un commentaire...", class: "comment-input" %>
+              <%= f.submit "Envoyer", class: "btn-popcorn-small" %>
             <% end %>
           </div>
         </div>

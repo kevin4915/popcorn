@@ -11,4 +11,16 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   has_many :friendships
   has_many :friends, -> { where(friendships: { status: 'accepted' }) }, through: :friendships
+  has_many :user_badges
+  has_many :badges, through: :user_badges
+
+  def check_for_badges
+    count = historics.count
+
+    badges << Badge.find_by(name: "Découvreur") if count >= 10 && !badges.exists?(name: "Découvreur")
+
+    return unless count >= 50 && !badges.exists?(name: "Grand Cinéphile")
+
+    badges << Badge.find_by(name: "Grand Cinéphile")
+  end
 end
