@@ -84,3 +84,36 @@
     margin-bottom: 12px;
   }
 }
+
+.top-section {
+  margin-top: 24px;
+}
+
+.top-tabs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 0 16px 20px;
+}
+
+.top-tab {
+  border: none;
+  background: #1f1f1f;
+  color: #bbb;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.top-tab.active {
+  background: linear-gradient(135deg, #e50914, #b0060f);
+  color: white;
+  box-shadow: 0 4px 18px rgba(229, 9, 20, 0.35);
+}
+
+.top-tab:hover {
+  color: white;
+}
