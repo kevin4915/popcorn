@@ -1,23 +1,18 @@
 <div class="popcorn-wrapper">
   <div class="profile-card-large">
-
     <div class="profile-header-main">
       <div class="avatar-container">
         <%= image_tag "avatar_default.avif", class: "profile-avatar-img" %>
       </div>
-
-      <h1 class="profile-name"><%= @user.first_name %></h1>
-
-      <div class="main-badge-display">
+      <div class="badge-frame">
+        <h1 class="profile-name"><%= @user.first_name %></h1>
         <% if @user.badges.any? %>
-          <% primary_badge = @user.badges.first %>
-          <div class="badge-title-tag" title="<%= primary_badge.description %>">
-            <span class="badge-icon-small"><%= primary_badge.icon %></span>
-            <span class="badge-text"><%= primary_badge.name %></span>
+          <div class="badge-item-fancy">
+            <span><%= @user.badges.first.icon %></span>
+            <span><%= @user.badges.first.name %></span>
           </div>
         <% end %>
       </div>
-
       <div class="profile-stats">
         <div class="stat-item">
           <span class="stat-value"><%= @user.liked_movies_count %></span>
@@ -31,29 +26,15 @@
     </div>
 
     <div class="profile-section">
-      <h3>Mes Abonnements</h3>
+      <h3>Mes Plateformes</h3>
       <div class="platform-flex">
-        <% platforms = {
-          "Netflix" => "Logo_netflix.png",
-          "DisneyPlus" => "Logo_disney.png",
-          "AmazonPrime" => "Logo_amazon_prime.png",
-          "CanalPlus" => "Logo_canal.png",
-          "HBO" => "Logo_HBO.png"
-        } %>
-
-        <% has_platform = false %>
-        <% platforms.each do |db_column, logo| %>
-          <% if @user.send(db_column) %>
-            <% has_platform = true %>
-            <div class="platform-chip">
-              <%= image_tag logo, class: "platform-mini-logo", alt: db_column %>
-              <%= db_column.gsub("Plus", "+").gsub("Prime", " Prime") %>
-            </div>
+        <% platforms = { "Netflix" => "Logo_netflix.png", "DisneyPlus" => "Logo_disney.png", "AmazonPrime" => "Logo_amazon_prime.png", "CanalPlus" => "Logo_canal.png", "HBO" => "Logo_HBO.png" } %>
+        <% platforms.each do |name, logo| %>
+          <% if @user.send(name) %>
+            <span class="platform-chip">
+              <%= image_tag logo, style: "width: 20px;" %> <%= name.gsub("Plus", "+").gsub("Prime", " Prime") %>
+            </span>
           <% end %>
-        <% end %>
-
-        <% unless has_platform %>
-          <p class="empty-msg">Aucun abonnement sélectionné dans les paramètres.</p>
         <% end %>
       </div>
     </div>
