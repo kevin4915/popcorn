@@ -10,7 +10,8 @@ Rails.application.routes.draw do
   get "surprise", to: "movies#surprise"
   get "recommended", to: "movies#recommended"
 
-  resources :recommendations, only: [:new, :create]
+  resources :recommendations, only: [:new, :create, :index]
+
   post "recommendations/results", to: "recommendations#results"
 
 

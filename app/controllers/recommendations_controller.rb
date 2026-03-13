@@ -1,6 +1,8 @@
 class RecommendationsController < ApplicationController
   def index
     redirect_to new_recommendation_path
+    @recommendations = RecommendationService.call
+    @movies = MovieService.call(params[:query])
   end
 
   def new
@@ -35,7 +37,6 @@ class RecommendationsController < ApplicationController
     puts "RAW RESPONSE:"
     puts raw
 
-    # Extraction robuste du JSON
     json_match = raw.match(/
 
 \[[\s\S]*\]
@@ -49,7 +50,7 @@ class RecommendationsController < ApplicationController
       movies = []
     end
 
-    # Ajout des affiches TMDB (sécurisé)
+    # Ajout des affiches TMDB
     @movies = movies.map do |movie|
       begin
         tmdb = TmdbService.search_movie(movie["title"])
