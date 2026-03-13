@@ -26,15 +26,15 @@
     <% @movies.each do |movie| %>
       <div class="popcorn-card-wrapper">
         <div class="popcorn-card">
-          <%= link_to movie_path(movie), class: "popcorn-poster" do %>
-            <%= image_tag movie.poster_url, alt: movie.title %>
+          <%= link_to movie_path(movie, from: "search", q: params[:q]), class: "popcorn-poster" do %>
+            <%= image_tag movie.poster_url.presence || asset_path("no-poster.png"), alt: movie.title %>
             <% if movie.rating.present? %>
               <span class="popcorn-rating-badge">⭐ <%= movie.rating %></span>
             <% end %>
           <% end %>
 
           <div class="popcorn-info">
-            <%= link_to movie_path(movie), class: "popcorn-info-link" do %>
+            <%= link_to movie_path(movie, from: "search", q: params[:q]), class: "popcorn-info-link" do %>
               <h2><%= movie.title %></h2>
               <p class="popcorn-category">
                 <%= movie.media_type == "tv" ? "📺 Série" : "🎬 Film" %>
@@ -46,6 +46,17 @@
               </div>
               <p class="popcorn-description"><%= truncate_at_sentence(movie.synopsis, 80) %></p>
             <% end %>
+
+            <div class="popcorn-actions"
+                 data-controller="watchlist"
+                 data-watchlist-added-value="<%= current_user.movies.include?(movie) %>">
+              <button class="btn-historic-action <%= current_user.movies.include?(movie) ? 'btn-added' : 'btn-add-list' %>"
+                      data-watchlist-target="btn"
+                      data-action="click->watchlist#toggle"
+                      data-movie-id="<%= movie.id %>">
+                <i data-watchlist-target="icon" class="fa-solid <%= current_user.movies.include?(movie) ? 'fa-check' : 'fa-heart' %>"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   resources :movies, only: [:index, :show] do
     member do
       post :swipe
+      post :add_to_list
+      delete :remove_from_list
     end
     collection do
       get :search
