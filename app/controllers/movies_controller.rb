@@ -179,6 +179,22 @@ TV_GENRES = {
       .map { |result| upsert_movie(result, result["media_type"]) }
   end
 
+  def add_to_list
+    @movie = Movie.find(params[:id])
+    unless current_user.movies.include?(@movie)
+      Historic.create!(user: current_user, movie: @movie)
+      current_user.check_for_badges
+    end
+    head :ok
+  end
+
+  def remove_from_list
+    @movie = Movie.find(params[:id])
+    historic = current_user.historics.find_by(movie: @movie)
+    historic&.destroy
+    head :ok
+  end
+
   private
 
   def tmdb_get(path, query = {})

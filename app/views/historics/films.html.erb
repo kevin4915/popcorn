@@ -5,7 +5,7 @@
     <div class="popcorn-card-wrapper">
       <div class="popcorn-card">
         <%= link_to movie_path(movie, from: "films"), class: "popcorn-poster" do %>
-          <%= image_tag movie.poster_url, alt: movie.title %>
+          <%= image_tag movie.poster_url.presence || asset_path("no-poster.png"), alt: movie.title %>
           <span class="popcorn-rating-badge">⭐ <%= movie.rating || "—" %></span>
         <% end %>
 
@@ -13,7 +13,7 @@
           <%= link_to movie_path(movie, from: "films"), class: "popcorn-info-link" do %>
             <h2><%= movie.title %></h2>
             <p class="popcorn-category">🎬 <%= movie.category %></p>
-            <p class="popcorn-duration">⏱️ <%= movie.duration %> min</p>
+            <p class="popcorn-duration">⏱️ <%= movie.duration.present? ? "#{movie.duration} min" : "—" %></p>
             <div class="popcorn-meta">
               <span class="popcorn-year">🎞️ <%= movie.year || "?" %></span>
             </div>

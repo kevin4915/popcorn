@@ -4,6 +4,7 @@
     case params[:from]
     when "films"  then films_historics_path
     when "series" then series_historics_path
+    when "search" then search_movies_path(q: params[:q])
     else root_path
     end,
     class: "show-back"
@@ -12,9 +13,7 @@
   <% end %>
 
   <div class="show-poster">
-    <% if @movie.poster_url.present? %>
-      <%= image_tag @movie.poster_url, alt: @movie.title %>
-    <% end %>
+    <%= image_tag @movie.poster_url.presence || asset_path("no-poster.png"), alt: @movie.title %>
   </div>
 
   <h1 class="show-title">

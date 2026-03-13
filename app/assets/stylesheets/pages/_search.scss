@@ -55,3 +55,19 @@
 .search-page .popcorn-title {
   margin-top: 20px;
 }
+
+.btn-add-list {
+  background: #2a2a2a;
+  color: #e50914;
+
+  &:hover { background: #e50914; color: white; }
+}
+
+.btn-added {
+  background: #2a2a2a;
+  color: #2ecc71;
+  cursor: default;
+  border: none;
+
+  &:hover { transform: none; }
+}

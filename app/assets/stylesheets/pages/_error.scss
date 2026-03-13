@@ -1,0 +1,29 @@
+.error-wrapper {
+  margin: 80px 16px 0;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(229, 9, 20, 0.75);
+  text-align: center;
+  color: white;
+}
+
+.error-code {
+  font-size: 100px;
+  font-weight: 900;
+  color: #e50914;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.error-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.error-subtitle {
+  font-size: 15px;
+  color: #aaa;
+  margin-bottom: 30px;
+}

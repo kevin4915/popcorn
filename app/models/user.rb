@@ -25,4 +25,25 @@ class User < ApplicationRecord
 
     badges << Badge.find_by(name: "Grand Cinéphile")
   end
+  has_many :sent_friendships, class_name: 'Friendship', foreign_key: 'user_id'
+  has_many :accepted_friends, lambda {
+    where(friendships: { status: 'accepted' })
+  }, through: :sent_friendships, source: :friend
+
+  has_many :received_friendships, class_name: 'Friendship', foreign_key: 'friend_id'
+  has_many :friends_who_added_me, lambda {
+    where(friendships: { status: 'accepted' })
+  }, through: :received_friendships, source: :user
+
+  def friends
+    accepted_friends + friends_who_added_me
+  end
+
+  def liked_movies_count
+    historics.where(movie_id: Movie.ids).count
+  end
+
+  def recent_liked_movies
+    historics.includes(:movie).order(created_at: :desc).limit(10).map(&:movie)
+  end
 end
