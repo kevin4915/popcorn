@@ -1,11 +1,18 @@
 Rails.application.routes.draw do
+  get "profiles/show"
   devise_for :users
 
   root "pages#home"
-
+  resources :friendships, only: [:create, :update, :destroy]
+  resources :profiles, only: [:show]
   resources :movies, only: [:index, :show] do
     member do
       post :swipe
+      post :add_to_list
+      delete :remove_from_list
+    end
+    collection do
+      get :search
     end
   end
 
@@ -40,4 +47,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  match "/404", to: "errors#not_found", via: :all
+  match "/500", to: "errors#internal_server_error", via: :all
 end

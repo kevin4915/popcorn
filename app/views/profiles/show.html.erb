@@ -1,0 +1,87 @@
+<div class="popcorn-wrapper">
+  <div class="profile-card-large">
+
+    <div class="profile-header-main">
+      <div class="avatar-container">
+        <%= image_tag "avatar_default.avif", class: "profile-avatar-img" %>
+      </div>
+
+      <h1 class="profile-name"><%= @user.first_name %></h1>
+
+      <div class="main-badge-display">
+        <% if @user.badges.any? %>
+          <% primary_badge = @user.badges.first %>
+          <div class="badge-title-tag" title="<%= primary_badge.description %>">
+            <span class="badge-icon-small"><%= primary_badge.icon %></span>
+            <span class="badge-text"><%= primary_badge.name %></span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="profile-stats">
+        <div class="stat-item">
+          <span class="stat-value"><%= @user.liked_movies_count %></span>
+          <span class="stat-label">Films likés</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value"><%= @user.friends.count %></span>
+          <span class="stat-label">Amis</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-section">
+      <h3>Mes Abonnements</h3>
+      <div class="platform-flex">
+        <% platforms = {
+          "Netflix" => "Logo_netflix.png",
+          "DisneyPlus" => "Logo_disney.png",
+          "AmazonPrime" => "Logo_amazon_prime.png",
+          "CanalPlus" => "Logo_canal.png",
+          "HBO" => "Logo_HBO.png"
+        } %>
+
+        <% has_platform = false %>
+        <% platforms.each do |db_column, logo| %>
+          <% if @user.send(db_column) %>
+            <% has_platform = true %>
+            <div class="platform-chip">
+              <%= image_tag logo, class: "platform-mini-logo", alt: db_column %>
+              <%= db_column.gsub("Plus", "+").gsub("Prime", " Prime") %>
+            </div>
+          <% end %>
+        <% end %>
+
+        <% unless has_platform %>
+          <p class="empty-msg">Aucun abonnement sélectionné dans les paramètres.</p>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="profile-section">
+      <h3>Derniers coups de cœur</h3>
+      <div class="movies-carousel">
+        <% @user.recent_liked_movies.each do |movie| %>
+          <%= link_to movie_path(movie), class: "carousel-movie-card" do %>
+            <%= image_tag movie.poster_url, alt: movie.title %>
+            <div class="movie-mini-info">
+              <span>⭐ <%= movie.rating %></span>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="profile-footer-actions">
+      <% if current_user != @user %>
+        <% if current_user.friends.include?(@user) %>
+          <span class="friend-status">✅ Amis</span>
+        <% elsif current_user.sent_friendships.exists?(friend: @user, status: 'pending') %>
+          <span class="friend-status">⏳ Demande en attente</span>
+        <% else %>
+          <%= button_to "Ajouter en ami", friendships_path(friend_id: @user.id), method: :post, class: "btn-popcorn" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -14,12 +14,15 @@
 @import "pages/movies_show";
 @import "movies/surprise";
 @import "movies/recommended";
-
 @import "components/community";
 @import "components/badge";
+@import "pages/profil";
 @import "pages/home";
 @import "pages/swipe";
 @import "pages/calendar";
+@import "pages/search";
+@import "components/header";
+@import "pages/error";
 
 * {
   margin: 0;

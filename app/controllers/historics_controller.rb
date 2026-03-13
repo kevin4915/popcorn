@@ -10,6 +10,6 @@ class HistoricsController < ApplicationController
   def destroy
     @historic = current_user.historics.find(params[:id])
     @historic.destroy
-    redirect_back fallback_location: historics_films_path, notice: "Retiré de ta liste !"
+    redirect_back fallback_location: films_historics_path, notice: "Retiré de ta liste !"
   end
 end

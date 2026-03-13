@@ -17,7 +17,7 @@
           <p class="community-activity">
             <span class="user-identity">
               <span class="user-name">
-                <%= historic.user.first_name || historic.user.email.split('@').first %>
+                <%= link_to (historic.user.first_name || historic.user.email.split('@').first), profile_path(historic.user) %>
               </span>
               <span class="badges-container">
                 <% historic.user.badges.each do |badge| %>
@@ -44,7 +44,7 @@
           <div class="community-comments">
             <% historic.comments.each do |comment| %>
               <div class="comment-item">
-                <strong><%= comment.user.first_name || "Utilisateur" %> :</strong> <%= comment.content %>
+                <strong><%= link_to (comment.user.first_name || "Utilisateur"), profile_path(comment.user) %> :</strong> <%= comment.content %>
               </div>
             <% end %>
 

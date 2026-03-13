@@ -187,3 +187,41 @@
 .alert {
   border-radius: 12px;
 }
+
+.profile-avatar-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-avatar-preview {
+  margin-bottom: 12px;
+}
+
+.profile-avatar-image {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 20px rgba(229, 9, 20, 0.35);
+}
+
+.avatar-upload-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: #2a2a2a;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #444;
+  transition: all 0.2s;
+}
+
+.avatar-upload-btn:hover {
+  background: #333;
+}
+
+.avatar-input {
+  display: none;
+}
