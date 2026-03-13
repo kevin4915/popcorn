@@ -5,7 +5,7 @@
     <div class="popcorn-card-wrapper">
       <div class="popcorn-card">
         <%= link_to movie_path(movie, from: "series"), class: "popcorn-poster" do %>
-          <%= image_tag movie.poster_url, alt: movie.title %>
+          <%= image_tag movie.poster_url.presence || asset_path("no-poster.png"), alt: movie.title %>
           <span class="popcorn-rating-badge">⭐ <%= movie.rating || "—" %></span>
         <% end %>
 

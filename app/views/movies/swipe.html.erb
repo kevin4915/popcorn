@@ -25,10 +25,10 @@
 
           <div class="swipe-poster-wrap">
             <%= image_tag(
-                  movie.poster_url.presence || "placeholder-poster.png",
-                  alt: movie.title,
-                  referrerpolicy: "no-referrer"
-                ) %>
+              movie.poster_url.presence || asset_path("no-poster.png"),
+              alt: movie.title,
+              referrerpolicy: "no-referrer"
+            ) %>
             <% if movie.rating.present? %>
               <span class="popcorn-rating-badge">⭐ <%= movie.rating %>/5</span>
             <% end %>
