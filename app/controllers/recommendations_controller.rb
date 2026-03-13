@@ -1,4 +1,11 @@
 class RecommendationsController < ApplicationController
+  def index
+    redirect_to new_recommendation_path
+  end
+
+  def new
+  end
+
   def create
     query = params[:query]
 
@@ -10,18 +17,31 @@ class RecommendationsController < ApplicationController
         messages: [
           {
             role: "user",
-            content: "Tu es un expert cinéma. Donne-moi 5 films similaires à : #{query}. Réponds uniquement en JSON : [ { \"title\": \"\", \"year\": \"\", \"genre\": \"\", \"summary\": \"\" } ]"
+            content: <<~PROMPT
+              Tu es un expert cinéma.
+              Donne-moi exactement 5 films similaires à : #{query}.
+              Réponds STRICTEMENT avec un JSON valide, sans texte avant ni après.
+              Format :
+              [
+                { "title": "", "year": "", "genre": "", "summary": "" }
+              ]
+            PROMPT
           }
         ]
       }
     )
 
     raw = response.dig("choices", 0, "message", "content")
-    cleaned = raw[/
+    puts "RAW RESPONSE:"
+    puts raw
+
+    # Extraction robuste du JSON
+    json_match = raw.match(/
 
 \[[\s\S]*\]
 
-/]
+/)
+    cleaned = json_match ? json_match[0] : "[]"
 
     begin
       movies = JSON.parse(cleaned)
@@ -29,10 +49,16 @@ class RecommendationsController < ApplicationController
       movies = []
     end
 
-    # Ajout des affiches TMDB
+    # Ajout des affiches TMDB (sécurisé)
     @movies = movies.map do |movie|
-      tmdb = TmdbService.search_movie(movie["title"])
-      movie.merge("poster_url" => tmdb&.dig(:poster_url))
+      begin
+        tmdb = TmdbService.search_movie(movie["title"])
+        poster = tmdb && tmdb[:poster_url] ? tmdb[:poster_url] : nil
+      rescue StandardError
+        poster = nil
+      end
+
+      movie.merge("poster_url" => poster)
     end
 
     render :results

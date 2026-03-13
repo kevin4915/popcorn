@@ -10,8 +10,9 @@ Rails.application.routes.draw do
   get "surprise", to: "movies#surprise"
   get "recommended", to: "movies#recommended"
 
-  get  "recommendations", to: "recommendations#new"
-  post "recommendations", to: "recommendations#create"
+  resources :recommendations, only: [:new, :create]
+  post "recommendations/results", to: "recommendations#results"
+
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
