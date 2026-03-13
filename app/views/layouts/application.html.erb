@@ -45,6 +45,7 @@
           </div>
 
           <div class="dropdown-menu-custom" id="dropdownMenu">
+            <%= link_to "Mon Profil", profile_path(current_user) %>
             <%= link_to "Communauté", community_path %>
             <%= link_to "Mes films", films_historics_path %>
             <%= link_to "Mes séries", series_historics_path %>
