@@ -3,7 +3,10 @@ Rails.application.routes.draw do
   devise_for :users
 
   root "pages#home"
-  resources :friendships, only: [:create, :update, :destroy]
+  resources :friendships, only: [:create, :update]
+  member do
+    patch :accept
+  end
   resources :profiles, only: [:show]
   resources :movies, only: [:index, :show] do
     member do
