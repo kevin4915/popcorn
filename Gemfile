@@ -49,6 +49,8 @@ gem "sassc-rails"
 gem "devise-i18n"
 gem "ruby_llm", "~> 1.2.0"
 gem "httparty"
+gem "cloudinary"
+gem "activestorage-cloudinary-service"
 
 group :development, :test do
   gem "dotenv-rails"
