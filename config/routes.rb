@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
+  get "profiles/show"
   devise_for :users
 
   root "pages#home"
-
+  resources :friendships, only: [:create, :update, :destroy]
+  resources :profiles, only: [:show]
   resources :movies, only: [:index, :show] do
     member do
       post :swipe
