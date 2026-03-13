@@ -1,20 +1,15 @@
 .profile-card-large {
-  background: rgba(26, 26, 26, 0.95);
-  border-radius: 20px;
-  border: 1px solid #333;
-  padding: 40px;
-  margin: 20px auto;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 20px;
+  margin: 0 auto;
   max-width: 800px;
-  box-shadow: 0 10px 30px rgba(229, 9, 20, 0.1);
-}
-
-.profile-section {
-  margin-bottom: 40px;
 }
 
 .profile-header-main {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
 
   .profile-avatar-img {
     width: 120px;
@@ -22,36 +17,31 @@
     border-radius: 50%;
     border: 3px solid #e50914;
     object-fit: cover;
+    margin-bottom: 20px;
   }
 }
 
-.main-badge-display {
-  margin-top: -10px;
-  margin-bottom: 20px;
+.badge-frame {
+  background: #1a1a1a;
+  padding: 20px 40px;
+  border-radius: 25px;
+  border: 1px solid #333;
+  display: inline-block;
+  margin-bottom: 30px;
+}
+
+.profile-name {
+  margin: 0 0 10px 0;
+  color: white;
+}
+
+.badge-item-fancy {
   display: flex;
-  justify-content: center;
-}
-
-.badge-title-tag {
-  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(229, 9, 20, 0.1);
-  border: 1px solid #e50914;
-  padding: 5px 15px;
-  border-radius: 20px;
-
-  .badge-icon-small {
-    font-size: 16px;
-  }
-
-  .badge-text {
-    font-size: 14px;
-    font-weight: 500;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
+  justify-content: center;
+  gap: 10px;
+  color: #e50914;
+  font-weight: bold;
 }
 
 .profile-stats {
@@ -68,39 +58,27 @@
   }
 }
 
+.profile-section {
+  margin-bottom: 40px;
+}
+
 .platform-flex {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 .platform-chip {
-  background: #2a2a2a;
-  border: 1px solid #444;
-  color: #fff;
+  background: #333;
   padding: 8px 16px;
-  border-radius: 25px;
-  font-size: 0.85rem;
+  border-radius: 20px;
+  font-size: 14px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  transition: all 0.3s ease;
-  width: fit-content;
-
-  &:hover {
-    border-color: #e50914;
-    transform: translateY(-2px);
-  }
-
-  .platform-mini-logo {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-    display: block;
-  }
+  gap: 8px;
+  color: white;
 }
 
 .movies-carousel {
@@ -124,10 +102,19 @@
   }
 }
 
-.empty-msg {
-  color: #666;
-  font-style: italic;
-  font-size: 0.9rem;
+.profile-footer-actions {
+  margin-top: 40px;
+  min-height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.friend-status {
+  background: #333;
+  padding: 10px 20px;
+  border-radius: 20px;
+  color: #fff;
 }
 
 .btn-popcorn {
@@ -138,9 +125,4 @@
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
-
-  &:hover {
-    background-color: #b20710;
-  }
 }
