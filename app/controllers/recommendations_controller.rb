@@ -1,8 +1,6 @@
 class RecommendationsController < ApplicationController
   def index
-    redirect_to new_recommendation_path
-    @recommendations = RecommendationService.call
-    @movies = MovieService.call(params[:query])
+    redirect_to new_recommendation_path and return
   end
 
   def new
@@ -21,11 +19,25 @@ class RecommendationsController < ApplicationController
             role: "user",
             content: <<~PROMPT
               Tu es un expert cinéma.
-              Donne-moi exactement 5 films similaires à : #{query}.
-              Réponds STRICTEMENT avec un JSON valide, sans texte avant ni après.
-              Format :
+
+              Donne-moi EXACTEMENT 5 films similaires à : "#{query}".
+
+              Règles STRICTES :
+              - Utilise UNIQUEMENT les titres EXACTS tels qu'ils apparaissent sur TMDB.
+              - Pas d'apostrophes, pas de guillemets spéciaux, pas de variantes.
+              - Pas de texte avant ou après le JSON.
+              - Le JSON doit être parfaitement valide.
+              - Le résumé doit être en français.
+              - L'année doit être un nombre (pas une string).
+
+              Réponds UNIQUEMENT avec ce JSON :
               [
-                { "title": "", "year": "", "genre": "", "summary": "" }
+                {
+                  "title": "",
+                  "year": 0,
+                  "genre": "",
+                  "summary": ""
+                }
               ]
             PROMPT
           }
@@ -37,20 +49,12 @@ class RecommendationsController < ApplicationController
     puts "RAW RESPONSE:"
     puts raw
 
-    json_match = raw.match(/
-
-\[[\s\S]*\]
-
-/)
-    cleaned = json_match ? json_match[0] : "[]"
-
     begin
-      movies = JSON.parse(cleaned)
-    rescue StandardError
+      movies = JSON.parse(raw)
+    rescue JSON::ParserError
       movies = []
     end
 
-    # Ajout des affiches TMDB
     @movies = movies.map do |movie|
       begin
         tmdb = TmdbService.search_movie(movie["title"])
@@ -62,6 +66,9 @@ class RecommendationsController < ApplicationController
       movie.merge("poster_url" => poster)
     end
 
-    render :results
+    respond_to do |format|
+      format.turbo_stream
+      format.html { render :results }
+    end
   end
 end
