@@ -23,20 +23,46 @@ class RecommendationsController < ApplicationController
               Donne-moi EXACTEMENT 5 films similaires à : "#{query}".
 
               Règles STRICTES :
+              - Réponds UNIQUEMENT avec un JSON.
+              - Le JSON doit être un TABLEAU contenant 5 objets.
+              - Pas de texte avant ou après.
+              - Pas de commentaires.
+              - Pas d'objet seul : toujours un tableau de 5 éléments.
               - Utilise UNIQUEMENT les titres EXACTS tels qu'ils apparaissent sur TMDB.
-              - Pas d'apostrophes, pas de guillemets spéciaux, pas de variantes.
-              - Pas de texte avant ou après le JSON.
-              - Le JSON doit être parfaitement valide.
               - Le résumé doit être en français.
               - L'année doit être un nombre (pas une string).
 
-              Réponds UNIQUEMENT avec ce JSON :
+              Format OBLIGATOIRE :
               [
                 {
-                  "title": "",
-                  "year": 0,
-                  "genre": "",
-                  "summary": ""
+                  "title": "Titre exact TMDB",
+                  "year": 2000,
+                  "genre": "Genre",
+                  "summary": "Résumé en français"
+                },
+                {
+                  "title": "Titre exact TMDB",
+                  "year": 2000,
+                  "genre": "Genre",
+                  "summary": "Résumé en français"
+                },
+                {
+                  "title": "Titre exact TMDB",
+                  "year": 2000,
+                  "genre": "Genre",
+                  "summary": "Résumé en français"
+                },
+                {
+                  "title": "Titre exact TMDB",
+                  "year": 2000,
+                  "genre": "Genre",
+                  "summary": "Résumé en français"
+                },
+                {
+                  "title": "Titre exact TMDB",
+                  "year": 2000,
+                  "genre": "Genre",
+                  "summary": "Résumé en français"
                 }
               ]
             PROMPT
@@ -49,12 +75,45 @@ class RecommendationsController < ApplicationController
     puts "RAW RESPONSE:"
     puts raw
 
+    # -----------------------------
+    #  PARSING ROBUSTE DU JSON
+    # -----------------------------
     begin
       movies = JSON.parse(raw)
+
+      # Si OpenAI renvoie un objet seul → on le transforme en tableau
+      movies = [movies] if movies.is_a?(Hash)
+
+      # Si OpenAI renvoie moins de 5 films → on complète
+      if movies.length < 5
+        missing = 5 - movies.length
+        movies += Array.new(missing) do
+          {
+            "title" => "Film manquant",
+            "year" => 0,
+            "genre" => "",
+            "summary" => ""
+          }
+        end
+      end
+
+      # Si OpenAI renvoie plus de 5 films → on coupe
+      movies = movies.first(5)
     rescue JSON::ParserError
-      movies = []
+      # JSON cassé → on renvoie 5 placeholders
+      movies = Array.new(5) do
+        {
+          "title" => "Film introuvable",
+          "year" => 0,
+          "genre" => "",
+          "summary" => ""
+        }
+      end
     end
 
+    # -----------------------------
+    #  ENRICHISSEMENT TMDB (posters)
+    # -----------------------------
     @movies = movies.map do |movie|
       begin
         tmdb = TmdbService.search_movie(movie["title"])

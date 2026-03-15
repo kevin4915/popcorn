@@ -1,0 +1,69 @@
+.recommendations-container {
+  padding: 20px;
+  color: white;
+}
+
+.section-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #ff2a2a;
+  text-align: center;
+}
+
+/* GRID POPCORN : 5 cartes propres */
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+/* CARTE POPCORN */
+.movie-card {
+  background: #0d0d0d;
+  border: 1px solid #ff2a2a;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 18px rgba(255, 0, 0, 0.55);
+  }
+}
+
+/* POSTER */
+.movie-poster {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* TEXTE */
+.movie-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.movie-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+}
+
+.movie-genre {
+  font-size: 14px;
+  color: #ff2a2a;
+}
+
+.movie-summary {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #e6e6e6;
+}
