@@ -11,6 +11,15 @@
           html: { method: :put, multipart: true }
         ) do |f| %>
       <%= f.error_notification %>
+      <% if resource.errors.any? %>
+        <div class="alert alert-danger">
+          <ul style="margin:0; padding-left:18px;">
+            <% resource.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
 
     <div class="profile-avatar-section" data-controller="avatar-preview">
       <p class="login-label">Photo de profil</p>
