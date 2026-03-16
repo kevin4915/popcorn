@@ -112,18 +112,23 @@ class RecommendationsController < ApplicationController
     end
 
     # -----------------------------
-    #  ENRICHISSEMENT TMDB (posters)
+    #  ENRICHISSEMENT TMDB COMPLET
     # -----------------------------
     @movies = movies.map do |movie|
-      begin
-        tmdb = TmdbService.search_movie(movie["title"])
-        poster = tmdb && tmdb[:poster_url] ? tmdb[:poster_url] : nil
-      rescue StandardError
-        poster = nil
-      end
+      tmdb = TmdbService.full_movie_info(movie["title"])
 
-      movie.merge("poster_url" => poster)
+      movie.merge(
+        "poster_url" => tmdb&.dig(:poster_url),
+        "rating" => tmdb&.dig(:rating),
+        "runtime" => tmdb&.dig(:runtime),
+        "genres" => tmdb&.dig(:genres),
+        "overview" => tmdb&.dig(:short_overview),
+        "release_year" => tmdb&.dig(:release_year),
+        "trailer_url" => tmdb&.dig(:trailer_url)
+      )
     end
+
+    Rails.logger.info "DEBUG FINAL => #{@movies.first.inspect}"
 
     respond_to do |format|
       format.turbo_stream

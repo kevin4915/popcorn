@@ -5,13 +5,21 @@
     <h3 class="movie-card-list-title"><%= movie["title"] %></h3>
 
     <div class="movie-card-list-tags">
-      <span>🎬 <%= movie["genre"] %></span>
-      <span>⏱ <%= movie["duration"] || "—" %> min</span>
-      <span>📅 <%= movie["year"] %></span>
-      <span>⭐ <%= movie["rating_5"] || "—" %></span>
+      <span>🎬 <%= movie["genres"]&.join(", ") || movie["genre"] %></span>
+      <span>⏱ <%= movie["runtime"] || "—" %> min</span>
+      <span>📅 <%= movie["release_year"] || movie["year"] %></span>
+      <span>⭐ <%= movie["rating"] || "—" %></span>
     </div>
 
-    <p class="movie-card-list-summary"><%= movie["summary"] %></p>
+    <p class="movie-card-list-summary">
+      <%= movie["short_overview"] || movie["summary"] %>
+    </p>
+
+    <% if movie["trailer_url"] %>
+      <a href="<%= movie["trailer_url"] %>" target="_blank" class="btn-trailer">
+        ▶️ Voir la bande‑annonce
+      </a>
+    <% end %>
 
     <div class="movie-card-list-actions">
       <button class="btn-list like">👍</button>
