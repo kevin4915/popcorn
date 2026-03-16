@@ -130,9 +130,6 @@ class RecommendationsController < ApplicationController
 
     Rails.logger.info "DEBUG FINAL => #{@movies.first.inspect}"
 
-    respond_to do |format|
-      format.turbo_stream
-      format.html { render :results }
-    end
+    render :results
   end
 end

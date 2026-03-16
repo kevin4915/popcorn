@@ -1,3 +1,7 @@
-<%= turbo_stream.replace "recommendations" do %>
-  <%= render "recommendations/results", movies: @movies %>
-<% end %>
+<turbo-stream target="results" action="replace">
+  <template>
+    <%= render partial: "recommendations/results",
+               formats: [:html],
+               locals: { movies: @movies } %>
+  </template>
+</turbo-stream>
