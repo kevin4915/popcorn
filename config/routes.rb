@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
   get "surprise",     to: "movies#surprise"
   get "recommended",  to: "movies#recommended"
+  get "welcome", to: "pages#welcome"
 
   resources :historics, only: [:index, :destroy] do
     resources :comments, only: [:create]
