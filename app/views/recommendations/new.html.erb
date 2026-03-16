@@ -5,7 +5,7 @@
                 method: :post,
                 data: { turbo_stream: true } do |f| %>
     <%= f.text_field :query, placeholder: "Tu es un expert ciné:" %>
-    <%= f.submit "Trouver 5 films" %>
+    <%= f.submit "Trouver 5 films similaires" %>
   <% end %>
 
   <div id="recommendations">
