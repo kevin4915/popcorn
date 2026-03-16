@@ -51,6 +51,7 @@ gem "ruby_llm", "~> 1.2.0"
 gem "httparty"
 gem "cloudinary"
 gem "activestorage-cloudinary-service"
+gem "kaminari"
 
 group :development, :test do
   gem "dotenv-rails"

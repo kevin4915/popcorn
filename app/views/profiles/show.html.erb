@@ -1,11 +1,17 @@
 <div class="popcorn-wrapper">
   <div class="profile-card-large">
+
     <div class="profile-header-main">
       <div class="avatar-container">
-        <%= image_tag "avatar_default.avif", class: "profile-avatar-img" %>
+        <% if @user.avatar.attached? %>
+          <%= image_tag @user.avatar, class: "profile-avatar-img", alt: @user.username %>
+        <% else %>
+          <%= image_tag "avatar_default.avif", class: "profile-avatar-img", alt: "Avatar par défaut" %>
+        <% end %>
       </div>
+
       <div class="badge-frame">
-        <h1 class="profile-name"><%= @user.first_name %></h1>
+        <h1 class="profile-name"><%= @user.username %></h1>
         <% if @user.badges.any? %>
           <div class="badge-item-fancy">
             <span><%= @user.badges.first.icon %></span>
@@ -13,6 +19,7 @@
           </div>
         <% end %>
       </div>
+
       <div class="profile-stats">
         <div class="stat-item">
           <span class="stat-value"><%= @user.liked_movies_count %></span>
@@ -25,14 +32,79 @@
       </div>
     </div>
 
+    <% if current_user != @user %>
+      <div class="profile-footer-actions">
+        <% if current_user.friend_with?(@user) %>
+          <span class="friend-status friend-accepted">✅ Vous êtes amis</span>
+          <% friendship = current_user.friendship_with(@user) %>
+          <%= button_to "Retirer des amis", friendship_path(friendship),
+              method: :delete,
+              form: { data: { turbo_confirm: "Retirer @#{@user.username} de vos amis ?" } },
+              class: "btn-popcorn-danger btn-sm" %>
+
+        <% elsif current_user.pending_request_sent_to?(@user) %>
+          <span class="friend-status friend-pending">⏳ Demande envoyée</span>
+          <% friendship = current_user.sent_friendships.find_by(friend: @user, status: 'pending') %>
+          <%= button_to "Annuler la demande", friendship_path(friendship),
+              method: :delete,
+              class: "btn-popcorn-outline btn-sm" %>
+
+        <% elsif current_user.pending_request_received_from?(@user) %>
+          <% friendship = current_user.received_friendships.find_by(user: @user, status: 'pending') %>
+          <div class="friend-request-actions">
+            <p class="friend-request-text">@<%= @user.username %> vous a envoyé une demande d'ami</p>
+            <%= button_to "✅ Accepter", accept_friendship_path(friendship), method: :patch, class: "btn-popcorn btn-sm" %>
+            <%= button_to "❌ Refuser", decline_friendship_path(friendship), method: :patch, class: "btn-popcorn-danger btn-sm" %>
+          </div>
+
+        <% else %>
+          <%= button_to "➕ Ajouter en ami", friendships_path(friend_id: @user.id),
+              method: :post, class: "btn-popcorn" %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if current_user == @user && @pending_requests&.any? %>
+      <div class="profile-section pending-requests">
+        <h3>Demandes d'amis en attente 🔔 (<%= @pending_requests.count %>)</h3>
+        <% @pending_requests.each do |friendship| %>
+          <div class="pending-request-item">
+            <div class="pending-request-user">
+              <% if friendship.user.avatar.attached? %>
+                <%= image_tag friendship.user.avatar, class: "mini-avatar" %>
+              <% else %>
+                <%= image_tag "avatar_default.avif", class: "mini-avatar" %>
+              <% end %>
+              <div>
+                <strong><%= friendship.user.first_name %></strong>
+                <span class="text-muted">@<%= friendship.user.username %></span>
+              </div>
+            </div>
+            <div class="pending-request-actions">
+              <%= button_to "✅ Accepter", accept_friendship_path(friendship), method: :patch, class: "btn-popcorn btn-sm" %>
+              <%= button_to "❌ Refuser", decline_friendship_path(friendship), method: :patch, class: "btn-popcorn-danger btn-sm" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
     <div class="profile-section">
       <h3>Mes Plateformes</h3>
+      <div class="calendar-divider"></div>
       <div class="platform-flex">
-        <% platforms = { "Netflix" => "Logo_netflix.png", "DisneyPlus" => "Logo_disney.png", "AmazonPrime" => "Logo_amazon_prime.png", "CanalPlus" => "Logo_canal.png", "HBO" => "Logo_HBO.png" } %>
+        <% platforms = {
+          "Netflix"     => "Logo_netflix.png",
+          "DisneyPlus"  => "Logo_disney.png",
+          "AmazonPrime" => "Logo_amazon_prime.png",
+          "CanalPlus"   => "Logo_canal.png",
+          "HBO"         => "Logo_HBO.png"
+        } %>
         <% platforms.each do |name, logo| %>
           <% if @user.send(name) %>
             <span class="platform-chip">
-              <%= image_tag logo, style: "width: 20px;" %> <%= name.gsub("Plus", "+").gsub("Prime", " Prime") %>
+              <%= image_tag logo, style: "width: 20px;" %>
+              <%= name.gsub("Plus", "+").gsub("Prime", " Prime") %>
             </span>
           <% end %>
         <% end %>
@@ -41,28 +113,50 @@
 
     <div class="profile-section">
       <h3>Derniers coups de cœur</h3>
-      <div class="movies-carousel">
-        <% @user.recent_liked_movies.each do |movie| %>
-          <%= link_to movie_path(movie), class: "carousel-movie-card" do %>
-            <%= image_tag movie.poster_url, alt: movie.title %>
-            <div class="movie-mini-info">
-              <span>⭐ <%= movie.rating %></span>
+      <div class="calendar-divider"></div>
+      <div class="calendar-grid">
+        <% @recent_movies.each do |movie| %>
+          <%= link_to movie_path(movie), class: "mini-movie-card" do %>
+            <div class="mini-poster-wrap">
+              <% if movie.poster_url.present? %>
+                <%= image_tag movie.poster_url, class: "mini-poster", alt: movie.title %>
+              <% else %>
+                <div class="mini-poster-placeholder">Pas d'affiche</div>
+              <% end %>
+
+              <% if movie.rating.present? %>
+                <span class="popcorn-rating-badge">⭐ <%= movie.rating %></span>
+              <% end %>
+
+              <div class="mini-card-overlay">
+                <h3><%= movie.title %></h3>
+              </div>
             </div>
           <% end %>
         <% end %>
       </div>
     </div>
 
-    <div class="profile-footer-actions">
-      <% if current_user != @user %>
-        <% if current_user.friends.include?(@user) %>
-          <span class="friend-status">✅ Amis</span>
-        <% elsif current_user.sent_friendships.exists?(friend: @user, status: 'pending') %>
-          <span class="friend-status">⏳ Demande en attente</span>
-        <% else %>
-          <%= button_to "Ajouter en ami", friendships_path(friend_id: @user.id), method: :post, class: "btn-popcorn" %>
-        <% end %>
-      <% end %>
-    </div>
+    <% if @user.friends.any? %>
+      <div class="profile-section">
+        <h3>Amis (<%= @user.friends.count %>)</h3>
+        <div class="friends-list">
+          <% @user.friends.each do |friend| %>
+            <%= link_to profile_path(friend), class: "friend-item" do %>
+              <% if friend.avatar.attached? %>
+                <%= image_tag friend.avatar, class: "mini-avatar" %>
+              <% else %>
+                <%= image_tag "avatar_default.avif", class: "mini-avatar" %>
+              <% end %>
+              <div>
+                <strong><%= friend.first_name %></strong>
+                <span class="text-muted">@<%= friend.username %></span>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
   </div>
 </div>

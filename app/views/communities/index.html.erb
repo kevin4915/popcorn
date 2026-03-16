@@ -2,23 +2,36 @@
   <h1 class="popcorn-title">Communauté</h1>
 
   <div class="community-tabs">
-    <%= link_to "Tout le monde", community_path(filter: 'all'), class: @filter == 'all' ? 'active' : '' %>
-    <%= link_to "Mes amis", community_path(filter: 'friends'), class: @filter == 'friends' ? 'active' : '' %>
+    <%= link_to "Tout le monde", community_path(filter: 'all'),     class: "community-tab #{@filter == 'all' ? 'active' : ''}" %>
+    <%= link_to "Mes amis",      community_path(filter: 'friends'), class: "community-tab #{@filter == 'friends' ? 'active' : ''}" %>
   </div>
+
+  <% if @recent_likes.empty? %>
+    <div class="community-empty">
+      <p>
+        <% if @filter == 'friends' %>
+          Aucun ami n'a encore liké de film. <%= link_to "Trouver des amis", community_path(filter: 'all') %> !
+        <% else %>
+          Aucune activité récente.
+        <% end %>
+      </p>
+    </div>
+  <% end %>
 
   <div class="community-feed">
     <% @recent_likes.each do |historic| %>
       <div class="popcorn-card horizontal community-card">
         <div class="popcorn-poster">
-          <%= image_tag historic.movie.poster_url, alt: historic.movie.title %>
+          <%= image_tag historic.movie.poster_url.presence || asset_path("no-poster.png"), alt: historic.movie.title %>
         </div>
 
         <div class="popcorn-info">
           <p class="community-activity">
             <span class="user-identity">
-              <span class="user-name">
-                <%= link_to (historic.user.first_name || historic.user.email.split('@').first), profile_path(historic.user) %>
-              </span>
+              <%= link_to profile_path(historic.user), class: "user-name" do %>
+                <%= historic.user.first_name %>
+                <span class="user-username">@<%= historic.user.username %></span>
+              <% end %>
               <span class="badges-container">
                 <% historic.user.badges.each do |badge| %>
                   <span class="popcorn-badge" title="<%= badge.description %>">
@@ -41,10 +54,23 @@
 
           <%= link_to "Voir le film", movie_path(historic.movie), class: "btn-popcorn-small" %>
 
+          <% if current_user != historic.user %>
+            <% unless current_user.friend_with?(historic.user) || current_user.pending_request_sent_to?(historic.user) %>
+              <%= button_to "➕ Ajouter @#{historic.user.username}",
+                  friendships_path(friend_id: historic.user.id),
+                  method: :post,
+                  class: "btn-popcorn-small btn-add-friend" %>
+            <% end %>
+          <% end %>
+
           <div class="community-comments">
             <% historic.comments.each do |comment| %>
               <div class="comment-item">
-                <strong><%= link_to (comment.user.first_name || "Utilisateur"), profile_path(comment.user) %> :</strong> <%= comment.content %>
+                <%= link_to profile_path(comment.user), class: "comment-author" do %>
+                  <strong><%= comment.user.first_name %></strong>
+                  <span class="text-muted">@<%= comment.user.username %></span>
+                <% end %>
+                : <%= comment.content %>
               </div>
             <% end %>
 

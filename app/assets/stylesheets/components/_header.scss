@@ -56,58 +56,6 @@
   align-items: center;
 }
 
-.badge-wrapper {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.avatar-shell {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: #1a1a1a;
-  box-shadow: 0 0 14px rgba(229, 9, 20, 0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.avatar {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: contain;
-  object-position: center;
-  background: #1a1a1a;
-  padding: 4px;
-}
-
-.badges-layer {
-  position: absolute;
-  top: -6px;
-  left: -6px;
-  display: flex;
-  gap: 2px;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.badge-dot {
-  background: #e50914;
-  color: white;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  border: 2px solid #1a1a1a;
-}
-
 .dropdown-menu-custom {
   display: none;
   flex-direction: column;
