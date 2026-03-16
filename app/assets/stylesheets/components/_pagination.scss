@@ -1,0 +1,47 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 20px 0;
+
+  span, a {
+    display: block;
+    background: #2a2a2a;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    border: none !important;
+    box-shadow: none !important;
+    transition: none !important;
+  }
+
+  span.page, span.next, span.last, span.first, span.prev {
+    padding: 0;
+    background: none;
+
+    a {
+      background: #2a2a2a;
+      color: white;
+      display: block;
+
+      &:hover {
+        background: #e50914 !important;
+        color: white !important;
+      }
+
+      span { // span.translation_missing
+        background: none;
+        padding: 0;
+        color: inherit;
+      }
+    }
+  }
+
+  span.current {
+    background: #e50914;
+    color: white;
+    padding: 8px 14px;
+  }
+}
