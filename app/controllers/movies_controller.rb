@@ -10,53 +10,53 @@ class MoviesController < ApplicationController
   }.freeze
 
   PLATFORM_URLS = {
-  "Netflix" => "https://www.netflix.com/search?q=",
-  "Disney+" => "https://www.disneyplus.com/search?q=",
-  "Prime Video" => "https://www.primevideo.com/search/ref=atv_nb_sr?phrase=",
-  "Canal+" => "https://www.canalplus.com/recherche/?q=",
-  "HBO Max" => "https://www.hbomax.com/search?q="
+    "Netflix" => "https://www.netflix.com/search?q=",
+    "Disney+" => "https://www.disneyplus.com/search?q=",
+    "Prime Video" => "https://www.primevideo.com/search/ref=atv_nb_sr?phrase=",
+    "Canal+" => "https://www.canalplus.com/recherche/?q=",
+    "HBO Max" => "https://www.hbomax.com/search?q="
   }.freeze
 
   MOVIE_GENRES = {
-  "Action" => 28,
-  "Animation" => 16,
-  "Aventure" => 12,
-  "Comédie" => 35,
-  "Documentaire" => 99,
-  "Drame" => 18,
-  "Familial" => 10751,
-  "Fantastique" => 14,
-  "Guerre" => 10752,
-  "Historique" => 36,
-  "Horreur" => 27,
-  "Musique" => 10402,
-  "Mystère" => 9648,
-  "Policier" => 80,
-  "Romance" => 10749,
-  "Science Fiction" => 878,
-  "Show télé" => 10770,
-  "Thriller" => 53,
-  "Western" => 37
-}.freeze
+    "Action" => 28,
+    "Animation" => 16,
+    "Aventure" => 12,
+    "Comédie" => 35,
+    "Documentaire" => 99,
+    "Drame" => 18,
+    "Familial" => 10_751,
+    "Fantastique" => 14,
+    "Guerre" => 10_752,
+    "Historique" => 36,
+    "Horreur" => 27,
+    "Musique" => 10_402,
+    "Mystère" => 9648,
+    "Policier" => 80,
+    "Romance" => 10_749,
+    "Science Fiction" => 878,
+    "Show télé" => 10_770,
+    "Thriller" => 53,
+    "Western" => 37
+  }.freeze
 
-TV_GENRES = {
-  "Action & Aventure" => 10759,
-  "Animation" => 16,
-  "Comédie" => 35,
-  "Policier" => 80,
-  "Documentaire" => 99,
-  "Drame" => 18,
-  "Familial" => 10751,
-  "Enfants" => 10762,
-  "Mystère" => 9648,
-  "News" => 10763,
-  "Reality show" => 10764,
-  "Science Fiction & Fantasie" => 10765,
-  "Soap" => 10766,
-  "Show télé" => 10767,
-  "Guerre & Politique" => 10768,
-  "Western" => 37
-}.freeze
+  TV_GENRES = {
+    "Action & Aventure" => 10_759,
+    "Animation" => 16,
+    "Comédie" => 35,
+    "Policier" => 80,
+    "Documentaire" => 99,
+    "Drame" => 18,
+    "Familial" => 10_751,
+    "Enfants" => 10_762,
+    "Mystère" => 9648,
+    "News" => 10_763,
+    "Reality show" => 10_764,
+    "Science Fiction & Fantasie" => 10_765,
+    "Soap" => 10_766,
+    "Show télé" => 10_767,
+    "Guerre & Politique" => 10_768,
+    "Western" => 37
+  }.freeze
 
   def index
     type = params[:serie] == "1" ? "tv" : "movie"
@@ -174,9 +174,9 @@ TV_GENRES = {
 
     results = tmdb_get("search/multi", language: "fr-FR", query: query)
     @movies = (results["results"] || [])
-      .select { |r| %w[movie tv].include?(r["media_type"]) }
-      .first(10)
-      .map { |result| upsert_movie(result, result["media_type"]) }
+              .select { |r| %w[movie tv].include?(r["media_type"]) }
+              .first(10)
+              .map { |result| upsert_movie(result, result["media_type"]) }
   end
 
   def add_to_list
@@ -201,7 +201,7 @@ TV_GENRES = {
     HTTParty.get(
       "https://api.themoviedb.org/3/#{path}",
       headers: {
-        "Authorization" => "Bearer #{ENV["TMDB_API_TOKEN"]}",
+        "Authorization" => "Bearer #{ENV.fetch('TMDB_API_TOKEN', nil)}",
         "Content-Type" => "application/json"
       },
       query: query
@@ -221,7 +221,7 @@ TV_GENRES = {
       synopsis: result["overview"],
       year: (result["release_date"] || result["first_air_date"])&.split("-")&.first&.to_i,
       rating: (result["vote_average"].to_f / 2).round(1),
-      poster_url: result["poster_path"].present? ? "https://image.tmdb.org/t/p/w500#{result["poster_path"]}" : nil,
+      poster_url: result["poster_path"].present? ? "https://image.tmdb.org/t/p/w500#{result['poster_path']}" : nil,
       category: params[:genre].presence || "Suggestion",
       media_type: type
     )
@@ -352,5 +352,4 @@ TV_GENRES = {
   def tmdb_genre_id(genre, type)
     type == "tv" ? TV_GENRES[genre] : MOVIE_GENRES[genre]
   end
-
 end

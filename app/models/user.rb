@@ -5,6 +5,9 @@ class User < ApplicationRecord
   validates :username, presence: true, uniqueness: { case_sensitive: false }, length: { minimum: 3, maximum: 30 }
   validates :first_name, presence: true
   validates :last_name, presence: true
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  before_validation :normalize_username
 
   has_many :historics
   has_many :movies, through: :historics
@@ -15,6 +18,8 @@ class User < ApplicationRecord
   has_many :user_badges
   has_many :badges, through: :user_badges
   has_many :comments
+
+  validates :username, presence: true, uniqueness: { case_sensitive: false }
 
   has_one_attached :avatar
 
@@ -67,5 +72,11 @@ class User < ApplicationRecord
 
   def display_name
     username.present? ? "@#{username}" : first_name
+  end
+  
+  private
+
+  def normalize_username
+    self.username = username.to_s.strip.presence
   end
 end

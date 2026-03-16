@@ -2,7 +2,7 @@
   background: transparent;
   border: none;
   box-shadow: none;
-  padding: 20px;
+  padding: 20px 0;
   margin: 0 auto;
   max-width: 800px;
 }
@@ -15,7 +15,6 @@
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    border: 3px solid #e50914;
     object-fit: cover;
     margin-bottom: 20px;
   }
@@ -277,4 +276,28 @@
 .text-muted {
   color: #888;
   font-size: 12px;
+}
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+
+  .movie-card-thumb {
+    position: relative;
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+
+    .poster-thumb {
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      display: block;
+    }
+
+    .movie-mini-info {
+      display: none;
+    }
+  }
 }

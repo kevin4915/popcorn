@@ -23,10 +23,12 @@
       <%= f.input :username,
                   required: true,
                   label: "Pseudo",
-                  placeholder: "ex: cinephile42",
-                  input_html: { autocomplete: "username", class: "login-input" },
+                  input_html: { autocomplete: "nickname", class: "login-input" },
                   label_html: { class: "login-label" },
-                  hint: "Minimum 3 caractères, unique sur la plateforme" %>
+                  error_html: { class: "invalid-feedback d-block" },
+                  placeholder: "ex: cinephile42"
+                  %>
+                  
 
       <%= f.input :email,
                   required: true,
