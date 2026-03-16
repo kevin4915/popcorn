@@ -31,6 +31,7 @@
 
     <div class="profile-section">
       <h3>Mes Plateformes</h3>
+      <div class="calendar-divider"></div>
       <div class="platform-flex">
         <% platforms = { "Netflix" => "Logo_netflix.png", "DisneyPlus" => "Logo_disney.png", "AmazonPrime" => "Logo_amazon_prime.png", "CanalPlus" => "Logo_canal.png", "HBO" => "Logo_HBO.png" } %>
         <% platforms.each do |name, logo| %>
@@ -45,12 +46,26 @@
 
     <div class="profile-section">
       <h3>Derniers coups de cœur</h3>
-      <div class="movies-carousel">
-        <% @user.recent_liked_movies.each do |movie| %>
-          <%= link_to movie_path(movie), class: "carousel-movie-card" do %>
-            <%= image_tag movie.poster_url.presence || asset_path("no-poster.png"), alt: movie.title %>
-              <span>⭐ <%= movie.rating %></span>
-        <% end %>
+      <div class="calendar-divider"></div>
+      <div class="calendar-grid">
+        <% @recent_movies.each do |movie| %>
+          <%= link_to movie_path(movie), class: "mini-movie-card" do %>
+            <div class="mini-poster-wrap">
+              <% if movie.poster_url.present? %>
+                <%= image_tag movie.poster_url, class: "mini-poster", alt: movie.title %>
+              <% else %>
+                <div class="mini-poster-placeholder">Pas d'affiche</div>
+              <% end %>
+
+              <% if movie.rating.present? %>
+                <span class="popcorn-rating-badge">⭐ <%= movie.rating %></span>
+              <% end %>
+
+              <div class="mini-card-overlay">
+                <h3><%= movie.title %></h3>
+              </div>
+            </div>
+          <% end %>
         <% end %>
       </div>
     </div>
