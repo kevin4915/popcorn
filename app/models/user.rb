@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  before_validation :normalize_username
+
   has_many :historics
   has_many :movies, through: :historics
   has_many :user_platforms
@@ -13,6 +15,8 @@ class User < ApplicationRecord
   has_many :friends, -> { where(friendships: { status: 'accepted' }) }, through: :friendships
   has_many :user_badges
   has_many :badges, through: :user_badges
+
+  validates :username, presence: true, uniqueness: { case_sensitive: false }
 
   has_one_attached :avatar
 
@@ -45,5 +49,11 @@ class User < ApplicationRecord
 
   def recent_liked_movies
     historics.includes(:movie).order(created_at: :desc).limit(10).map(&:movie)
+  end
+
+  private
+
+  def normalize_username
+    self.username = username.to_s.strip.presence
   end
 end

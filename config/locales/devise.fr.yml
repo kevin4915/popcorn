@@ -25,6 +25,7 @@ fr:
         unconfirmed_email: Email non confirmé
         unlock_token: Clé de déverrouillage
         updated_at: Date de mise à jour
+        username: "Ce pseudo"
     models:
       user: Utilisateur
   devise:
@@ -143,3 +144,9 @@ fr:
       not_saved:
         one: 'une erreur a empêché ce (cet ou cette) %{resource} d’être enregistré(e) :'
         other: "%{count} erreurs ont empêché ce (cet ou cette) %{resource} d’être enregistré(e) :"
+    models:
+        user:
+          attributes:
+            username:
+              blank: "doit être renseigné"
+              taken: "est déjà pris"

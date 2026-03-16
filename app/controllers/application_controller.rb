@@ -16,10 +16,10 @@ class ApplicationController < ActionController::Base
   # Autoriser le champ personnalisé pour sign_up et account_update
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up,
-                                      keys: %i[last_name first_name Netflix DisneyPlus AmazonPrime CanalPlus HBO
+                                      keys: %i[last_name first_name username Netflix DisneyPlus AmazonPrime CanalPlus HBO
                                                avatar])
     devise_parameter_sanitizer.permit(:account_update,
-                                      keys: %i[last_name first_name Netflix DisneyPlus AmazonPrime CanalPlus HBO
+                                      keys: %i[last_name first_name username Netflix DisneyPlus AmazonPrime CanalPlus HBO
                                                avatar])
   end
 end
