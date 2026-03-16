@@ -53,6 +53,13 @@
                   input_html: { class: "login-input" },
                   label_html: { class: "login-label" } %>
 
+      <%= f.input :username,
+                  required: true,
+                  label: "Pseudo",
+                  input_html: { class: "login-input" },
+                  label_html: { class: "login-label" },
+                  error_html: { class: "invalid-feedback d-block" } %>
+
       <%= f.input :email,
                   required: true,
                   label: "Adresse e-mail",
