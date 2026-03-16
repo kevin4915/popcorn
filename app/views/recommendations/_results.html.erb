@@ -2,22 +2,13 @@
   <h2 class="section-title">🎬 Résultats de la recommandation</h2>
 
   <% if movies.present? %>
-    <div class="movies-grid">
-      <% movies.each do |movie| %>
-        <div class="movie-card">
-          <% if movie["poster_url"].present? %>
-            <img src="<%= movie["poster_url"] %>" alt="<%= movie["title"] %>" class="movie-poster">
-          <% end %>
+  <div class="movies-grid">
+    <% movies.each do |movie| %>
+      <%= render "movie_card_list", movie: movie %>
+    <% end %>
+  </div>
+<% else %>
+  <p>Aucun film trouvé.</p>
+<% end %>
 
-          <div class="movie-info">
-            <h3 class="movie-title"><%= movie["title"] %> (<%= movie["year"] %>)</h3>
-            <p class="movie-genre"><%= movie["genre"] %></p>
-            <p class="movie-summary"><%= movie["summary"] %></p>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  <% else %>
-    <p>Aucun film trouvé. Essaie une autre requête !</p>
-  <% end %>
 </div>

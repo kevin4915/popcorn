@@ -1,0 +1,22 @@
+<div class="movie-card-list">
+  <img src="<%= movie["poster_url"] %>" alt="<%= movie["title"] %>" class="movie-card-list-poster">
+
+  <div class="movie-card-list-content">
+    <h3 class="movie-card-list-title"><%= movie["title"] %></h3>
+
+    <div class="movie-card-list-tags">
+      <span>🎬 <%= movie["genre"] %></span>
+      <span>⏱ <%= movie["duration"] || "—" %> min</span>
+      <span>📅 <%= movie["year"] %></span>
+      <span>⭐ <%= movie["rating_5"] || "—" %></span>
+    </div>
+
+    <p class="movie-card-list-summary"><%= movie["summary"] %></p>
+
+    <div class="movie-card-list-actions">
+      <button class="btn-list like">👍</button>
+      <button class="btn-list dislike">👎</button>
+      <button class="btn-list delete">🗑️</button>
+    </div>
+  </div>
+</div>
