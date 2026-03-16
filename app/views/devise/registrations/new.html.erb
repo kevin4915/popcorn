@@ -20,6 +20,14 @@
                   input_html: { autocomplete: "given-name", class: "login-input" },
                   label_html: { class: "login-label" } %>
 
+      <%= f.input :username,
+                  required: true,
+                  label: "Pseudo",
+                  placeholder: "ex: cinephile42",
+                  input_html: { autocomplete: "username", class: "login-input" },
+                  label_html: { class: "login-label" },
+                  hint: "Minimum 3 caractères, unique sur la plateforme" %>
+
       <%= f.input :email,
                   required: true,
                   label: "Adresse email",
