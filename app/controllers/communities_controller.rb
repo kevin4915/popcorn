@@ -7,11 +7,11 @@ class CommunitiesController < ApplicationController
       @recent_likes = Historic.includes(:user, :movie)
                               .where(user_id: friend_ids)
                               .order(created_at: :desc)
-                              .limit(20)
+                              .page(params[:page]).per(20)
     else
       @recent_likes = Historic.includes(:user, :movie)
                               .order(created_at: :desc)
-                              .limit(20)
+                              .page(params[:page]).per(20)
     end
   end
 end
