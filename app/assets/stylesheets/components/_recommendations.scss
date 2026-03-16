@@ -1,69 +1,95 @@
-.recommendations-container {
-  padding: 20px;
-  color: white;
-}
-
-.section-title {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  color: #ff2a2a;
-  text-align: center;
-}
-
-/* GRID POPCORN : 5 cartes propres */
-.movies-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
-}
-
-/* CARTE POPCORN */
-.movie-card {
-  background: #0d0d0d;
-  border: 1px solid #ff2a2a;
-  border-radius: 14px;
-  padding: 14px;
+.movie-card-list {
   display: flex;
-  flex-direction: column;
   gap: 12px;
-  box-shadow: 0 0 12px rgba(255, 0, 0, 0.35);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 0 18px rgba(255, 0, 0, 0.55);
-  }
+  background: #111118;
+  border-radius: 18px;
+  padding: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 0 0 1px #2a2a35, 0 0 18px rgba(255, 0, 0, 0.25);
+  color: #ffffff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
 }
 
-/* POSTER */
-.movie-poster {
-  width: 100%;
-  height: 360px;
+.movie-card-list-poster {
+  width: 80px;
+  height: 115px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 12px;
+  flex-shrink: 0;
 }
 
-/* TEXTE */
-.movie-info {
+.movie-card-list-content {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  justify-content: space-between;
+  flex: 1;
 }
 
-.movie-title {
-  font-size: 20px;
+.movie-card-list-title {
+  font-size: 15px;
   font-weight: 700;
-  color: white;
+  margin: 0 0 4px 0;
 }
 
-.movie-genre {
-  font-size: 14px;
-  color: #ff2a2a;
+.movie-card-list-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
-.movie-summary {
-  font-size: 14px;
-  line-height: 1.4;
-  color: #e6e6e6;
+.movie-card-list-tags span {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #1b1b25;
+  color: #d0d0e0;
 }
+
+.movie-card-list-summary {
+  font-size: 12px;
+  line-height: 1.3;
+  color: #c7c7d5;
+  margin: 0 0 8px 0;
+}
+
+.btn-trailer {
+  display: inline-block;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #1b1b25;
+  color: #ffffff;
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: background 0.15s ease;
+}
+
+.btn-trailer:hover {
+  background: #6a6a6d;
+}
+
+.movie-card-list-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-list {
+  border: none;
+  background: #1b1b25;
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn-list:hover {
+  background: #262636;
+  transform: translateY(-1px);
+}
+
+.btn-list.like { color: #4ade80; }
+.btn-list.dislike { color: #fb7185; }
+.btn-list.delete { color: #f97316; }
