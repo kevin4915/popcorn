@@ -44,8 +44,7 @@
       <div class="movies-carousel">
         <% @user.recent_liked_movies.each do |movie| %>
           <%= link_to movie_path(movie), class: "carousel-movie-card" do %>
-            <%= image_tag movie.poster_url, alt: movie.title %>
-            <div class="movie-mini-info">
+            <%= image_tag movie.poster_url.presence || asset_path("no-poster.png"), alt: movie.title %>
               <span>⭐ <%= movie.rating %></span>
             </div>
           <% end %>
