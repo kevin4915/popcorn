@@ -16,7 +16,7 @@
       <p class="login-label">Photo de profil</p>
 
       <div class="profile-avatar-preview">
-        <% if resource.avatar.attached? && resource.persisted?%>
+        <% if resource.avatar.attached? %>
           <%= image_tag resource.avatar,
                 class: "profile-avatar-image",
                 alt: "Avatar du user",
