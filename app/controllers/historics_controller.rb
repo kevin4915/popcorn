@@ -1,10 +1,16 @@
 class HistoricsController < ApplicationController
   def films
-    @movies = current_user.movies.where(media_type: "movie").order("historics.created_at DESC")
+    @movies = Movie.joins(:historics)
+      .where(historics: { user_id: current_user.id }, media_type: "movie")
+      .order("historics.created_at DESC")
+      .page(params[:page]).per(10)
   end
 
   def series
-    @movies = current_user.movies.where(media_type: "tv").order("historics.created_at DESC")
+    @movies = Movie.joins(:historics)
+      .where(historics: { user_id: current_user.id }, media_type: "tv")
+      .order("historics.created_at DESC")
+      .page(params[:page]).per(10)
   end
 
   def destroy
