@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get "profiles/show"
-  devise_for :users
+  devise_for :users, controllers: { registrations: "registrations" }
 
   root "pages#home"
   resources :friendships, only: [:create, :update, :destroy]
