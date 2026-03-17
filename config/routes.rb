@@ -39,6 +39,10 @@ Rails.application.routes.draw do
       get :films
       get :series
     end
+    member do
+      post :like
+      post :dislike
+    end
   end
 
   resources :communities, only: [:index]
