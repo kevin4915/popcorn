@@ -1,12 +1,19 @@
 <div class="recommendation-page" data-controller="recommendations">
-  <h1>Prêt pour une séance sur mesure ? Ton IA attend le clap</h1>
+  <h1>🎬 Prêt pour une séance sur mesure ? Ton complice cinéma attend le clap 🎞️</h1>
+  <p class="subtagline">🍿 Arrête de chercher. Appuie sur play ▶️</p>
 
   <%= form_with url: recommendations_path,
                 method: :post,
                 data: { turbo: false } do |f| %>
-    <%= f.text_field :query, placeholder: "Tu es un expert ciné:" %>
-    <%= f.submit "Trouver 5 films similaires",
-                 data: { action: "click->recommendations#submit" } %>
+
+    <%= f.text_field :query, placeholder: "Un film suffit 🎥" %>
+
+    <%= f.button type: "submit",
+          class: "btn-reco",
+          data: { disable_with: "<span class='spinner'></span> Recherche…".html_safe } do %>
+      🔍 Trouver 5 films similaires
+    <% end %>
+
   <% end %>
 
   <div id="results">
