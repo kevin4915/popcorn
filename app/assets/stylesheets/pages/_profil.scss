@@ -36,7 +36,7 @@
 
 .profile-username {
   font-size: 14px;
-  color: #888;
+  color: #ccc;
   margin: 0 0 10px 0;
 }
 
@@ -197,7 +197,6 @@
   flex-shrink: 0;
 }
 
-// ← NOUVEAU : liste d'amis
 .friends-list {
   display: flex;
   flex-direction: column;
@@ -227,7 +226,6 @@
   }
 }
 
-// Boutons
 .btn-popcorn {
   background-color: #e50914;
   color: white;
@@ -274,7 +272,7 @@
 }
 
 .text-muted {
-  color: #888;
+  color: #b70303;
   font-size: 12px;
 }
 
@@ -299,5 +297,10 @@
     .movie-mini-info {
       display: none;
     }
+  }
+}
+.friend-item {
+  div span.text-muted {
+    color: #e50914 !important;
   }
 }
