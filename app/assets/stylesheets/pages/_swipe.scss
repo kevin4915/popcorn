@@ -57,23 +57,7 @@
     pointer-events: none;
   }
 
-  &.swiped-left::after {
-    content: "NOPE";
-    position: absolute;
-    top: 45px;
-    right: 20px;
-    color: #e74c3c;
-    border: 4px solid #e74c3c;
-    padding: 5px 15px;
-    font-size: 2.5rem;
-    font-weight: bold;
-    transform: rotate(15deg);
-    border-radius: 10px;
-    z-index: 10;
-    pointer-events: none;
-  }
-
-  .progress-bar {
+   .progress-bar {
     width: 100%;
     height: 4px;
     background: #333;
