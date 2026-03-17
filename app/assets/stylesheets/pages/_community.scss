@@ -243,6 +243,10 @@
   flex-shrink: 0;
 }
 
-.popcorn-poster {
-  position: relative;
+.community-feed {
+  .popcorn-poster {
+    overflow: hidden;
+    border-radius: 10px;
+    display: block;
+  }
 }
