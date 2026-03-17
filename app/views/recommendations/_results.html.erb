@@ -1,14 +1,15 @@
 <div class="recommendations-container">
-  <h2 class="section-title">🎬 Résultats de la recommandation</h2>
+  <h2 class="section-title">🎬 Clap final ! Voici les films que ton assistant cinéphile te recommande sans hésiter</h2>
 
   <% if movies.present? %>
-  <div class="movies-grid">
-    <% movies.each do |movie| %>
-      <%= render "movie_card_list", movie: movie %>
-    <% end %>
-  </div>
-<% else %>
-  <p>Aucun film trouvé.</p>
-<% end %>
 
+    <div class="movie-list-wrapper">
+      <% movies.each do |movie| %>
+        <%= render "movie_card_list", movie: movie %>
+      <% end %>
+    </div>
+
+  <% else %>
+    <p>Aucun film trouvé.</p>
+  <% end %>
 </div>

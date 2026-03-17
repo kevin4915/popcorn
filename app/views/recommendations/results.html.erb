@@ -1,11 +1,18 @@
 <div class="recommendation-page">
-  <h1>Recommandations IA</h1>
+  <h1>Recommandations</h1>
 
   <%= form_with url: recommendations_path,
                 method: :post,
                 data: { turbo: false } do |f| %>
+
     <%= f.text_field :query, placeholder: "Tu es un expert ciné:" %>
-    <%= f.submit "Trouver 5 films similaires" %>
+
+    <%= f.button type: "submit",
+          class: "btn-reco",
+          data: { disable_with: "<span class='spinner'></span> Recherche…" } do %>
+      Trouver 5 films similaires
+    <% end %>
+
   <% end %>
 
   <div id="results">
