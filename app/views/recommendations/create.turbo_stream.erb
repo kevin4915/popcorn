@@ -1,0 +1,7 @@
+<turbo-stream target="results" action="replace">
+  <template>
+    <%= render partial: "recommendations/results",
+               formats: [:html],
+               locals: { movies: @movies } %>
+  </template>
+</turbo-stream>

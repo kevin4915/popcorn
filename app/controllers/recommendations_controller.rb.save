@@ -1,0 +1,19 @@
+class RecommendationsController < ApplicationController
+  def new
+  end
+
+  def create
+    query = params[:query]
+
+    client = OpenAI::Client.new(access_token: ENV.fetch("OPENAI_API_KEY", nil))
+
+    response = client.responses(
+      model: "gpt-4o-mini",
+      input: "Tu es un expert cinéma. Donne-moi 5 films similaires à : #{query}. Réponds uniquement en JSON : [ { \"title\": \"\", \"year\": \"\", \"genre\": \"\", \"summary\": \"\" } ]"
+    )
+
+    content = response["output_text"]
+    @movies = JSON.parse(content)
+    render :results
+  end
+end

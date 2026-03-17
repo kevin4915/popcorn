@@ -14,7 +14,8 @@
 @import "pages/movies_show";
 @import "movies/surprise";
 @import "movies/recommended";
-@import "components/community";
+@import "components/recommendations";
+
 @import "components/badge";
 @import "pages/profil";
 @import "pages/home";
@@ -23,6 +24,8 @@
 @import "pages/search";
 @import "components/header";
 @import "pages/error";
+@import "pages/community";
+@import "pages/welcome";
 
 * {
   margin: 0;

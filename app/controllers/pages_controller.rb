@@ -17,13 +17,16 @@ class PagesController < ApplicationController
                         .to_h
   end
 
+  def welcome
+  end
+
   private
 
   def tmdb_get(path, query = {})
     HTTParty.get(
       "https://api.themoviedb.org/3/#{path}",
       headers: {
-        "Authorization" => "Bearer #{ENV.fetch("TMDB_API_TOKEN", nil)}",
+        "Authorization" => "Bearer #{ENV.fetch('TMDB_API_TOKEN', nil)}",
         "Content-Type" => "application/json"
       },
       query: query
@@ -134,7 +137,7 @@ class PagesController < ApplicationController
       synopsis: result["overview"],
       year: (result["release_date"] || result["first_air_date"])&.split("-")&.first&.to_i,
       rating: (result["vote_average"].to_f / 2).round(1),
-      poster_url: result["poster_path"].present? ? "https://image.tmdb.org/t/p/w500#{result["poster_path"]}" : nil,
+      poster_url: result["poster_path"].present? ? "https://image.tmdb.org/t/p/w500#{result['poster_path']}" : nil,
       category: category_label,
       media_type: media_type
     )
@@ -171,7 +174,7 @@ class PagesController < ApplicationController
       {
         "name" => actor["name"],
         "character" => actor["character"],
-        "photo_url" => actor["profile_path"].present? ? "https://image.tmdb.org/t/p/w185#{actor["profile_path"]}" : nil
+        "photo_url" => actor["profile_path"].present? ? "https://image.tmdb.org/t/p/w185#{actor['profile_path']}" : nil
       }
     end.to_json
   end

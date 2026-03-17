@@ -1,0 +1,95 @@
+.movie-card-list {
+  display: flex;
+  gap: 30px;
+  background: #333;
+  border-radius: 18px;
+  padding: 10px;
+  margin-bottom: 14px;
+  box-shadow: 0 0 0 1px #2a2a35, 0 0 18px #fd1015;
+  color: #fff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+}
+
+.movie-card-list-poster {
+  width: 80px;
+  height: 115px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.movie-card-list-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.movie-card-list-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.movie-card-list-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.movie-card-list-tags span {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #1b1b25;
+  color: #d0d0e0;
+}
+
+.movie-card-list-summary {
+  font-size: 12px;
+  line-height: 1.3;
+  color: #c7c7d5;
+  margin: 0 0 8px 0;
+}
+
+.btn-trailer {
+  display: inline-block;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #1b1b25;
+  color: #fff;
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: background 0.15s ease;
+}
+
+.btn-trailer:hover {
+  background: #262636;
+}
+
+.movie-card-list-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-list {
+  border: none;
+  background: #1b1b25;
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn-list:hover {
+  background: #262636;
+  transform: translateY(-1px);
+}
+
+.btn-list.like { color: #4ade80; }
+.btn-list.dislike { color: #fb7185; }
+.btn-list.delete { color: #f97316; }
