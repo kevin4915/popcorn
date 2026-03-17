@@ -29,14 +29,21 @@
               method: :post,
               class: "btn-add-friend btn-add-friend-corner",
               data: { turbo_method: :post } do %>
-            <i class="fa-solid fa-user-plus"></i>
-          <% end %>
+                <i class="fa-solid fa-user-plus"></i>
+              <% end %>
             <% end %>
           <% end %>
+
+          <% likes_count = Historic.where(movie: historic.movie, liked: true).count %>
 
           <%= link_to movie_path(historic.movie), class: "popcorn-poster" do %>
             <%= image_tag historic.movie.poster_url.presence || asset_path("no-poster.png"), alt: historic.movie.title %>
             <span class="popcorn-rating-badge">⭐ <%= historic.movie.rating || "—" %></span>
+            <% if likes_count > 0 %>
+              <span class="likes-counter-badge">
+                <i class="fa-solid fa-thumbs-up"></i> <%= likes_count %>
+              </span>
+            <% end %>
           <% end %>
 
           <div class="popcorn-info">
@@ -54,6 +61,7 @@
               <p class="popcorn-category"><%= historic.movie.media_type == "tv" ? "📺 Série" : "🎥 Film" %></p>
               <p class="popcorn-category">🎬 <%= historic.movie.category %></p>
             </div>
+
             <div class="community-comments">
               <% historic.comments.last(1).each do |comment| %>
                 <div class="comment-item">
