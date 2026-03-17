@@ -23,7 +23,7 @@
   </head>
 
   <body>
-    <% if current_user %>
+    <% if current_user && !current_page?(welcome_path) %>
       <div class="header">
         <div class="header-left">
           <%= link_to root_path, class: "header-logo-link" do %>
