@@ -82,6 +82,17 @@
                 <span class="popcorn-year">🎞️ <%= historic.movie.year || "?" %></span>
               </div>
             </div>
+
+            <div class="community-comments">
+              <%= form_with model: [historic, Comment.new], class: "comment-form" do |f| %>
+                <div class="search-bar">
+                  <%= f.text_field :content, placeholder: "Ajouter un commentaire...", class: "search-input", autocomplete: "off" %>
+                  <button type="submit" class="search-submit">
+                    <i class="bi bi-plus-lg"></i>
+                  </button>
+                </div>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>
