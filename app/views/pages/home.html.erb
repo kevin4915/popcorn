@@ -112,7 +112,7 @@
                 <% if movie[:poster_url].present? %>
                   <%= image_tag movie[:poster_url], class: "poster-thumb", alt: movie.title %>
                 <% else %>
-                  <div class="mini-poster-placeholder">Pas d'affiche</div>
+                  <%= image_tag asset_path("no-poster.png"), class: "poster-thumb", alt: movie.title %>
                 <% end %>
               <% end %>
             <% end %>
@@ -138,7 +138,7 @@
                 <% if serie[:poster_url].present? %>
                   <%= image_tag serie[:poster_url], class: "poster-thumb", alt: serie[:title] %>
                 <% else %>
-                  <div class="mini-poster-placeholder">Pas d'affiche</div>
+                  <%= image_tag asset_path("no-poster.png"), class: "poster-thumb", alt: serie[:title] %>
                 <% end %>
               <% end %>
             <% end %>
@@ -165,7 +165,7 @@
                 <% if movie[:poster_url].present? %>
                   <%= image_tag movie[:poster_url], class: "poster-thumb", alt: movie.title %>
                 <% else %>
-                  <div class="mini-poster-placeholder">Pas d'affiche</div>
+                  <%= image_tag asset_path("no-poster.png"), class: "poster-thumb", alt: movie.title %>
                 <% end %>
             <% end %>
           <% end %>
