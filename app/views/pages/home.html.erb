@@ -109,7 +109,11 @@
           <div class="movies-row" id="carousel-day">
             <% @top_day.each do |movie| %>
               <%= link_to movie_path(movie), class: "movie-card-thumb" do %>
-                <%= image_tag movie.poster_url, class: "poster-thumb", alt: movie.title %>
+                <% if movie[:poster_url].present? %>
+                  <%= image_tag movie[:poster_url], class: "poster-thumb", alt: movie.title %>
+                <% else %>
+                  <div class="mini-poster-placeholder">Pas d'affiche</div>
+                <% end %>
               <% end %>
             <% end %>
           </div>
@@ -131,7 +135,11 @@
           <div class="movies-row" id="carousel-tv-fr">
             <% @top_tv_fr.each do |serie| %>
               <%= link_to movie_path(serie), class: "movie-card-thumb" do %>
-                <%= image_tag serie.poster_url, class: "poster-thumb", alt: serie.title %>
+                <% if serie[:poster_url].present? %>
+                  <%= image_tag serie[:poster_url], class: "poster-thumb", alt: serie[:title] %>
+                <% else %>
+                  <div class="mini-poster-placeholder">Pas d'affiche</div>
+                <% end %>
               <% end %>
             <% end %>
           </div>
@@ -154,9 +162,11 @@
         <div class="movies-row" id="carousel-for-you">
           <% @for_you.each do |movie| %>
             <%= link_to movie_path(movie), class: "movie-card-thumb" do %>
-              <%= image_tag movie.poster_url,
-                    class: "poster-thumb",
-                    alt: movie.title %>
+                <% if movie[:poster_url].present? %>
+                  <%= image_tag movie[:poster_url], class: "poster-thumb", alt: movie.title %>
+                <% else %>
+                  <div class="mini-poster-placeholder">Pas d'affiche</div>
+                <% end %>
             <% end %>
           <% end %>
         </div>
