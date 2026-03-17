@@ -21,7 +21,8 @@ export default class extends Controller {
       if (response.ok) {
         this.addedValue = !this.addedValue
         this.iconTarget.className = `fa-solid ${this.addedValue ? "fa-check" : "fa-heart"}`
-        this.btnTarget.className  = `btn-historic-action ${this.addedValue ? "btn-added" : "btn-add-list"}`
+        this.btnTarget.classList.remove("btn-added", "btn-add-list")
+        this.btnTarget.classList.add(this.addedValue ? "btn-added" : "btn-add-list")
       }
     })
   }

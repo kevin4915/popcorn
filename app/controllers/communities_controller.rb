@@ -10,6 +10,7 @@ class CommunitiesController < ApplicationController
                               .page(params[:page]).per(10)
     else
       @recent_likes = Historic.includes(:user, :movie)
+                              .where.not(user_id: current_user.id)
                               .order(created_at: :desc)
                               .page(params[:page]).per(10)
     end
