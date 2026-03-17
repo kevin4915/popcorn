@@ -15,20 +15,15 @@ document.addEventListener("turbo:load", () => {
   });
 });
 
-document.addEventListener("turbo:load", () => {
-  const avatar = document.getElementById("avatarDropdown");
-  const menu = document.getElementById("dropdownMenu");
+const closeUserMenus = () => {
+  document.querySelectorAll(".dropdown-menu-custom").forEach((menu) => {
+    menu.classList.remove("active")
+  })
 
-  if (avatar) {
-    avatar.addEventListener("click", () => {
-      menu.classList.toggle("active");
-    });
+  document.querySelectorAll(".avatar-dropdown").forEach((dropdown) => {
+    dropdown.classList.remove("active")
+  })
+}
 
-    // Ferme le menu si on clique ailleurs
-    document.addEventListener("click", (e) => {
-      if (!avatar.contains(e.target)) {
-        menu.classList.remove("active");
-      }
-    });
-  }
-});
+document.addEventListener("turbo:before-cache", closeUserMenus)
+document.addEventListener("turbo:load", closeUserMenus)

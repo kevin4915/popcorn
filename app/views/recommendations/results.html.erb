@@ -1,0 +1,14 @@
+<div class="recommendation-page">
+  <h1>Recommandations IA</h1>
+
+  <%= form_with url: recommendations_path,
+                method: :post,
+                data: { turbo: false } do |f| %>
+    <%= f.text_field :query, placeholder: "Tu es un expert ciné:" %>
+    <%= f.submit "Trouver 5 films similaires" %>
+  <% end %>
+
+  <div id="results">
+    <%= render "recommendations/results", movies: @movies %>
+  </div>
+</div>
