@@ -34,10 +34,14 @@ Rails.application.routes.draw do
   get "welcome", to: "pages#welcome"
 
   resources :historics, only: [:index, :destroy] do
-    resources :comments, only: [:create]
+    resources :comments, only: [:create, :destroy]
     collection do
       get :films
       get :series
+    end
+    member do
+      post :like
+      post :dislike
     end
   end
 

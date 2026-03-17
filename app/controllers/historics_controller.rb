@@ -18,4 +18,16 @@ class HistoricsController < ApplicationController
     @historic.destroy
     redirect_back fallback_location: films_historics_path, notice: "Retiré de ta liste !"
   end
+
+  def like
+    @historic = current_user.historics.find(params[:id])
+    @historic.update(liked: !@historic.liked, disliked: false)
+    redirect_back fallback_location: films_historics_path
+  end
+
+  def dislike
+    @historic = current_user.historics.find(params[:id])
+    @historic.update(disliked: !@historic.disliked, liked: false)
+    redirect_back fallback_location: films_historics_path
+  end
 end

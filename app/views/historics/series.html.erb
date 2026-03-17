@@ -2,11 +2,24 @@
   <h1 class="popcorn-title">Mes séries</h1>
 
   <% @movies.each do |movie| %>
+    <% historic = current_user.historics.find_by(movie: movie) %>
     <div class="popcorn-card-wrapper">
       <div class="popcorn-card">
         <%= link_to movie_path(movie, from: "series"), class: "popcorn-poster" do %>
           <%= image_tag movie.poster_url.presence || asset_path("no-poster.png"), alt: movie.title %>
           <span class="popcorn-rating-badge">⭐ <%= movie.rating || "—" %></span>
+          <% likes_count = Historic.where(movie: movie, liked: true).count %>
+          <% dislikes_count = Historic.where(movie: movie, disliked: true).count %>
+          <% if likes_count > 0 || dislikes_count > 0 %>
+            <span class="votes-badge">
+              <% if likes_count > 0 %>
+                <span class="vote-up"><i class="fa-solid fa-thumbs-up"></i> <%= likes_count %></span>
+              <% end %>
+              <% if dislikes_count > 0 %>
+                <span class="vote-down"><i class="fa-solid fa-thumbs-down"></i> <%= dislikes_count %></span>
+              <% end %>
+            </span>
+          <% end %>
         <% end %>
 
         <div class="popcorn-info">
@@ -17,24 +30,28 @@
             <div class="popcorn-meta">
               <span class="popcorn-year">🎞️ <%= movie.year || "?" %></span>
             </div>
-            <p class="popcorn-description"><%= truncate_at_sentence(movie.synopsis,100) %></p>
+            <p class="popcorn-description"><%= truncate_at_sentence(movie.synopsis, 100) %></p>
           <% end %>
 
           <div class="popcorn-actions">
             <div class="popcorn-actions-left">
-              <button class="btn-historic-action btn-thumbs-up">
+              <%= button_to like_historic_path(historic),
+                  method: :post,
+                  class: "btn-historic-action btn-thumbs-up #{historic&.liked ? 'active' : ''}" do %>
                 <i class="fa-solid fa-thumbs-up"></i>
-              </button>
+              <% end %>
 
-              <button class="btn-historic-action btn-thumbs-down">
+              <%= button_to dislike_historic_path(historic),
+                  method: :post,
+                  class: "btn-historic-action btn-thumbs-down #{historic&.disliked ? 'active' : ''}" do %>
                 <i class="fa-solid fa-thumbs-down"></i>
-              </button>
+              <% end %>
             </div>
 
-            <%= button_to historic_path(current_user.historics.find_by(movie: movie)),
+            <%= button_to historic_path(historic),
                           method: :delete,
                           class: "btn-delete-historic",
-                          form: { data: { turbo_confirm: "Retirer ce film de ta liste ?" } } do %>
+                          form: { data: { turbo_confirm: "Retirer cette série de ta liste ?" } } do %>
               <i class="fa-solid fa-trash"></i>
             <% end %>
           </div>

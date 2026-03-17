@@ -38,8 +38,8 @@
         </div>
 
         <div class="header-right">
-          <div class="avatar-dropdown" id="avatarDropdown">
-            <div class="badge-wrapper">
+          <div class="avatar-dropdown" data-controller="avatar-menu">
+            <div class="badge-wrapper" data-action="click->avatar-menu#toggle">
               <div class="avatar-shell">
                 <% if current_user.avatar.attached? %>
                   <%= image_tag current_user.avatar, class: "avatar", alt: current_user.first_name %>
@@ -59,8 +59,7 @@
               <% end %>
             </div>
 
-            <div class="dropdown-menu-custom" id="dropdownMenu">
-              <%= link_to "Mon Profil", profile_path(current_user) %>
+            <div class="dropdown-menu-custom" data-avatar-menu-target="menu">
               <%= link_to "Communauté", community_path %>
               <%= link_to "Mes films", films_historics_path %>
               <%= link_to "Mes séries", series_historics_path %>
