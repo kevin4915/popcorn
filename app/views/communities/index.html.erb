@@ -40,30 +40,37 @@
           <% end %>
 
           <div class="popcorn-info">
-            <p class="community-activity">
-              <%= link_to profile_path(historic.user), class: "user-name" do %>
-                <span class="user-username">@<%= historic.user.username %></span>
-              <% end %>
-              <% historic.user.badges.each do |badge| %>
-                <span class="popcorn-badge" title="<%= badge.description %>"><%= badge.icon %></span>
-              <% end %>
-              a aimé <strong><%= historic.movie.title %></strong>
-            </p>
+            <div class="mt-1">
+              <h2 class="community-activity">
+                <%= link_to profile_path(historic.user), class: "user-name" do %>
+                  <span class="user-username">@<%= historic.user.username %></span>
+                <% end %>
+                <% historic.user.badges.each do |badge| %>
+                  <span class="popcorn-badge" title="<%= badge.description %>"><%= badge.icon %></span>
+                <% end %>
+                a aimé <strong><%= historic.movie.title %></strong>
+              </h2>
 
-            <p class="popcorn-category"><%= historic.movie.media_type == "tv" ? "📺 Série" : "🎥 Film" %></p>
-            <p class="popcorn-category">🎬 <%= historic.movie.category %></p>
-            <div class="popcorn-meta">
-              <span class="popcorn-year">🎞️ <%= historic.movie.year || "?" %></span>
+              <p class="popcorn-category"><%= historic.movie.media_type == "tv" ? "📺 Série" : "🎥 Film" %></p>
+              <p class="popcorn-category">🎬 <%= historic.movie.category %></p>
             </div>
-
             <div class="community-comments">
-              <% historic.comments.each do |comment| %>
+              <% historic.comments.last(1).each do |comment| %>
                 <div class="comment-item">
-                  <%= link_to profile_path(comment.user), class: "comment-author" do %>
-                    <strong><%= comment.user.first_name %></strong>
-                    <span class="text-muted">@<%= comment.user.username %></span>
+                  <div class="comment-text">
+                    <%= link_to profile_path(comment.user), class: "comment-author" do %>
+                      <strong class="comment-decoration">@<%= comment.user.username %></strong>
+                    <% end %>
+                    : <%= comment.content %>
+                  </div>
+                  <% if comment.user == current_user %>
+                    <%= button_to historic_comment_path(comment.historic, comment),
+                        method: :delete,
+                        class: "btn-delete-comment",
+                        form: { data: { turbo_confirm: "Supprimer ce commentaire ?" } } do %>
+                      <i class="fa-solid fa-trash"></i>
+                    <% end %>
                   <% end %>
-                  : <%= comment.content %>
                 </div>
               <% end %>
 

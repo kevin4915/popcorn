@@ -11,6 +11,12 @@ class CommentsController < ApplicationController
     end
   end
 
+    def destroy
+      @comment = Comment.find(params[:id])
+      @comment.destroy if @comment.user == current_user
+      redirect_back fallback_location: community_path
+    end
+
   private
 
   def comment_params
