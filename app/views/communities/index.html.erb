@@ -34,22 +34,35 @@
             <% end %>
           <% end %>
 
-          <%= link_to movie_path(historic.movie), class: "popcorn-poster" do %>
-            <%= image_tag historic.movie.poster_url.presence || asset_path("no-poster.png"), alt: historic.movie.title %>
-            <span class="popcorn-rating-badge">⭐ <%= historic.movie.rating || "—" %></span>
-            <% likes_count = Historic.where(movie: historic.movie, liked: true).count %>
-            <% dislikes_count = Historic.where(movie: historic.movie, disliked: true).count %>
-            <% if likes_count > 0 || dislikes_count > 0 %>
-              <span class="votes-badge">
-                <% if likes_count > 0 %>
-                  <span class="vote-up"><i class="fa-solid fa-thumbs-up"></i> <%= likes_count %></span>
-                <% end %>
-                <% if dislikes_count > 0 %>
-                  <span class="vote-down"><i class="fa-solid fa-thumbs-down"></i> <%= dislikes_count %></span>
-                <% end %>
-              </span>
+          <div class="popcorn-poster-wrapper">
+            <%= link_to movie_path(historic.movie, from: "community"), class: "popcorn-poster" do %>
+              <%= image_tag historic.movie.poster_url.presence || asset_path("no-poster.png"), alt: historic.movie.title %>
+              <span class="popcorn-rating-badge">⭐ <%= historic.movie.rating || "—" %></span>
+              <% likes_count = Historic.where(movie: historic.movie, liked: true).count %>
+              <% dislikes_count = Historic.where(movie: historic.movie, disliked: true).count %>
+              <% if likes_count > 0 || dislikes_count > 0 %>
+                <span class="votes-badge">
+                  <% if likes_count > 0 %>
+                    <span class="vote-up"><i class="fa-solid fa-thumbs-up"></i> <%= likes_count %></span>
+                  <% end %>
+                  <% if dislikes_count > 0 %>
+                    <span class="vote-down"><i class="fa-solid fa-thumbs-down"></i> <%= dislikes_count %></span>
+                  <% end %>
+                </span>
+              <% end %>
             <% end %>
-          <% end %>
+
+            <div data-controller="watchlist"
+                 data-watchlist-added-value="<%= current_user.movies.include?(historic.movie) %>"
+                 style="position: absolute; top: 6px; right: 6px;">
+              <button class="btn-historic-action btn-watchlist-corner <%= current_user.movies.include?(historic.movie) ? 'btn-added' : 'btn-add-list' %>"
+                      data-watchlist-target="btn"
+                      data-action="click->watchlist#toggle"
+                      data-movie-id="<%= historic.movie.id %>">
+                <i data-watchlist-target="icon" class="fa-solid <%= current_user.movies.include?(historic.movie) ? 'fa-check' : 'fa-heart' %>"></i>
+              </button>
+            </div>
+          </div>
 
           <div class="popcorn-info">
             <div class="mt-1">
