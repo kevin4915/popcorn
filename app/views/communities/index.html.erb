@@ -78,37 +78,9 @@
 
               <p class="popcorn-category"><%= historic.movie.media_type == "tv" ? "📺 Série" : "🎥 Film" %></p>
               <p class="popcorn-category">🎬 <%= historic.movie.category %></p>
-            </div>
-
-            <div class="community-comments">
-              <% last_comment = Comment.joins(:historic).where(historics: { movie_id: historic.movie.id }).order(created_at: :desc).first %>
-              <% if last_comment %>
-                <div class="comment-item">
-                  <div class="comment-text">
-                    <%= link_to profile_path(last_comment.user), class: "comment-author" do %>
-                      <strong class="comment-decoration">@<%= last_comment.user.username %></strong>
-                    <% end %>
-                    : <%= last_comment.content %>
-                  </div>
-                  <% if last_comment.user == current_user %>
-                    <%= button_to historic_comment_path(last_comment.historic, last_comment),
-                        method: :delete,
-                        class: "btn-delete-comment",
-                        form: { data: { turbo_confirm: "Supprimer ce commentaire ?" } } do %>
-                      <i class="fa-solid fa-trash"></i>
-                    <% end %>
-                  <% end %>
-                </div>
-              <% end %>
-
-              <%= form_with model: [historic, Comment.new], class: "comment-form" do |f| %>
-                <div class="search-bar">
-                  <%= f.text_field :content, placeholder: "Ajouter un commentaire...", class: "search-input", autocomplete: "off" %>
-                  <button type="submit" class="search-submit">
-                    <i class="bi bi-plus-lg"></i>
-                  </button>
-                </div>
-              <% end %>
+              <div class="popcorn-meta">
+                <span class="popcorn-year">🎞️ <%= historic.movie.year || "?" %></span>
+              </div>
             </div>
           </div>
         </div>
