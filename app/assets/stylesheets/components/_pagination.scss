@@ -45,3 +45,9 @@
     padding: 8px 14px;
   }
 }
+
+.pagination {
+  .first, .last {
+    display: none;
+  }
+}
