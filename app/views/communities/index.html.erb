@@ -1,0 +1,85 @@
+<div class="popcorn-wrapper">
+  <h1 class="popcorn-title">Communauté</h1>
+
+  <div class="community-tabs">
+    <%= link_to "Tout le monde", community_path(filter: 'all'),     class: "community-tab #{@filter == 'all' ? 'active' : ''}" %>
+    <%= link_to "Mes amis",      community_path(filter: 'friends'), class: "community-tab #{@filter == 'friends' ? 'active' : ''}" %>
+  </div>
+
+  <% if @recent_likes.empty? %>
+    <div class="community-empty">
+      <p>
+        <% if @filter == 'friends' %>
+          Aucun ami n'a encore liké de film. <%= link_to "Trouver des amis", community_path(filter: 'all') %> !
+        <% else %>
+          Aucune activité récente.
+        <% end %>
+      </p>
+    </div>
+  <% end %>
+
+  <div class="community-feed">
+    <% @recent_likes.each do |historic| %>
+      <div class="popcorn-card-wrapper">
+        <div class="popcorn-card" style="position: relative;">
+
+          <% if current_user != historic.user %>
+            <% unless current_user.friend_with?(historic.user) || current_user.pending_request_sent_to?(historic.user) %>
+              <%= link_to friendships_path(friend_id: historic.user.id),
+              method: :post,
+              class: "btn-add-friend btn-add-friend-corner",
+              data: { turbo_method: :post } do %>
+            <i class="fa-solid fa-user-plus"></i>
+          <% end %>
+            <% end %>
+          <% end %>
+
+          <%= link_to movie_path(historic.movie), class: "popcorn-poster" do %>
+            <%= image_tag historic.movie.poster_url.presence || asset_path("no-poster.png"), alt: historic.movie.title %>
+            <span class="popcorn-rating-badge">⭐ <%= historic.movie.rating || "—" %></span>
+          <% end %>
+
+          <div class="popcorn-info">
+            <p class="community-activity">
+              <%= link_to profile_path(historic.user), class: "user-name" do %>
+                <span class="user-username">@<%= historic.user.username %></span>
+              <% end %>
+              <% historic.user.badges.each do |badge| %>
+                <span class="popcorn-badge" title="<%= badge.description %>"><%= badge.icon %></span>
+              <% end %>
+              a aimé <strong><%= historic.movie.title %></strong>
+            </p>
+
+            <p class="popcorn-category"><%= historic.movie.media_type == "tv" ? "📺 Série" : "🎥 Film" %></p>
+            <p class="popcorn-category">🎬 <%= historic.movie.category %></p>
+            <div class="popcorn-meta">
+              <span class="popcorn-year">🎞️ <%= historic.movie.year || "?" %></span>
+            </div>
+
+            <div class="community-comments">
+              <% historic.comments.each do |comment| %>
+                <div class="comment-item">
+                  <%= link_to profile_path(comment.user), class: "comment-author" do %>
+                    <strong><%= comment.user.first_name %></strong>
+                    <span class="text-muted">@<%= comment.user.username %></span>
+                  <% end %>
+                  : <%= comment.content %>
+                </div>
+              <% end %>
+
+              <%= form_with model: [historic, Comment.new], class: "comment-form" do |f| %>
+                <div class="search-bar">
+                  <%= f.text_field :content, placeholder: "Ajouter un commentaire...", class: "search-input", autocomplete: "off" %>
+                  <button type="submit" class="search-submit">
+                    <i class="bi bi-plus-lg"></i>
+                  </button>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<%= paginate @recent_likes %>

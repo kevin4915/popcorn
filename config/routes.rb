@@ -1,14 +1,27 @@
 Rails.application.routes.draw do
   devise_for :users
-  root to: "pages#home"
+
+  root "pages#home"
+
+  resources :friendships, only: [:create, :destroy] do
+  member do
+    patch :accept
+    patch :decline
+    end
+  end
+
+  resources :profiles, only: [:show]
+
   resources :movies, only: [:index, :show] do
     member do
       post :swipe
+      post :add_to_list
+      delete :remove_from_list
+    end
+    collection do
+      get :search
     end
   end
-  resources :historics, only: [:index]
-  get "surprise", to: "movies#surprise"
-  get "recommended", to: "movies#recommended"
 
   resources :recommendations, only: [:new, :create, :index]
 
@@ -16,15 +29,25 @@ Rails.application.routes.draw do
 
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  get "surprise",     to: "movies#surprise"
+  get "recommended",  to: "movies#recommended"
+  get "welcome", to: "pages#welcome"
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  resources :historics, only: [:index, :destroy] do
+    resources :comments, only: [:create]
+    collection do
+      get :films
+      get :series
+    end
+  end
+
+  resources :communities, only: [:index]
+  get "community", to: "communities#index"
+
+  get "calendar", to: "pages#calendar"
+
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Defines the root path route ("/")
-  # root "posts#index"
+  match "/404", to: "errors#not_found",              via: :all
+  match "/500", to: "errors#internal_server_error",  via: :all
 end

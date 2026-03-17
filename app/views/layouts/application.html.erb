@@ -11,14 +11,13 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <%= turbo_include_tags %>
@@ -26,25 +25,54 @@
   </head>
 
   <body>
-    <% if current_user %>
+    <% if current_user && !current_page?(welcome_path) %>
       <div class="header">
-        <%= link_to root_path do %>
-          <%= image_tag "logo.png", class: "logo" %>
-        <% end %>
-        <p>Bienvenue, <%= current_user.first_name %></p>
-        <div class="avatar-dropdown" id="avatarDropdown">
-          <%= image_tag "avatar_default.avif", class: "avatar" %>
-          <div class="dropdown-menu-custom" id="dropdownMenu">
-            <%= link_to "Gérer mon compte", edit_user_registration_path %>
-            <%= link_to "Recommandations IA", new_recommendation_path, class: "dropdown-item" %>
-            <%= link_to "Accéder à mes films", historics_path %>
-            <%= link_to "Se déconnecter", destroy_user_session_path, data: { turbo_method: :delete } %>
+        <div class="header-left">
+          <%= link_to root_path, class: "header-logo-link" do %>
+            <%= image_tag "logo.png", class: "logo" %>
+          <% end %>
+        </div>
+
+        <div class="header-center">
+          <p>Bienvenue, <%= current_user.first_name %></p>
+        </div>
+
+        <div class="header-right">
+          <div class="avatar-dropdown" id="avatarDropdown">
+            <div class="badge-wrapper">
+              <div class="avatar-shell">
+                <% if current_user.avatar.attached? %>
+                  <%= image_tag current_user.avatar, class: "avatar", alt: current_user.first_name %>
+                <% else %>
+                  <%= image_tag "avatar_default.avif", class: "avatar", alt: "Avatar par défaut" %>
+                <% end %>
+              </div>
+
+              <% if user_signed_in? && current_user.badges.any? %>
+                <div class="badges-layer">
+                  <% current_user.badges.each do |badge| %>
+                    <span class="badge-dot" title="<%= badge.description %>">
+                      <%= badge.icon %>
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="dropdown-menu-custom" id="dropdownMenu">
+              <%= link_to "Mon Profil", profile_path(current_user) %>
+              <%= link_to "Communauté", community_path %>
+              <%= link_to "Mes films", films_historics_path %>
+              <%= link_to "Mes séries", series_historics_path %>
+              <%= link_to "Calendrier des sorties", calendar_path %>
+              <%= link_to "Recommandations IA", new_recommendation_path, class: "dropdown-item" %>
+              <%= link_to "Gérer mon compte", edit_user_registration_path %>
+              <%= link_to "Se déconnecter", destroy_user_session_path, data: { turbo_method: :delete } %>
+            </div>
           </div>
         </div>
       </div>
     <% end %>
-
-    <%= render "shared/flashes" %>
 
     <%= yield %>
   </body>

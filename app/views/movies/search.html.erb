@@ -1,0 +1,67 @@
+<div class="popcorn-wrapper search-page">
+  <div class="search-header">
+    <%= form_with url: search_movies_path, method: :get do |f| %>
+      <div class="search-bar">
+        <%= f.text_field :q,
+              value: params[:q],
+              placeholder: "Rechercher un film ou une série...",
+              class: "search-input",
+              autocomplete: "off" %>
+        <button type="submit" class="search-submit">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+    <% end %>
+
+    <h1 class="popcorn-title">
+      <% if params[:q].present? %>
+        Résultats pour "<%= params[:q] %>"
+      <% else %>
+        Recherche
+      <% end %>
+    </h1>
+  </div>
+
+  <% if @movies.blank? %>
+    <p style="text-align: center; color: #aaa; margin-top: 20px;">Aucun résultat trouvé.</p>
+  <% else %>
+    <% @movies.each do |movie| %>
+      <div class="popcorn-card-wrapper">
+        <div class="popcorn-card">
+          <%= link_to movie_path(movie, from: "search", q: params[:q]), class: "popcorn-poster" do %>
+            <%= image_tag movie.poster_url.presence || asset_path("no-poster.png"), alt: movie.title %>
+            <% if movie.rating.present? %>
+              <span class="popcorn-rating-badge">⭐ <%= movie.rating %></span>
+            <% end %>
+          <% end %>
+
+          <div class="popcorn-info">
+            <%= link_to movie_path(movie, from: "search", q: params[:q]), class: "popcorn-info-link" do %>
+              <h2><%= movie.title %></h2>
+              <p class="popcorn-category">
+                <%= movie.media_type == "tv" ? "📺 Série" : "🎬 Film" %>
+                <% if movie.category.present? %> · <%= movie.category %><% end %>
+              </p>
+              <p class="popcorn-duration">⏱️ <%= movie.duration.present? ? "#{movie.duration} min" : "—" %></p>
+              <div class="popcorn-meta">
+                <span class="popcorn-year">🎞️ <%= movie.year || "?" %></span>
+              </div>
+              <p class="popcorn-description"><%= truncate_at_sentence(movie.synopsis, 80) %></p>
+            <% end %>
+
+            <div class="popcorn-actions"
+                 data-controller="watchlist"
+                 data-watchlist-added-value="<%= current_user.movies.include?(movie) %>">
+              <button class="btn-historic-action <%= current_user.movies.include?(movie) ? 'btn-added' : 'btn-add-list' %>"
+                      data-watchlist-target="btn"
+                      data-action="click->watchlist#toggle"
+                      data-movie-id="<%= movie.id %>">
+                <i data-watchlist-target="icon" class="fa-solid <%= current_user.movies.include?(movie) ? 'fa-check' : 'fa-heart' %>"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
