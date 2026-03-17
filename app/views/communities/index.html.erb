@@ -81,16 +81,17 @@
             </div>
 
             <div class="community-comments">
-              <% historic.comments.last(1).each do |comment| %>
+              <% last_comment = Comment.joins(:historic).where(historics: { movie_id: historic.movie.id }).order(created_at: :desc).first %>
+              <% if last_comment %>
                 <div class="comment-item">
                   <div class="comment-text">
-                    <%= link_to profile_path(comment.user), class: "comment-author" do %>
-                      <strong class="comment-decoration">@<%= comment.user.username %></strong>
+                    <%= link_to profile_path(last_comment.user), class: "comment-author" do %>
+                      <strong class="comment-decoration">@<%= last_comment.user.username %></strong>
                     <% end %>
-                    : <%= comment.content %>
+                    : <%= last_comment.content %>
                   </div>
-                  <% if comment.user == current_user %>
-                    <%= button_to historic_comment_path(comment.historic, comment),
+                  <% if last_comment.user == current_user %>
+                    <%= button_to historic_comment_path(last_comment.historic, last_comment),
                         method: :delete,
                         class: "btn-delete-comment",
                         form: { data: { turbo_confirm: "Supprimer ce commentaire ?" } } do %>

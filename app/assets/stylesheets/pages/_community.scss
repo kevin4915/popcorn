@@ -236,8 +236,8 @@
   border-radius: 8px;
   backdrop-filter: blur(4px);
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  flex-direction: row;
+  gap: 6px;
 }
 
 .vote-up { color: #2ecc71; }
