@@ -34,14 +34,19 @@
             <% end %>
           <% end %>
 
-          <% likes_count = Historic.where(movie: historic.movie, liked: true).count %>
-
           <%= link_to movie_path(historic.movie), class: "popcorn-poster" do %>
             <%= image_tag historic.movie.poster_url.presence || asset_path("no-poster.png"), alt: historic.movie.title %>
             <span class="popcorn-rating-badge">⭐ <%= historic.movie.rating || "—" %></span>
-            <% if likes_count > 0 %>
-              <span class="likes-counter-badge">
-                <i class="fa-solid fa-thumbs-up"></i> <%= likes_count %>
+            <% likes_count = Historic.where(movie: historic.movie, liked: true).count %>
+            <% dislikes_count = Historic.where(movie: historic.movie, disliked: true).count %>
+            <% if likes_count > 0 || dislikes_count > 0 %>
+              <span class="votes-badge">
+                <% if likes_count > 0 %>
+                  <span class="vote-up"><i class="fa-solid fa-thumbs-up"></i> <%= likes_count %></span>
+                <% end %>
+                <% if dislikes_count > 0 %>
+                  <span class="vote-down"><i class="fa-solid fa-thumbs-down"></i> <%= dislikes_count %></span>
+                <% end %>
               </span>
             <% end %>
           <% end %>
