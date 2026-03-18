@@ -1,13 +1,19 @@
 class RecommendationsController < ApplicationController
   def index
-    redirect_to new_recommendation_path and return
+    redirect_to new_recommendation_path
   end
 
   def new
   end
 
   def create
-    query = params[:query]
+    query = params[:query].to_s.strip
+
+    if query.blank?
+      @movies = []
+      flash.now[:alert] = "Entre un film pour lancer la recherche."
+      render :new and return
+    end
 
     client = OpenAI::Client.new(access_token: ENV.fetch("OPENAI_API_KEY"))
 
@@ -39,30 +45,6 @@ class RecommendationsController < ApplicationController
                   "year": 2000,
                   "genre": "Genre",
                   "summary": "Résumé en français"
-                },
-                {
-                  "title": "Titre exact TMDB",
-                  "year": 2000,
-                  "genre": "Genre",
-                  "summary": "Résumé en français"
-                },
-                {
-                  "title": "Titre exact TMDB",
-                  "year": 2000,
-                  "genre": "Genre",
-                  "summary": "Résumé en français"
-                },
-                {
-                  "title": "Titre exact TMDB",
-                  "year": 2000,
-                  "genre": "Genre",
-                  "summary": "Résumé en français"
-                },
-                {
-                  "title": "Titre exact TMDB",
-                  "year": 2000,
-                  "genre": "Genre",
-                  "summary": "Résumé en français"
                 }
               ]
             PROMPT
@@ -71,20 +53,13 @@ class RecommendationsController < ApplicationController
       }
     )
 
-    raw = response.dig("choices", 0, "message", "content")
-    puts "RAW RESPONSE:"
-    puts raw
+    raw = response.dig("choices", 0, "message", "content").to_s.strip
+    raw = raw.gsub(/\A```json\s*/i, "").gsub(/\A```\s*/i, "").gsub(/```$/, "").strip
 
-    # -----------------------------
-    #  PARSING ROBUSTE DU JSON
-    # -----------------------------
     begin
       movies = JSON.parse(raw)
-
-      # Si OpenAI renvoie un objet seul → on le transforme en tableau
       movies = [movies] if movies.is_a?(Hash)
 
-      # Si OpenAI renvoie moins de 5 films → on complète
       if movies.length < 5
         missing = 5 - movies.length
         movies += Array.new(missing) do
@@ -97,10 +72,8 @@ class RecommendationsController < ApplicationController
         end
       end
 
-      # Si OpenAI renvoie plus de 5 films → on coupe
       movies = movies.first(5)
     rescue JSON::ParserError
-      # JSON cassé → on renvoie 5 placeholders
       movies = Array.new(5) do
         {
           "title" => "Film introuvable",
@@ -111,25 +84,40 @@ class RecommendationsController < ApplicationController
       end
     end
 
-    # -----------------------------
-    #  ENRICHISSEMENT TMDB COMPLET
-    # -----------------------------
-    @movies = movies.map do |movie|
-      tmdb = TmdbService.full_movie_info(movie["title"])
+  @movies = movies.map do |movie|
+    next if movie["title"].blank?
 
-      movie.merge(
-        "poster_url" => tmdb&.dig(:poster_url),
-        "rating" => tmdb&.dig(:rating),
-        "runtime" => tmdb&.dig(:runtime),
-        "genres" => tmdb&.dig(:genres),
-        "overview" => tmdb&.dig(:short_overview),
-        "release_year" => tmdb&.dig(:release_year),
-        "trailer_url" => tmdb&.dig(:trailer_url)
+    tmdb = TmdbService.full_movie_info(movie["title"])
+
+    if tmdb.present? && tmdb[:tmdb_id].present?
+      record = Movie.find_or_initialize_by(tmdb_id: tmdb[:tmdb_id])
+
+      record.assign_attributes(
+        title: tmdb[:title].presence || movie["title"],
+        synopsis: tmdb[:short_overview].presence || movie["summary"],
+        year: tmdb[:release_year].presence || movie["year"],
+        rating: tmdb[:rating],
+        duration: tmdb[:runtime],
+        poster_url: tmdb[:poster_url],
+        trailer: tmdb[:trailer_url],
+        category: Array(tmdb[:genres]).join(", ").presence || movie["genre"],
+        media_type: "movie"
+      )
+
+      record.save!
+      record
+    else
+      # fallback : on affiche quand même quelque chose
+      Movie.new(
+        title: movie["title"],
+        synopsis: movie["summary"],
+        year: movie["year"],
+        category: movie["genre"],
+        media_type: "movie"
       )
     end
+  end.compact
 
-    Rails.logger.info "DEBUG FINAL => #{@movies.first.inspect}"
-
-    render :results
+    render :new
   end
 end
