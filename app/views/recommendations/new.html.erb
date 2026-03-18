@@ -1,22 +1,90 @@
-<div class="recommendation-page" data-controller="recommendations">
-  <h1>🎬 Prêt pour une séance sur mesure ? Ton complice cinéma attend le clap 🎞️</h1>
-  <p class="subtagline">🍿 Arrête de chercher. Appuie sur play ▶️</p>
+<div class="reco-page">
+  <div class="reco-hero">
+    <div class="reco-botbuster-wrap">
+      <%= image_tag "BotBuster.png", class: "reco-botbuster", alt: "BotBuster" %>
+    </div>
 
-  <%= form_with url: recommendations_path,
-                method: :post,
-                data: { turbo: false } do |f| %>
+    <h1>BotBuster, ton complice cinéma</h1>
+    <p class="reco-subtitle">
+      Donne un film ou une série que tu as aimé, BotBuster te propose 5 films ou séries dans le même esprit.
+    </p>
+  </div>
 
-    <%= f.text_field :query, placeholder: "Un film suffit 🎥" %>
+  <div class="reco-shell">
+    <%= form_with url: recommendations_path, method: :post, data: { turbo: false }, class: "reco-form" do |f| %>
+      <div class="reco-input-group">
+        <%= f.text_field :query,
+              value: params[:query],
+              placeholder: "Exemple : Inception, Heat, Stranger Things ...",
+              class: "reco-input" %>
 
-    <%= f.button type: "submit",
-          class: "btn-reco",
-          data: { disable_with: "<span class='spinner'></span> Recherche…".html_safe } do %>
-      🔍 Trouver 5 films similaires
+        <%= f.button type: "submit",
+              class: "btn-action reco-submit",
+              data: { disable_with: "Recherche..." } do %>
+          🤖 Action !!!
+        <% end %>
+      </div>
     <% end %>
 
-  <% end %>
+    <% if @movies.present? %>
+      <div class="reco-results-header">
+        <h2>Les suggestions de BotBuster pour “<%= params[:query] %>”</h2>
+        <p>5 séléctions pour prolonger ta séance.</p>
+      </div>
 
-  <div id="results">
-    <%= render "recommendations/results", movies: @movies if @movies.present? %>
+      <div class="reco-grid">
+        <% @movies.each do |movie| %>
+          <div class="reco-card">
+            <div class="reco-poster-wrap">
+              <%= image_tag(
+                    movie.poster_url.presence || asset_path("no-poster.png"),
+                    alt: movie.title,
+                    class: "reco-poster"
+                  ) %>
+
+              <% if movie.rating.present? %>
+                <span class="reco-rating-badge">⭐ <%= movie.rating %>/5</span>
+              <% end %>
+            </div>
+
+            <div class="reco-card-body">
+              <h3 class="reco-title">
+                <%= movie.title %>
+                <% if movie.year.present? %>
+                  (<%= movie.year %>)
+                <% end %>
+              </h3>
+
+              <div class="reco-meta">
+                <% if movie.duration.present? %>
+                  <span>⏱️ <%= movie.duration %> min</span>
+                <% end %>
+              </div>
+
+              <% if movie.category.present? %>
+                <p class="reco-genres"><%= movie.category %></p>
+              <% end %>
+
+              <p class="reco-summary">
+                <%= movie.synopsis.presence || "Résumé non disponible." %>
+              </p>
+
+              <div class="reco-actions">
+                <% if movie.persisted? %>
+                  <%= link_to "Voir la fiche", movie_path(movie), class: "reco-secondary-btn" %>
+                <% else %>
+                  <span class="reco-secondary-btn reco-disabled-btn">Fiche indisponible</span>
+                <% end %>
+
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="reco-footer-cta">
+        <%= link_to "Nouvelle recherche", new_recommendation_path, class: "reco-secondary-btn" %>
+      </div>
+    <% end %>
   </div>
 </div>
