@@ -2,7 +2,7 @@
   <h1 class="popcorn-title">Communauté</h1>
 
   <div class="community-tabs">
-    <%= link_to "Tout le monde", community_path(filter: 'all'),     class: "community-tab #{@filter == 'all' ? 'active' : ''}" %>
+    <%= link_to "PopCorners", community_path(filter: 'all'),     class: "community-tab #{@filter == 'all' ? 'active' : ''}" %>
     <%= link_to "Mes amis",      community_path(filter: 'friends'), class: "community-tab #{@filter == 'friends' ? 'active' : ''}" %>
   </div>
 
