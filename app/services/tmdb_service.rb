@@ -112,4 +112,25 @@ class TmdbService
       "#{text[0...max_length].rstrip}..."
     end
   end
+
+  def self.quick_movie_info(title)
+    return nil if title.blank? || api_token.blank?
+
+    results = search_movie(title)
+    return nil if results.blank?
+
+    movie = results.first
+
+    {
+      tmdb_id: movie["id"],
+      title: movie["title"],
+      synopsis: truncate_text(movie["overview"], 180),
+      year: extract_year(movie["release_date"]),
+      rating: normalize_rating(movie["vote_average"]),
+      poster_url: poster_url_for(movie["poster_path"])
+    }
+  rescue StandardError => e
+    Rails.logger.error("TMDB QUICK ERROR: #{e.class} - #{e.message}")
+    nil
+  end
 end

@@ -26,26 +26,18 @@ class RecommendationsController < ApplicationController
             content: <<~PROMPT
               Tu es un expert cinéma.
 
-              Donne-moi EXACTEMENT 5 films similaires à : "#{query}".
+              Donne-moi EXACTEMENT 5 films similaires à "#{query}".
 
               Règles STRICTES :
-              - Réponds UNIQUEMENT avec un JSON.
-              - Le JSON doit être un TABLEAU contenant 5 objets.
-              - Pas de texte avant ou après.
-              - Pas de commentaires.
-              - Pas d'objet seul : toujours un tableau de 5 éléments.
-              - Utilise UNIQUEMENT les titres EXACTS tels qu'ils apparaissent sur TMDB.
-              - Le résumé doit être en français.
-              - L'année doit être un nombre (pas une string).
+              - Réponds UNIQUEMENT avec un JSON
+              - Le JSON doit être un TABLEAU de 5 objets
+              - Pas de texte avant ou après
+              - Chaque objet doit contenir uniquement :
+                - "title"
 
-              Format OBLIGATOIRE :
+              Format :
               [
-                {
-                  "title": "Titre exact TMDB",
-                  "year": 2000,
-                  "genre": "Genre",
-                  "summary": "Résumé en français"
-                }
+                { "title": "Titre exact TMDB" }
               ]
             PROMPT
           }
@@ -87,20 +79,18 @@ class RecommendationsController < ApplicationController
   @movies = movies.map do |movie|
     next if movie["title"].blank?
 
-    tmdb = TmdbService.full_movie_info(movie["title"])
+    tmdb = TmdbService.quick_movie_info(movie["title"])
 
     if tmdb.present? && tmdb[:tmdb_id].present?
       record = Movie.find_or_initialize_by(tmdb_id: tmdb[:tmdb_id])
 
       record.assign_attributes(
         title: tmdb[:title].presence || movie["title"],
-        synopsis: tmdb[:short_overview].presence || movie["summary"],
-        year: tmdb[:release_year].presence || movie["year"],
+        synopsis: tmdb[:synopsis].presence || movie["summary"],
+        year: tmdb[:year].presence || movie["year"],
         rating: tmdb[:rating],
-        duration: tmdb[:runtime],
         poster_url: tmdb[:poster_url],
-        trailer: tmdb[:trailer_url],
-        category: Array(tmdb[:genres]).join(", ").presence || movie["genre"],
+        category: movie["genre"],
         media_type: "movie"
       )
 
