@@ -34,10 +34,13 @@ class RecommendationsController < ApplicationController
               - Pas de texte avant ou après
               - Chaque objet doit contenir uniquement :
                 - "title"
+                - "genre"
+                - "media_type" (soit "movie" soit "tv")
+                - "duration" (durée en minutes, nombre entier)
 
               Format :
               [
-                { "title": "Titre exact TMDB" }
+                { "title": "Titre exact TMDB", "genre": "Drame", "media_type": "movie", "duration": 120 }
               ]
             PROMPT
           }
@@ -59,6 +62,8 @@ class RecommendationsController < ApplicationController
             "title" => "Film manquant",
             "year" => 0,
             "genre" => "",
+            "media_type" => "movie",
+            "duration" => nil,
             "summary" => ""
           }
         end
@@ -71,42 +76,45 @@ class RecommendationsController < ApplicationController
           "title" => "Film introuvable",
           "year" => 0,
           "genre" => "",
+          "media_type" => "movie",
+          "duration" => nil,
           "summary" => ""
         }
       end
     end
 
-  @movies = movies.map do |movie|
-    next if movie["title"].blank?
+    @movies = movies.map do |movie|
+      next if movie["title"].blank?
 
-    tmdb = TmdbService.quick_movie_info(movie["title"])
+      tmdb = TmdbService.quick_movie_info(movie["title"])
 
-    if tmdb.present? && tmdb[:tmdb_id].present?
-      record = Movie.find_or_initialize_by(tmdb_id: tmdb[:tmdb_id])
+      if tmdb.present? && tmdb[:tmdb_id].present?
+        record = Movie.find_or_initialize_by(tmdb_id: tmdb[:tmdb_id])
 
-      record.assign_attributes(
-        title: tmdb[:title].presence || movie["title"],
-        synopsis: tmdb[:synopsis].presence || movie["summary"],
-        year: tmdb[:year].presence || movie["year"],
-        rating: tmdb[:rating],
-        poster_url: tmdb[:poster_url],
-        category: movie["genre"],
-        media_type: "movie"
-      )
+        record.assign_attributes(
+          title: tmdb[:title].presence || movie["title"],
+          synopsis: tmdb[:synopsis].presence || movie["summary"],
+          year: tmdb[:year].presence || movie["year"],
+          rating: tmdb[:rating],
+          poster_url: tmdb[:poster_url],
+          category: movie["genre"],
+          media_type: movie["media_type"].presence || "movie",
+          duration: record.duration.presence || movie["duration"]
+        )
 
-      record.save!
-      record
-    else
-      # fallback : on affiche quand même quelque chose
-      Movie.new(
-        title: movie["title"],
-        synopsis: movie["summary"],
-        year: movie["year"],
-        category: movie["genre"],
-        media_type: "movie"
-      )
-    end
-  end.compact
+        record.save!
+        record
+      else
+        Movie.new(
+          title: movie["title"],
+          synopsis: movie["summary"],
+          year: movie["year"],
+          category: movie["genre"],
+          media_type: movie["media_type"].presence || "movie",
+          duration: movie["duration"]
+        )
+      end
+    end.compact
 
     render :new
   end

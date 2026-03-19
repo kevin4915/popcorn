@@ -6,6 +6,7 @@
     when "series"    then series_historics_path
     when "search"    then search_movies_path(q: params[:q])
     when "community" then community_path
+    when "reco" then new_recommendation_path
     else root_path
     end,
     class: "show-back"
