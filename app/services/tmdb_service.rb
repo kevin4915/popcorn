@@ -124,7 +124,7 @@ class TmdbService
     {
       tmdb_id: movie["id"],
       title: movie["title"],
-      synopsis: truncate_text(movie["overview"], 180),
+      synopsis: movie["overview"],
       year: extract_year(movie["release_date"]),
       rating: normalize_rating(movie["vote_average"]),
       poster_url: poster_url_for(movie["poster_path"])

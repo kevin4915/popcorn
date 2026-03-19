@@ -100,7 +100,10 @@
 .reco-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 18px;
+
+  .popcorn-info {
+    justify-content: flex-start;
+  }
 }
 
 .reco-card {

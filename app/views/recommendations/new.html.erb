@@ -28,54 +28,62 @@
 
     <% if @movies.present? %>
       <div class="reco-results-header">
-        <h2>Les suggestions de BotBuster pour “<%= params[:query] %>”</h2>
+        <h2>Les suggestions de BotBuster pour "<%= params[:query] %>"</h2>
         <p>5 séléctions pour prolonger ta séance.</p>
       </div>
 
       <div class="reco-grid">
         <% @movies.each do |movie| %>
-          <div class="reco-card">
-            <div class="reco-poster-wrap">
-              <%= image_tag(
-                    movie.poster_url.presence || asset_path("no-poster.png"),
-                    alt: movie.title,
-                    class: "reco-poster"
-                  ) %>
-
-              <% if movie.rating.present? %>
-                <span class="reco-rating-badge">⭐ <%= movie.rating %>/5</span>
-              <% end %>
-            </div>
-
-            <div class="reco-card-body">
-              <h3 class="reco-title">
-                <%= movie.title %>
-                <% if movie.year.present? %>
-                  (<%= movie.year %>)
+          <div class="popcorn-card-wrapper">
+            <div class="popcorn-card">
+              <div class="popcorn-poster-wrapper">
+                <%= link_to movie.persisted? ? movie_path(movie, from: "reco") : "#", class: "popcorn-poster" do %>
+                  <%= image_tag movie.poster_url.presence || asset_path("no-poster.png"), alt: movie.title %>
+                  <% if movie.rating.present? %>
+                    <span class="popcorn-rating-badge">⭐ <%= movie.rating %>/5</span>
+                  <% end %>
+                  <% if movie.persisted? %>
+                    <% likes_count = Historic.where(movie: movie, liked: true).count %>
+                    <% dislikes_count = Historic.where(movie: movie, disliked: true).count %>
+                    <% if likes_count > 0 || dislikes_count > 0 %>
+                      <span class="votes-badge">
+                        <% if likes_count > 0 %>
+                          <span class="vote-up"><i class="fa-solid fa-thumbs-up"></i> <%= likes_count %></span>
+                        <% end %>
+                        <% if dislikes_count > 0 %>
+                          <span class="vote-down"><i class="fa-solid fa-thumbs-down"></i> <%= dislikes_count %></span>
+                        <% end %>
+                      </span>
+                    <% end %>
+                  <% end %>
                 <% end %>
-              </h3>
 
-              <div class="reco-meta">
-                <% if movie.duration.present? %>
-                  <span>⏱️ <%= movie.duration %> min</span>
+                <% if movie.persisted? %>
+                  <div data-controller="watchlist"
+                       data-watchlist-added-value="<%= current_user.movies.include?(movie) %>"
+                       style="position: absolute; top: 6px; right: 6px;">
+                    <button class="btn-historic-action btn-watchlist-corner <%= current_user.movies.include?(movie) ? 'btn-added' : 'btn-add-list' %>"
+                            data-watchlist-target="btn"
+                            data-action="click->watchlist#toggle"
+                            data-movie-id="<%= movie.id %>">
+                      <i data-watchlist-target="icon" class="fa-solid <%= current_user.movies.include?(movie) ? 'fa-check' : 'fa-heart' %>"></i>
+                    </button>
+                  </div>
                 <% end %>
               </div>
 
-              <% if movie.category.present? %>
-                <p class="reco-genres"><%= movie.category %></p>
-              <% end %>
-
-              <p class="reco-summary">
-                <%= movie.synopsis.presence || "Résumé non disponible." %>
-              </p>
-
-              <div class="reco-actions">
-                <% if movie.persisted? %>
-                  <%= link_to "Voir la fiche", movie_path(movie), class: "reco-secondary-btn" %>
-                <% else %>
-                  <span class="reco-secondary-btn reco-disabled-btn">Fiche indisponible</span>
-                <% end %>
-
+              <div class="popcorn-info">
+                <div>
+                  <h2><%= movie.title %> <% if movie.year.present? %>(<%= movie.year %>)<% end %></h2>
+                  <% if movie.duration.present? %>
+                    <p class="popcorn-duration">⏱️ <%= movie.duration %> min</p>
+                  <% end %>
+                  <p class="popcorn-category"><%= movie.media_type == "tv" ? "📺 Série" : "🎥 Film" %></p>
+                  <% if movie.category.present? %>
+                    <p class="popcorn-category">🎬 <%= movie.category %></p>
+                  <% end %>
+                  <p class="popcorn-description"><%= truncate(movie.synopsis.presence || "Résumé non disponible.", length: 150) %></p>
+                </div>
               </div>
             </div>
           </div>
